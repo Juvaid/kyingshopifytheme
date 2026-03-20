@@ -21,14 +21,14 @@
   - Responsive: Touch target 44px minimum on mobile
 {% endcomment %}
 
-{% assign type = include.type | default: 'primary' %}
-{% assign text = include.text | default: 'Button' %}
-{% assign url = include.url | default: '#' %}
-{% assign disabled = include.disabled | default: false %}
+{% assign type = type | default: 'primary' %}
+{% assign text = text | default: 'Button' %}
+{% assign url = url | default: '#' %}
+{% assign disabled = disabled | default: false %}
 
 <a 
   href="{% if disabled %}#{% else %}{{ url }}{% endif %}"
-  class="btn btn--{{ type }} {{ include.class }}"
+  class="btn btn--{{ type }} {{ class }}"
   {% if disabled %}aria-disabled="true" role="button"{% endif %}>
   {{ text }}
 </a>

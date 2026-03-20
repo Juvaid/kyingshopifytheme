@@ -96,9 +96,9 @@
     <div style="padding: 20px; background: #f9f8f6; margin: 20px;">
       <h3 style="margin-top: 0;">Button Component Test</h3>
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        {% include 'component-button', text: 'Primary Button', type: 'primary', url: '/collections/all' %}
-        {% include 'component-button', text: 'Secondary Button', type: 'secondary' %}
-        {% include 'component-button', text: 'Ghost Button', type: 'ghost' %}
+        {% render 'component-button', text: 'Primary Button', type: 'primary', url: '/collections/all' %}
+        {% render 'component-button', text: 'Secondary Button', type: 'secondary' %}
+        {% render 'component-button', text: 'Ghost Button', type: 'ghost' %}
       </div>
     </div>
     <!-- END TEST -->
