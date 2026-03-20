@@ -188,13 +188,19 @@
 
     {%- if section.settings.show_view_all and more_in_collection -%}
       <div class="center collection__view-all{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
-        <a
-          href="{{ section.settings.collection.url }}"
-          class="{% if section.settings.view_all_style == 'link' %}link underlined-link{% elsif section.settings.view_all_style == 'solid' %}button{% else %}button button--secondary{% endif %}"
-          aria-label="{{ 'sections.featured_collection.view_all_label' | t: collection_name: section.settings.collection.title | escape }}"
-        >
-          {{ 'sections.featured_collection.view_all' | t }}
-        </a>
+        {%- assign view_all_type = 'primary' -%}
+        {%- if section.settings.view_all_style == 'outline' -%}
+          {%- assign view_all_type = 'secondary' -%}
+        {%- elsif section.settings.view_all_style == 'link' -%}
+          {%- assign view_all_type = 'ghost' -%}
+        {%- endif -%}
+
+        {% render 'component-button',
+          text: 'sections.featured_collection.view_all' | t,
+          url: section.settings.collection.url,
+          type: view_all_type,
+          class: 'featured-collection__view-all'
+        %}
       </div>
     {%- endif -%}
     {% if section.settings.image_shape == 'arch' %}
