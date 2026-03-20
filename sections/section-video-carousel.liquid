@@ -310,7 +310,7 @@
       
     <div class="modal-product-box-{{ section.id }}">
       <div class="modal-info-row-{{ section.id }}">
-        <img id="ModalThumb-{{ section.id }}" src="" class="modal-thumb-{{ section.id }}" width="50" height="50" loading="lazy">
+        <img id="ModalThumb-{{ section.id }}" src="{{ 'no-image.gif' | asset_img_url: '100x' }}" data-src="" class="modal-thumb-{{ section.id }}" width="50" height="50" loading="lazy">
         <div class="modal-text-group-{{ section.id }}">
           <div class="modal-title-{{ section.id }}" id="ModalTitle-{{ section.id }}">Product Name</div>
           <span class="modal-badge-{{ section.id }}" id="ModalDiscount-{{ section.id }}">33% OFF</span>

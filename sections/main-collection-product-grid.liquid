@@ -34,10 +34,219 @@
       padding-bottom: {{ section.settings.padding_bottom }}px;
     }
   }
+
+  /* Grid Banner Slideshow Styles */
+  .grid-banner-slideshow-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: {{ section.settings.grid_banner_radius }}px;
+    margin-bottom: {{ section.settings.grid_banner_margin_bottom }}px;
+    background: #f3f3f3;
+  }
+
+  .grid-banner-wrapper-{{ section.id }} {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    will-change: transform;
+    {%- if section.settings.grid_banner_height_mode == 'adapt' -%}
+      height: auto;
+    {%- else -%}
+      height: {{ section.settings.grid_banner_height_mobile }}px;
+    {%- endif -%}
+  }
+
+  @media screen and (min-width: 750px) {
+    .grid-banner-wrapper-{{ section.id }} {
+      {%- if section.settings.grid_banner_height_mode == 'fixed' -%}
+        height: {{ section.settings.grid_banner_height_desktop }}px;
+      {%- endif -%}
+    }
+  }
+
+  .grid-banner-slide-{{ section.id }} {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .grid-banner-slide-{{ section.id }} a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .grid-banner-slide-{{ section.id }} img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .grid-banner-nav-{{ section.id }} {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.4);
+    backdrop-filter: blur(4px);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background 0.3s;
+  }
+  .grid-banner-nav-{{ section.id }}:hover { background: rgba(255,255,255,0.6); }
+  .grid-banner-nav-{{ section.id }} svg { width: 20px; height: 20px; fill: #000; }
+  .grid-banner-prev-{{ section.id }} { left: 15px; }
+  .grid-banner-next-{{ section.id }} { right: 15px; }
+
+  .grid-banner-dots-{{ section.id }} {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+  .grid-banner-dot-{{ section.id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid #fff;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.3s, transform 0.3s;
+  }
+  .grid-banner-dot-{{ section.id }}.active {
+    background: #000;
+    transform: scale(1.2);
+  }
+
+  .desktop-only-{{ section.id }} { display: block; }
+  .mobile-only-{{ section.id }} { display: none; }
+
+  @media screen and (max-width: 749px) {
+    .desktop-only-{{ section.id }} { display: none; }
+    .mobile-only-{{ section.id }} { display: block; }
+  }
 {%- endstyle -%}
 
 <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
   {%- paginate collection.products by 240 -%}
+    {%- if section.blocks.size > 0 -%}
+      <div class="page-width">
+        <div class="grid-banner-slideshow-{{ section.id }}" id="GridBanner-{{ section.id }}">
+          <div class="grid-banner-wrapper-{{ section.id }}" id="GridBannerWrapper-{{ section.id }}">
+            {%- for block in section.blocks -%}
+              <div class="grid-banner-slide-{{ section.id }}" {{ block.shopify_attributes }}>
+                <a href="{{ block.settings.link | default: '#' }}">
+                  {%- if block.settings.image != blank or block.settings.mobile_image != blank -%}
+                    {%- assign mobile_image = block.settings.mobile_image | default: block.settings.image -%}
+                    {%- assign desktop_image = block.settings.image | default: block.settings.mobile_image -%}
+                    <img 
+                      src="{{ desktop_image | image_url: width: 2000 }}" 
+                      alt="{{ desktop_image.alt | escape }}" 
+                      class="desktop-only-{{ section.id }}" 
+                      loading="lazy" 
+                      width="{{ desktop_image.width | default: 2000 }}" 
+                      height="{{ desktop_image.height | default: 1000 }}"
+                    >
+                    <img 
+                      src="{{ mobile_image | image_url: width: 1000 }}" 
+                      alt="{{ mobile_image.alt | escape }}" 
+                      class="mobile-only-{{ section.id }}" 
+                      loading="lazy" 
+                      width="{{ mobile_image.width | default: 1000 }}" 
+                      height="{{ mobile_image.height | default: 1200 }}"
+                    >
+                  {%- else -%}
+                    {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+                </a>
+              </div>
+            {%- endfor -%}
+          </div>
+
+          {%- if section.blocks.size > 1 -%}
+            <button class="grid-banner-nav-{{ section.id }} grid-banner-prev-{{ section.id }}" onclick="moveGridSlide{{ section.id | replace: '-', '_' }}( -1)">
+              <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+            </button>
+            <button class="grid-banner-nav-{{ section.id }} grid-banner-next-{{ section.id }}" onclick="moveGridSlide{{ section.id | replace: '-', '_' }}( 1)">
+              <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+            </button>
+
+            <div class="grid-banner-dots-{{ section.id }}">
+              {%- for block in section.blocks -%}
+                <button class="grid-banner-dot-{{ section.id }}{% if forloop.first %} active{% endif %}" onclick="goToGridSlide{{ section.id | replace: '-', '_' }}({{ forloop.index0 }})"></button>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <script>
+        (function() {
+          const wrapper = document.getElementById('GridBannerWrapper-{{ section.id }}');
+          const dots = document.querySelectorAll('.grid-banner-dot-{{ section.id }}');
+          let currentSlide = 0;
+          const totalSlides = {{ section.blocks.size }};
+          const autoplaySpeed = {{ section.settings.grid_banner_autoplay_speed | times: 1000 }};
+          let autoPlayInterval;
+
+          window.moveGridSlide{{ section.id | replace: '-', '_' }} = function(direction) {
+            currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
+            updateSlideshow();
+            resetInterval();
+          };
+
+          window.goToGridSlide{{ section.id | replace: '-', '_' }} = function(index) {
+            currentSlide = index;
+            updateSlideshow();
+            resetInterval();
+          };
+
+          function updateSlideshow() {
+            wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+            dots.forEach((dot, index) => {
+              dot.classList.toggle('active', index === currentSlide);
+            });
+          }
+
+          function startAutoPlay() {
+            if ({{ section.settings.grid_banner_autoplay }} && totalSlides > 1) {
+              autoPlayInterval = setInterval(() => moveGridSlide{{ section.id | replace: '-', '_' }}(1), autoplaySpeed);
+            }
+          }
+
+          function resetInterval() {
+            clearInterval(autoPlayInterval);
+            startAutoPlay();
+          }
+
+          startAutoPlay();
+
+          // Touch Swipe Support
+          let touchStartX = 0;
+          let touchEndX = 0;
+          wrapper.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+          wrapper.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchStartX - touchEndX > 50) moveGridSlide{{ section.id | replace: '-', '_' }}(1);
+            if (touchEndX - touchStartX > 50) moveGridSlide{{ section.id | replace: '-', '_' }}(-1);
+          }, { passive: true });
+        })();
+      </script>
+    {%- endif -%}
 
     <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical page-width{% endif %}">
       {{ 'component-facets.css' | asset_url | stylesheet_tag }}
@@ -85,52 +294,6 @@
             class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
           >
             <div class="loading-overlay gradient"></div>
-            {%- if section.settings.grid_banner_image != blank -%}
-              <div class="collection-grid-banner{% if section.settings.grid_banner_height_mode == 'adapt' %} collection-grid-banner--adapt{% endif %}" style="
-                --banner-height-desktop: {{ section.settings.grid_banner_height_desktop }}px;
-                --banner-height-mobile: {{ section.settings.grid_banner_height_mobile }}px;
-                --banner-radius: {{ section.settings.grid_banner_radius }}px;
-                --banner-margin-bottom: {{ section.settings.grid_banner_margin_bottom }}px;
-              ">
-                {%- if section.settings.grid_banner_link != blank -%}
-                  <a href="{{ section.settings.grid_banner_link }}" class="collection-grid-banner__link">
-                {%- endif -%}
-                <div class="collection-grid-banner__image-wrapper{% if section.settings.grid_banner_height_mode != 'adapt' %} media media--transparent{% endif %}">
-                  <picture>
-                    {%- if section.settings.grid_banner_image_mobile != blank -%}
-                      <source
-                        media="(max-width: 749px)"
-                        srcset="
-                          {{ section.settings.grid_banner_image_mobile | image_url: width: 375 }} 375w,
-                          {{ section.settings.grid_banner_image_mobile | image_url: width: 750 }} 750w
-                        "
-                        sizes="100vw"
-                      >
-                    {%- endif -%}
-                    <img
-                      srcset="
-                        {%- if section.settings.grid_banner_image.width >= 165 -%}{{ section.settings.grid_banner_image | image_url: width: 165 }} 165w,{%- endif -%}
-                        {%- if section.settings.grid_banner_image.width >= 360 -%}{{ section.settings.grid_banner_image | image_url: width: 360 }} 360w,{%- endif -%}
-                        {%- if section.settings.grid_banner_image.width >= 535 -%}{{ section.settings.grid_banner_image | image_url: width: 535 }} 535w,{%- endif -%}
-                        {%- if section.settings.grid_banner_image.width >= 750 -%}{{ section.settings.grid_banner_image | image_url: width: 750 }} 750w,{%- endif -%}
-                        {%- if section.settings.grid_banner_image.width >= 1070 -%}{{ section.settings.grid_banner_image | image_url: width: 1070 }} 1070w,{%- endif -%}
-                        {%- if section.settings.grid_banner_image.width >= 1500 -%}{{ section.settings.grid_banner_image | image_url: width: 1500 }} 1500w,{%- endif -%}
-                        {{ section.settings.grid_banner_image | image_url }} {{ section.settings.grid_banner_image.width }}w
-                      "
-                      src="{{ section.settings.grid_banner_image | image_url: width: 1500 }}"
-                      sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 330 }}px, (min-width: 750px) calc(100vw - 35rem), calc(100vw - 3rem)"
-                      alt="{{ section.settings.grid_banner_image.alt | escape }}"
-                      loading="lazy"
-                      width="{{ section.settings.grid_banner_image.width }}"
-                      height="{{ section.settings.grid_banner_image.height }}"
-                    >
-                  </picture>
-                </div>
-                {%- if section.settings.grid_banner_link != blank -%}
-                  </a>
-                {%- endif -%}
-              </div>
-            {%- endif -%}
             <ul
               id="product-grid"
               data-id="{{ section.id }}"
@@ -358,17 +521,23 @@
     },
     {
       "type": "header",
-      "content": "Grid Banner"
+      "content": "Grid Banner (Slideshow)"
     },
     {
-      "type": "image_picker",
-      "id": "grid_banner_image",
-      "label": "Banner Image"
+      "type": "checkbox",
+      "id": "grid_banner_autoplay",
+      "label": "Enable Autoplay",
+      "default": true
     },
     {
-      "type": "image_picker",
-      "id": "grid_banner_image_mobile",
-      "label": "Banner Image (Mobile)"
+      "type": "range",
+      "id": "grid_banner_autoplay_speed",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Autoplay Speed",
+      "default": 5
     },
     {
       "type": "select",
@@ -376,7 +545,7 @@
       "options": [
         {
           "value": "adapt",
-          "label": "Adapt to Image"
+          "label": "Adapt to First Image"
         },
         {
           "value": "fixed",
@@ -390,21 +559,21 @@
       "type": "range",
       "id": "grid_banner_height_desktop",
       "min": 50,
-      "max": 400,
+      "max": 500,
       "step": 10,
       "unit": "px",
       "label": "Banner Height (Desktop)",
-      "default": 150
+      "default": 180
     },
     {
       "type": "range",
       "id": "grid_banner_height_mobile",
       "min": 50,
-      "max": 300,
+      "max": 400,
       "step": 10,
       "unit": "px",
       "label": "Banner Height (Mobile)",
-      "default": 120
+      "default": 140
     },
     {
       "type": "range",
@@ -425,11 +594,6 @@
       "unit": "px",
       "label": "Space Below Banner",
       "default": 30
-    },
-    {
-      "type": "url",
-      "id": "grid_banner_link",
-      "label": "Banner Link"
     },
     {
       "type": "header",
@@ -454,6 +618,29 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Banner Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Desktop Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile Image (Optional)"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Slide Link"
+        }
+      ]
     }
   ]
 }

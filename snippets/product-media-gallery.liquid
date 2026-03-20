@@ -136,7 +136,19 @@
           {{- 'icon-caret.svg' | inline_asset_content -}}
         </span>
       </button>
-      <div class="slider-counter caption">
+      <div class="slider-dots-pagination">
+        {%- for media in product.media -%}
+          <button
+            type="button"
+            class="slider-counter__link slider-counter__link--dots{% if forloop.first %} slider-counter__link--active{% endif %}"
+            aria-label="{{ 'general.slider.of' | t: count: forloop.index, total: media_count }}"
+            aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+          >
+            <span class="dot"></span>
+          </button>
+        {%- endfor -%}
+      </div>
+      <div class="slider-counter caption visually-hidden">
         <span class="slider-counter--current">1</span>
         <span aria-hidden="true"> / </span>
         <span class="visually-hidden">{{ 'general.slider.of' | t }}</span>

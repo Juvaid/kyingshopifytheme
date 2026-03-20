@@ -99,11 +99,6 @@
               {%- when 'title' -%}
                 <div class="product__title" {{ block.shopify_attributes }}>
                   <h1>{{ product.title | escape }}</h1>
-                  <a href="{{ product.url }}" class="product__title">
-                    <h2 class="h1">
-                      {{ product.title | escape }}
-                    </h2>
-                  </a>
                 </div>
               {%- when 'price' -%}
                 <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
@@ -343,7 +338,7 @@
                                   </span>
                                   {%- break -%}
                                 {%- endif -%}
-                              {%- endfor -%}
+                                {%- endfor -%}
                             {%- endif -%}
                           </div>
                         {%- else -%}
@@ -717,6 +712,97 @@
     </script>
   </div>
 </product-info>
+
+{%- if section.settings.enable_sticky_atc -%}
+  <div id="sticky-atc-mobile" class="sticky-atc-mobile small-hide medium-hide">
+    <div class="sticky-atc-mobile__container">
+      <div class="sticky-atc-mobile__info">
+        <span class="sticky-atc-mobile__title">{{ product.title }}</span>
+        <span class="sticky-atc-mobile__price" id="sticky-atc-price">{{ product.selected_or_first_available_variant.price | money }}</span>
+      </div>
+      <product-form class="product-form">
+        <div class="product-form__error-message-wrapper" role="alert" hidden>
+          <span class="svg-wrapper">
+            {{- 'icon-error.svg' | inline_asset_content -}}
+          </span>
+          <span class="product-form__error-message"></span>
+        </div>
+
+        {%- form 'product', product, id: 'sticky-atc-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          <button
+            type="submit"
+            name="add"
+            class="product-form__submit button button--full-width button--primary"
+            {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}
+          >
+            <span>
+              {%- if product.selected_or_first_available_variant.available -%}
+                {{ 'products.product.add_to_cart' | t }}
+              {%- else -%}
+                {{ 'products.product.sold_out' | t }}
+              {%- endif -%}
+            </span>
+            {%- render 'loading-spinner' -%}
+          </button>
+        {%- endform -%}
+      </product-form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const stickyAtc = document.getElementById('sticky-atc-mobile');
+      const mainAtc = document.querySelector('.product-form__buttons');
+      
+      if (stickyAtc && mainAtc) {
+        window.addEventListener('scroll', function() {
+          const mainAtcPosition = mainAtc.getBoundingClientRect().bottom;
+          if (mainAtcPosition < 0) {
+            stickyAtc.classList.add('show');
+          } else {
+            stickyAtc.classList.remove('show');
+          }
+        });
+      }
+
+      // Sync variant changes using theme's pubsub
+      if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+        subscribe(PUB_SUB_EVENTS.variantChange, function(event) {
+          const variant = event.data.variant;
+          const sectionId = event.data.sectionId;
+          
+          // Only update if it's the main product section
+          if (sectionId === {{ section.id | json }} || sectionId === {{ section.id | append: '-main' | json }}) {
+            if (variant) {
+              const stickyIdInput = stickyAtc.querySelector('input[name="id"]');
+              const stickyPrice = document.getElementById('sticky-atc-price');
+              const stickySubmit = stickyAtc.querySelector('.product-form__submit');
+              
+              if (stickyIdInput) stickyIdInput.value = variant.id;
+              
+              // Get price from the main price element to ensure correct formatting/currency
+              const mainPrice = document.querySelector('.product__info-container .price');
+              if (stickyPrice && mainPrice) {
+                stickyPrice.innerHTML = mainPrice.innerHTML;
+              }
+              
+              if (stickySubmit) {
+                if (variant.available) {
+                  stickySubmit.removeAttribute('disabled');
+                  stickySubmit.querySelector('span').innerText = {{ 'products.product.add_to_cart' | t | json }};
+                } else {
+                  stickySubmit.setAttribute('disabled', 'disabled');
+                  stickySubmit.querySelector('span').innerText = {{ 'products.product.sold_out' | t | json }};
+                }
+              }
+            }
+          }
+        });
+      }
+    });
+  </script>
+{%- endif -%}
 
 {% schema %}
 {
@@ -2069,6 +2155,12 @@
     }
   ],
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable_sticky_atc",
+      "default": true,
+      "label": "Enable Sticky Add to Cart (Mobile)"
+    },
     {
       "type": "checkbox",
       "id": "enable_sticky_info",
