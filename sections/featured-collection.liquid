@@ -92,44 +92,6 @@
       {%- endif -%}
     </div>
 
-    <!-- TESTING BUTTON COMPONENT -->
-    <div style="padding: 20px; background: #f9f8f6; margin: 20px;">
-      <h3 style="margin-top: 0;">Button Component Test</h3>
-      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        {% render 'component-button', text: 'Primary Button', type: 'primary', url: '/collections/all' %}
-        {% render 'component-button', text: 'Secondary Button', type: 'secondary' %}
-        {% render 'component-button', text: 'Ghost Button', type: 'ghost' %}
-      </div>
-    </div>
-    <!-- END TEST -->
-
-    <!-- TESTING CARD COMPONENT -->
-    <div style="padding: 20px; background: #f9f8f6; margin: 20px;">
-      <h3 style="margin-top: 0;">Card Component Test</h3>
-      <div style="max-width: 400px;">
-        {% capture card_content %}
-          <h4 style="margin-top: 0;">Test Card</h4>
-          <p>"This is a reusable card component test content. It should have a subtle shadow and hover effect."</p>
-          {% render 'component-button', text: 'Card Action', type: 'secondary' %}
-        {% endcapture %}
-        {% render 'component-card', content: card_content %}
-      </div>
-    </div>
-    <!-- END TEST -->
-
-    <!-- TESTING PRODUCT CARD COMPONENT -->
-    <div style="padding: 20px; background: #f9f8f6; margin: 20px;">
-      <h3 style="margin-top: 0;">Product Card Component Test</h3>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-        {%- for product in section.settings.collection.products limit: 4 -%}
-          {% render 'component-product-card', product: product %}
-        {%- else -%}
-          <p>No products found in collection. Please select a collection in the theme editor.</p>
-        {%- endfor -%}
-      </div>
-    </div>
-    <!-- END TEST -->
-
     <slider-component class="slider-mobile-gutter{% if section.settings.full_width %} slider-component-full-width{% endif %}{% if show_mobile_slider == false %} page-width{% endif %}{% if show_desktop_slider == false and section.settings.full_width == false %} page-width-desktop{% endif %}{% if show_desktop_slider %} slider-component-desktop{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
       <ul
         id="Slider-{{ section.id }}"
@@ -155,17 +117,10 @@
                   style="--animation-order: {{ forloop.index }};"
                 {% endif %}
               >
-                {% render 'card-product',
-                  card_product: product,
-                  media_aspect_ratio: section.settings.image_ratio,
-                  image_shape: section.settings.image_shape,
-                  lazy_load: lazy_load,
-                  show_secondary_image: section.settings.show_secondary_image,
-                  show_vendor: section.settings.show_vendor,
+                {% render 'component-product-card',
+                  product: product,
                   show_rating: section.settings.show_rating,
-                  skip_styles: skip_card_product_styles,
-                  section_id: section.id,
-                  quick_add: section.settings.quick_add
+                  show_quick_add: true
                 %}
               </li>
               {%- assign skip_card_product_styles = true -%}
