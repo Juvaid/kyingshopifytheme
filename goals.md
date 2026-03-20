@@ -11,5 +11,5 @@
 - [ ] Read and analyze requirements in existing .md files <!-- id: 6 -->
 
 ## Future Tasks
-- [ ] Develop Shopify Theme Components <!-- id: 3 -->
-- [ ] Implement Design System <!-- id: 4 -->
+- [x] Production Integration of Components (Global replacement of Dawn cards) <!-- id: 12 -->
+- [/] Final User Review and Polish <!-- id: 3 -->
