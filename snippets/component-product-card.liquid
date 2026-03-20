@@ -32,11 +32,21 @@
         width="500"
         height="500">
     </div>
+  {%- elsif placeholder_image -%}
+    <div class="product-card__image-wrapper">
+      {{ placeholder_image | placeholder_svg_tag: 'product-card__image' }}
+    </div>
   {%- endif -%}
 
   <div class="product-card__content">
     
-    <h3 class="product-card__title">{{ product.title }}</h3>
+    <h3 class="product-card__title">
+      {%- if product -%}
+        {{ product.title }}
+      {%- else -%}
+        {{ 'onboarding.product_title' | t }}
+      {%- endif -%}
+    </h3>
     
     {%- if show_rating and product.metafields.reviews.rating.value -%}
       <div class="product-card__rating">
@@ -46,23 +56,27 @@
     {%- endif -%}
 
     <div class="product-card__pricing">
-      {%- if product.compare_at_price and product.compare_at_price > product.price -%}
-        <span class="product-card__price product-card__price--sale">
-          {{ product.price | money }}
-        </span>
-        <span class="product-card__price product-card__price--original">
-          {{ product.compare_at_price | money }}
-        </span>
+      {%- if product -%}
+        {%- if product.compare_at_price and product.compare_at_price > product.price -%}
+          <span class="product-card__price product-card__price--sale">
+            {{ product.price | money }}
+          </span>
+          <span class="product-card__price product-card__price--original">
+            {{ product.compare_at_price | money }}
+          </span>
+        {%- else -%}
+          <span class="product-card__price">
+            {{ product.price | money }}
+          </span>
+        {%- endif -%}
       {%- else -%}
-        <span class="product-card__price">
-          {{ product.price | money }}
-        </span>
+        <span class="product-card__price">{{ 1999 | money }}</span>
       {%- endif -%}
     </div>
 
     {%- if show_quick_add -%}
       <div class="product-card__cta">
-        {% render 'component-button', text: 'Quick Add', type: 'primary', url: product.url %}
+        {% render 'component-button', text: 'Quick Add', type: 'primary', url: product.url | default: '#' %}
       </div>
     {%- endif -%}
 
