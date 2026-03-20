@@ -1,0 +1,191 @@
+{% comment %}
+  PRODUCT CARD COMPONENT
+  
+  Design Reference: docs/03-component-specs.md > Component 2: Product Card
+  
+  Params:
+  - product (required): Shopify product object
+  - show_rating: true/false (default: true)
+  - show_quick_add: true/false (default: true)
+  
+  Usage:
+  {% render 'component-product-card', product: product, show_rating: true, show_quick_add: true %}
+{% endcomment %}
+
+{% assign show_rating = show_rating | default: true %}
+{% assign show_quick_add = show_quick_add | default: true %}
+
+<article class="product-card">
+  
+  {%- if product.featured_image -%}
+    <div class="product-card__image-wrapper">
+      <img 
+        class="product-card__image"
+        src="{{ product.featured_image | image_url: width: 500 }}"
+        srcset="
+          {{ product.featured_image | image_url: width: 300 }} 300w,
+          {{ product.featured_image | image_url: width: 500 }} 500w,
+          {{ product.featured_image | image_url: width: 800 }} 800w"
+        sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 25vw"
+        alt="{{ product.featured_image.alt | escape }}"
+        loading="lazy"
+        width="500"
+        height="500">
+    </div>
+  {%- endif -%}
+
+  <div class="product-card__content">
+    
+    <h3 class="product-card__title">{{ product.title }}</h3>
+    
+    {%- if show_rating and product.metafields.reviews.rating.value -%}
+      <div class="product-card__rating">
+        <span class="product-card__stars">⭐ {{ product.metafields.reviews.rating.value }}</span>
+        <span class="product-card__review-count">({{ product.metafields.reviews.rating_count }})</span>
+      </div>
+    {%- endif -%}
+
+    <div class="product-card__pricing">
+      {%- if product.compare_at_price and product.compare_at_price > product.price -%}
+        <span class="product-card__price product-card__price--sale">
+          {{ product.price | money }}
+        </span>
+        <span class="product-card__price product-card__price--original">
+          {{ product.compare_at_price | money }}
+        </span>
+      {%- else -%}
+        <span class="product-card__price">
+          {{ product.price | money }}
+        </span>
+      {%- endif -%}
+    </div>
+
+    {%- if show_quick_add -%}
+      <div class="product-card__cta">
+        {% render 'component-button', text: 'Quick Add', type: 'primary', url: product.url %}
+      </div>
+    {%- endif -%}
+
+  </div>
+
+</article>
+
+<style>
+  /* ============================================
+     PRODUCT CARD COMPONENT STYLES
+     Design Token Reference: design-tokens.css
+     ============================================ */
+
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-white);
+    border: var(--border-width-sm) solid var(--color-gray-medium);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: all var(--transition-standard);
+    height: 100%;
+  }
+
+  .product-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  /* Image */
+  .product-card__image-wrapper {
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--color-gray-light);
+    aspect-ratio: 1;
+  }
+
+  .product-card__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--transition-standard);
+  }
+
+  .product-card:hover .product-card__image {
+    transform: scale(1.05);
+  }
+
+  /* Content */
+  .product-card__content {
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    flex: 1;
+  }
+
+  /* Title */
+  .product-card__title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    margin: 0;
+    line-height: var(--line-height-tight);
+    color: var(--color-black);
+  }
+
+  /* Rating */
+  .product-card__rating {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-dark);
+  }
+
+  .product-card__stars {
+    font-weight: var(--font-weight-semibold);
+  }
+
+  /* Pricing */
+  .product-card__pricing {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
+  }
+
+  .product-card__price {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-black);
+  }
+
+  .product-card__price--sale {
+    color: var(--color-accent-red);
+  }
+
+  .product-card__price--original {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-dark);
+    text-decoration: line-through;
+    font-weight: var(--font-weight-regular);
+  }
+
+  /* CTA */
+  .product-card__cta {
+    margin-top: var(--spacing-md);
+  }
+
+  .product-card__cta .btn {
+    width: 100%;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .product-card__title {
+      font-size: var(--font-size-sm);
+    }
+
+    .product-card__content {
+      padding: var(--spacing-sm);
+      gap: 6px;
+    }
+  }
+</style>
