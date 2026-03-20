@@ -1,0 +1,123 @@
+{% comment %}
+  BUTTON COMPONENT
+  
+  Design Reference: docs/kying-design-system.md > Components > Buttons
+  
+  Params:
+  - text (required): Button label text
+  - type: 'primary' | 'secondary' | 'ghost' (default: 'primary')
+  - url: Link destination (default: '#')
+  - class: Additional CSS classes for customization
+  - disabled: true to disable (default: false)
+  
+  Usage Examples:
+  {% include 'component-button', text: 'Shop Now', type: 'primary', url: '/collections/all' %}
+  {% include 'component-button', text: 'Learn More', type: 'secondary' %}
+  {% include 'component-button', text: 'View', type: 'ghost', url: '/about' %}
+  
+  Liquid Logic:
+  - If disabled=true, href becomes '#' and ARIA is set
+  - Supports all accessibility standards (WCAG AA)
+  - Responsive: Touch target 44px minimum on mobile
+{% endcomment %}
+
+{% assign type = include.type | default: 'primary' %}
+{% assign text = include.text | default: 'Button' %}
+{% assign url = include.url | default: '#' %}
+{% assign disabled = include.disabled | default: false %}
+
+<a 
+  href="{% if disabled %}#{% else %}{{ url }}{% endif %}"
+  class="btn btn--{{ type }} {{ include.class }}"
+  {% if disabled %}aria-disabled="true" role="button"{% endif %}>
+  {{ text }}
+</a>
+
+<style>
+  /* ============================================
+     BUTTON COMPONENT STYLES
+     Design Token Reference: design-tokens.css
+     ============================================ */
+
+  .btn {
+    /* Layout */
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    
+    /* Typography */
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    font-family: inherit;
+    text-decoration: none;
+    text-align: center;
+    
+    /* Interactive */
+    cursor: pointer;
+    border: none;
+    transition: all var(--transition-fast);
+    
+    /* Accessibility */
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .btn:focus {
+    outline: var(--border-width-md) solid var(--color-black);
+    outline-offset: 2px;
+  }
+
+  /* PRIMARY VARIANT */
+  .btn--primary {
+    background-color: var(--color-black);
+    color: var(--color-white);
+  }
+
+  .btn--primary:hover:not([aria-disabled="true"]) {
+    background-color: #1a1a1a;
+    transform: scale(1.02);
+  }
+
+  .btn--primary:active:not([aria-disabled="true"]) {
+    background-color: #0d0d0d;
+    transform: scale(0.98);
+  }
+
+  /* SECONDARY VARIANT */
+  .btn--secondary {
+    background-color: var(--color-gray-light);
+    color: var(--color-black);
+    border: var(--border-width-sm) solid var(--color-gray-medium);
+  }
+
+  .btn--secondary:hover:not([aria-disabled="true"]) {
+    background-color: #F3F3F3;
+    border-color: var(--color-gray-dark);
+  }
+
+  /* GHOST VARIANT */
+  .btn--ghost {
+    background-color: transparent;
+    color: var(--color-black);
+    border: none;
+    text-decoration: underline;
+  }
+
+  .btn--ghost:hover:not([aria-disabled="true"]) {
+    opacity: 0.7;
+  }
+
+  /* DISABLED STATE */
+  .btn[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* RESPONSIVE ADJUSTMENTS */
+  @media (max-width: 640px) {
+    .btn {
+      padding: 10px 16px;
+      font-size: var(--font-size-xs);
+    }
+  }
+</style>
