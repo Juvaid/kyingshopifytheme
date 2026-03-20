@@ -569,7 +569,6 @@
                               aria-label="{{ 'general.slider.name' | t }}"
                             {% endif %}
                           >
-                            {% assign skip_card_product_styles = false %}
                             {%- for i in (1..number_of_slides) -%}
                               <div
                                 id="Slide-{{ block.id }}-{{ forloop.index }}"
@@ -584,18 +583,15 @@
                                 <ul class="list-unstyled" role="list">
                                   {%- for product in recommendations.products
                                     limit: block.settings.products_per_page
-                                    offset: continue
                                   -%}
                                     <li>
-                                      {%- if block.settings.enable_quick_add -%}
-                                        {% assign quick_add = 'standard' %}
-                                      {%- else -%}
-                                        {% assign quick_add = 'none' %}
-                                      {%- endif -%}
+                                      {% render 'component-product-card',
+                                        product: product,
+                                        show_rating: true,
+                                        show_quick_add: block.settings.enable_quick_add,
                                         horizontal_quick_add: true
                                       %}
                                     </li>
-                                    {%- assign skip_card_product_styles = true -%}
                                   {%- endfor -%}
                                 </ul>
                               </div>
@@ -715,13 +711,6 @@
       <script src="{{ 'product-model.js' | asset_url }}" defer></script>
     {%- endif -%}
 
-    {%- liquid
-      if product.selected_or_first_available_variant.featured_media
-        assign seo_media = product.selected_or_first_available_variant.featured_media
-      else
-        assign seo_media = product.featured_media
-      endif
-    -%}
 
     <script type="application/ld+json">
       {{ product | structured_data }}

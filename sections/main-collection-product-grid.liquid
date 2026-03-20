@@ -152,12 +152,7 @@
                 {% if section.settings.quick_add == 'bulk' %} collection-quick-add-bulk{% endif %}
               "
             >
-              {% assign skip_card_product_styles = false %}
               {%- for product in collection.products -%}
-                {% assign lazy_load = false %}
-                {%- if forloop.index > 2 -%}
-                  {%- assign lazy_load = true -%}
-                {%- endif -%}
                 <li
                   class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
                   {% if settings.animations_reveal_on_scroll %}
@@ -171,7 +166,6 @@
                     show_quick_add: true
                   %}
                 </li>
-                {%- assign skip_card_product_styles = true -%}
               {%- endfor -%}
             </ul>
 

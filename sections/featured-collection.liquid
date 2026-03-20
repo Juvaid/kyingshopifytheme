@@ -100,7 +100,6 @@
         role="list"
         aria-label="{{ 'general.slider.name' | t }}"
       >
-        {% assign skip_card_product_styles = false %}
 
         {%- if section.settings.collection.products.size > 0 -%}
           {% assign lazy_load = false %}
@@ -188,12 +187,6 @@
 
     {%- if section.settings.show_view_all and more_in_collection -%}
       <div class="center collection__view-all{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
-        {%- assign view_all_type = 'primary' -%}
-        {%- if section.settings.view_all_style == 'outline' -%}
-          {%- assign view_all_type = 'secondary' -%}
-        {%- elsif section.settings.view_all_style == 'link' -%}
-          {%- assign view_all_type = 'ghost' -%}
-        {%- endif -%}
 
         {% render 'component-button',
           text: 'sections.featured_collection.view_all' | t,

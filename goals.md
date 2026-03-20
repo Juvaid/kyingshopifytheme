@@ -12,4 +12,4 @@
 
 ## Future Tasks
 - [x] Production Integration of Components (Global replacement of Dawn cards) <!-- id: 12 -->
-- [/] Final User Review and Polish <!-- id: 3 -->
+- [x] Final User Review and Polish <!-- id: 3 -->
