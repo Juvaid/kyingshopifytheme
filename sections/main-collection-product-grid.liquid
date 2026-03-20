@@ -37,65 +37,7 @@
 {%- endstyle -%}
 
 <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
-  {%- paginate collection.products by section.settings.products_per_page -%}
-    {% comment %} Sort is the first tabbable element when filter type is vertical {% endcomment %}
-    {%- if section.settings.enable_sorting and section.settings.filter_type == 'vertical' -%}
-      <facet-filters-form class="facets facets-vertical-sort page-width small-hide">
-        <form class="facets-vertical-form" id="FacetSortForm">
-          <div class="facet-filters sorting caption">
-            <div class="facet-filters__field">
-              <h2 class="facet-filters__label caption-large text-body">
-                <label for="SortBy">{{ 'products.facets.sort_by_label' | t }}</label>
-              </h2>
-              <div class="select">
-                {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
-                <select
-                  name="sort_by"
-                  class="facet-filters__sort select__select caption-large"
-                  id="SortBy"
-                  aria-describedby="a11y-refresh-page-message"
-                >
-                  {%- for option in collection.sort_options -%}
-                    <option
-                      value="{{ option.value | escape }}"
-                      {% if option.value == sort_by %}
-                        selected="selected"
-                      {% endif %}
-                    >
-                      {{ option.name | escape }}
-                    </option>
-                  {%- endfor -%}
-                </select>
-                <span class="svg-wrapper">
-                  {{- 'icon-caret.svg' | inline_asset_content -}}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="product-count-vertical light" role="status">
-            <h2 class="product-count__text text-body">
-              <span id="ProductCountDesktop">
-                {%- if collection.results_count -%}
-                  {{
-                    'templates.search.results_with_count'
-                    | t: terms: collection.terms, count: collection.results_count
-                  }}
-                {%- elsif collection.products_count == collection.all_products_count -%}
-                  {{ 'products.facets.product_count_simple' | t: count: collection.products_count }}
-                {%- else -%}
-                  {{
-                    'products.facets.product_count'
-                    | t: product_count: collection.products_count, count: collection.all_products_count
-                  }}
-                {%- endif -%}
-              </span>
-            </h2>
-            {%- render 'loading-spinner' -%}
-          </div>
-        </form>
-      </facet-filters-form>
-    {%- endif -%}
+  {%- paginate collection.products by 240 -%}
 
     <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical page-width{% endif %}">
       {{ 'component-facets.css' | asset_url | stylesheet_tag }}
@@ -143,6 +85,52 @@
             class="collection{% if section.settings.filter_type != 'vertical' %} page-width{% endif %}"
           >
             <div class="loading-overlay gradient"></div>
+            {%- if section.settings.grid_banner_image != blank -%}
+              <div class="collection-grid-banner{% if section.settings.grid_banner_height_mode == 'adapt' %} collection-grid-banner--adapt{% endif %}" style="
+                --banner-height-desktop: {{ section.settings.grid_banner_height_desktop }}px;
+                --banner-height-mobile: {{ section.settings.grid_banner_height_mobile }}px;
+                --banner-radius: {{ section.settings.grid_banner_radius }}px;
+                --banner-margin-bottom: {{ section.settings.grid_banner_margin_bottom }}px;
+              ">
+                {%- if section.settings.grid_banner_link != blank -%}
+                  <a href="{{ section.settings.grid_banner_link }}" class="collection-grid-banner__link">
+                {%- endif -%}
+                <div class="collection-grid-banner__image-wrapper{% if section.settings.grid_banner_height_mode != 'adapt' %} media media--transparent{% endif %}">
+                  <picture>
+                    {%- if section.settings.grid_banner_image_mobile != blank -%}
+                      <source
+                        media="(max-width: 749px)"
+                        srcset="
+                          {{ section.settings.grid_banner_image_mobile | image_url: width: 375 }} 375w,
+                          {{ section.settings.grid_banner_image_mobile | image_url: width: 750 }} 750w
+                        "
+                        sizes="100vw"
+                      >
+                    {%- endif -%}
+                    <img
+                      srcset="
+                        {%- if section.settings.grid_banner_image.width >= 165 -%}{{ section.settings.grid_banner_image | image_url: width: 165 }} 165w,{%- endif -%}
+                        {%- if section.settings.grid_banner_image.width >= 360 -%}{{ section.settings.grid_banner_image | image_url: width: 360 }} 360w,{%- endif -%}
+                        {%- if section.settings.grid_banner_image.width >= 535 -%}{{ section.settings.grid_banner_image | image_url: width: 535 }} 535w,{%- endif -%}
+                        {%- if section.settings.grid_banner_image.width >= 750 -%}{{ section.settings.grid_banner_image | image_url: width: 750 }} 750w,{%- endif -%}
+                        {%- if section.settings.grid_banner_image.width >= 1070 -%}{{ section.settings.grid_banner_image | image_url: width: 1070 }} 1070w,{%- endif -%}
+                        {%- if section.settings.grid_banner_image.width >= 1500 -%}{{ section.settings.grid_banner_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+                        {{ section.settings.grid_banner_image | image_url }} {{ section.settings.grid_banner_image.width }}w
+                      "
+                      src="{{ section.settings.grid_banner_image | image_url: width: 1500 }}"
+                      sizes="(min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 330 }}px, (min-width: 750px) calc(100vw - 35rem), calc(100vw - 3rem)"
+                      alt="{{ section.settings.grid_banner_image.alt | escape }}"
+                      loading="lazy"
+                      width="{{ section.settings.grid_banner_image.width }}"
+                      height="{{ section.settings.grid_banner_image.height }}"
+                    >
+                  </picture>
+                </div>
+                {%- if section.settings.grid_banner_link != blank -%}
+                  </a>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
             <ul
               id="product-grid"
               data-id="{{ section.id }}"
@@ -359,7 +347,7 @@
           "label": "t:sections.main-collection-product-grid.settings.filter_type.options__3.label"
         }
       ],
-      "default": "horizontal",
+      "default": "vertical",
       "label": "t:sections.main-collection-product-grid.settings.filter_type.label"
     },
     {
@@ -367,6 +355,81 @@
       "id": "enable_sorting",
       "default": true,
       "label": "t:sections.main-collection-product-grid.settings.enable_sorting.label"
+    },
+    {
+      "type": "header",
+      "content": "Grid Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "grid_banner_image",
+      "label": "Banner Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "grid_banner_image_mobile",
+      "label": "Banner Image (Mobile)"
+    },
+    {
+      "type": "select",
+      "id": "grid_banner_height_mode",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to Image"
+        },
+        {
+          "value": "fixed",
+          "label": "Fixed Height"
+        }
+      ],
+      "default": "fixed",
+      "label": "Height Mode"
+    },
+    {
+      "type": "range",
+      "id": "grid_banner_height_desktop",
+      "min": 50,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Banner Height (Desktop)",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "grid_banner_height_mobile",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Banner Height (Mobile)",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "grid_banner_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Banner Border Radius",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "grid_banner_margin_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Space Below Banner",
+      "default": 30
+    },
+    {
+      "type": "url",
+      "id": "grid_banner_link",
+      "label": "Banner Link"
     },
     {
       "type": "header",

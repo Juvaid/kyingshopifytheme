@@ -1,0 +1,382 @@
+{%- style -%}
+  .review-section-{{ section.id }} {
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    perspective: 1000px;
+  }
+
+  .review-header-{{ section.id }} {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .review-header-{{ section.id }} h2 {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  
+  .review-aggregate-{{ section.id }} {
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+  .review-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, 1fr);
+    gap: {{ section.settings.gap }}px;
+    transform-style: preserve-3d;
+  }
+
+  .review-card-{{ section.id }} {
+    background: {{ section.settings.card_background }};
+    border-radius: {{ section.settings.border_radius }}px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 10px 30px -5px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden; 
+    transform-style: preserve-3d;
+    transition: transform 0.1s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  @keyframes saberSweep-{{ section.id }} {
+    0% { left: -150%; opacity: 0; }
+    20% { opacity: 1; }
+    100% { left: 150%; opacity: 0; }
+  }
+
+  .review-card-{{ section.id }}::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 100%; 
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-25deg);
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0; 
+  }
+
+  .review-card-{{ section.id }}:hover::after {
+    animation: saberSweep-{{ section.id }} 0.8s cubic-bezier(0.4, 0.0, 0.2, 1) forwards;
+  }
+
+  .review-card-{{ section.id }} .r-stars, 
+  .review-card-{{ section.id }} .r-title, 
+  .review-card-{{ section.id }} .r-body, 
+  .review-card-{{ section.id }} .r-footer {
+     transform: translateZ(20px); 
+     transition: transform 0.3s ease;
+  }
+  
+  .review-card-{{ section.id }} .r-stars { color: #FFB800; font-size: 18px; margin-bottom: 12px; letter-spacing: 2px; }
+  .review-card-{{ section.id }} .r-title { font-weight: 700; font-size: 18px; margin-bottom: 10px; color: #222; }
+  .review-card-{{ section.id }} .r-body { font-size: 15px; line-height: 1.6; color: #555; margin-bottom: 25px; flex-grow: 1; }
+  .review-card-{{ section.id }} .r-footer { display: flex; align-items: center; border-top: 1px solid #eee; padding-top: 20px; }
+
+  .review-card-{{ section.id }} .r-avatar {
+    width: 40px; height: 40px; background: #f0f0f0; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; color: #555; font-size: 16px; margin-right: 12px;
+    transform: translateZ(30px);
+  }
+
+  .review-card-{{ section.id }} .r-meta { display: flex; flex-direction: column; }
+  .review-card-{{ section.id }} .r-name { font-size: 14px; font-weight: 700; color: #222; }
+  .review-card-{{ section.id }} .r-verified { font-size: 12px; color: #23a559; display: flex; align-items: center; gap: 4px; margin-top: 3px; }
+
+  @media (max-width: 991px) {
+    .review-section-{{ section.id }} { padding: 40px 0; perspective: none; }
+    .review-header-{{ section.id }} { padding: 0 20px; }
+
+    .review-grid-{{ section.id }} {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 20px;
+      padding: 20px 20px 40px 20px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      transform-style: flat;
+    }
+    .review-grid-{{ section.id }}::-webkit-scrollbar { display: none; }
+
+    .review-card-{{ section.id }} {
+      min-width: 280px; max-width: 300px;
+      scroll-snap-align: center;
+      transform: none !important; 
+      transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    }
+    .review-card-{{ section.id }}:active { transform: scale(0.98) !important;}
+    .review-card-{{ section.id }} .r-stars, .r-title, .r-body, .r-footer, .r-avatar { transform: none !important; }
+  }
+{%- endstyle -%}
+
+<div class="review-section-{{ section.id }}" id="Reviews-{{ section.id }}">
+  <div class="review-header-{{ section.id }}">
+    <h2>{{ section.settings.heading }}</h2>
+    {%- if section.settings.show_aggregate -%}
+      <div class="review-aggregate-{{ section.id }}">
+        <span style="color:#FFB800">★★★★★</span> {{ section.settings.aggregate_text }}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="review-grid-{{ section.id }}" id="ReviewGrid-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      <div class="review-card-{{ section.id }} js-tilt-{{ section.id }}" {{ block.shopify_attributes }}>
+        <div class="r-stars">
+          {%- for i in (1..block.settings.rating) -%}★{%- endfor -%}
+          {%- assign remaining = 5 | minus: block.settings.rating -%}
+          {%- if remaining > 0 -%}
+            {%- for i in (1..remaining) -%}<span style="opacity: 0.2">★</span>{%- endfor -%}
+          {%- endif -%}
+        </div>
+        {%- if block.settings.title != blank -%}
+          <div class="r-title">{{ block.settings.title }}</div>
+        {%- endif -%}
+        <div class="r-body">{{ block.settings.body }}</div>
+        <div class="r-footer">
+          <div class="r-avatar">
+            {%- if block.settings.avatar_image != blank -%}
+              {{ block.settings.avatar_image | image_url: width: 80 | image_tag: loading: 'lazy', class: 'avatar-img' }}
+            {%- else -%}
+              {{ block.settings.name | slice: 0 }}
+            {%- endif -%}
+          </div>
+          <div class="r-meta">
+            <span class="r-name">{{ block.settings.name }}</span>
+            {%- if block.settings.verified -%}
+              <span class="r-verified">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                Verified Buyer
+              </span>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<script>
+  (function() {
+    function initTilt() {
+      if (window.innerWidth > 991) {
+        const cards = document.querySelectorAll('.js-tilt-{{ section.id }}');
+
+        cards.forEach(card => {
+          card.addEventListener('mousemove', handleMove);
+          card.addEventListener('mouseleave', handleLeave);
+          card.addEventListener('mouseenter', handleEnter);
+        });
+
+        function handleEnter(e) {
+          this.style.transition = 'none';
+          this.style.boxShadow = '0 20px 40px rgba(0,0,0,0.15)';
+        }
+
+        function handleMove(e) {
+          const card = this;
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -10;
+          const rotateY = ((x - centerX) / centerX) * 10;
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`;
+        }
+
+        function handleLeave(e) {
+          this.style.transition = 'transform 0.5s ease, box-shadow 0.3s ease';
+          this.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+          this.style.boxShadow = '0 10px 30px -5px rgba(0,0,0,0.1)';
+        }
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", initTilt);
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+      initTilt();
+    }
+
+    // Re-init on Shopify Section Load
+    document.addEventListener('shopify:section:load', function(event) {
+      if (event.detail.sectionId === '{{ section.id }}') {
+        initTilt();
+      }
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Review Block",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Loved by Customers"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 18,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Font Size",
+      "default": 26
+    },
+    {
+      "type": "checkbox",
+      "id": "show_aggregate",
+      "label": "Show Aggregate Rating",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "aggregate_text",
+      "label": "Aggregate Text",
+      "default": "4.9/5 based on 5,200+ reviews"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "label": "Columns Desktop",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between cards",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "label": "Card Border Radius",
+      "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Max Width",
+      "default": 1200
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "label": "Rating",
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Smells expensive!"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Review Content",
+          "default": "Honestly surprised by the longevity. I put it on in the morning and was still getting compliments at dinner. The packaging feels very premium too."
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Customer Name",
+          "default": "Amit S."
+        },
+        {
+          "type": "image_picker",
+          "id": "avatar_image",
+          "label": "Avatar Image (Optional)"
+        },
+        {
+          "type": "checkbox",
+          "id": "verified",
+          "label": "Verified Buyer",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Review Block",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review" },
+        { "type": "review" }
+      ]
+    }
+  ]
+}
+{% endschema %}

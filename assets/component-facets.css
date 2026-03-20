@@ -591,14 +591,21 @@ button.facets__button {
 
 span.active-facets__button-inner {
   color: rgb(var(--color-foreground));
-  box-shadow: 0 0 0 0.1rem rgb(var(--color-foreground));
-  border-radius: 2.6rem;
-  font-size: 1rem;
+  background: rgba(var(--color-foreground), 0.05);
+  border: 1px solid rgba(var(--color-foreground), 0.1);
+  border-radius: 2rem;
+  font-size: 1.2rem;
   min-height: 0;
   min-width: 0;
-  padding: 0.25rem 1.25rem;
+  padding: 0.6rem 1.4rem;
   display: flex;
   align-items: center;
+  transition: all var(--duration-short) ease;
+}
+
+span.active-facets__button-inner:hover {
+  background: rgba(var(--color-foreground), 0.1);
+  border-color: rgba(var(--color-foreground), 0.2);
 }
 
 span.active-facets__button-inner:before,
@@ -1139,20 +1146,33 @@ input.mobile-facets__checkbox {
     width: 26rem;
   }
 
-  .facets__disclosure-vertical {
-    border-top: 0.1rem solid rgba(var(--color-foreground), 0.1);
+  .facets-vertical .facets-wrapper {
+    padding-right: 5rem;
+    position: sticky;
+    top: 5rem;
+    align-self: start;
+    width: 28rem;
+  }
+
+  .facets-vertical .facets__disclosure-vertical {
+    border-top: 0.1rem solid rgba(var(--color-foreground), 0.08);
     margin-right: 0;
   }
 
   .facets-vertical .facets__summary {
-    padding-top: 1.5rem;
+    padding-top: 2rem;
     margin-bottom: 0;
-    padding-bottom: 1.5rem;
+    padding-bottom: 2rem;
+    font-weight: 500;
   }
 
-  .facets__heading--vertical {
+  .facets-vertical .facets__heading--vertical {
     margin: 0 0 1.5rem 0;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    line-height: normal;
   }
 
   .facets__header-vertical {
@@ -1179,24 +1199,181 @@ input.mobile-facets__checkbox {
   .facets-vertical-form {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .facet-filters__field {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .facet-filters__label {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+
+  .facet-filters__sort {
+    background: transparent;
+    border: 1px solid rgba(var(--color-foreground), 0.1) !important;
+    border-radius: 4px;
+    padding: 0.8rem 3.5rem 0.8rem 1.5rem;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all var(--duration-short) ease;
+  }
+
+  .facet-filters__sort:hover {
+    border-color: rgba(var(--color-foreground), 0.3) !important;
   }
 
   .product-count-vertical {
-    margin-left: 3.5rem;
+    margin: 0;
     position: relative;
+  }
+
+  .product-count__text {
+    font-size: 1.3rem;
+    color: rgba(var(--color-foreground), 0.6);
+  }
+
+  .facets-vertical-sort-sidebar {
+    padding: 0 0 1.5rem;
+    border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.1);
+    margin-bottom: 1.5rem;
+  }
+
+  .facets-vertical-sort-sidebar .facet-filters__field {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .facets-vertical-sort-sidebar .facets__heading--vertical {
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .facets-vertical-sort-sidebar .select {
+    width: 100%;
+  }
+
+  .facets-vertical-sort-sidebar .facet-filters__sort {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(var(--color-foreground), 0.1) !important;
+    border-radius: var(--buttons-radius);
+    padding: 1rem 3.5rem 1rem 1.5rem;
+    font-size: 1.4rem;
+    color: rgb(var(--color-foreground));
+  }
+
+  .product-count-sidebar {
+    margin-top: 1.5rem;
+  }
+
+  .product-count-sidebar .product-count__text {
+    font-size: 1.2rem;
+    color: rgba(var(--color-foreground), 0.5);
+    font-style: italic;
   }
 
   .facets-vertical .active-facets__button-wrapper {
     margin-bottom: 2rem;
   }
 
-  .facets-vertical .facets__price {
-    padding: 0.5rem 0.5rem 0.5rem 0;
+  .collection-grid-banner {
+    margin-bottom: var(--banner-margin-bottom, 3rem);
+    overflow: hidden;
+    border-radius: var(--banner-radius, 1.6rem);
+    box-shadow: var(--media-shadow-horizontal-offset) var(--media-shadow-vertical-offset) var(--media-shadow-blur-radius) rgba(var(--color-shadow), var(--media-shadow-opacity));
   }
 
-  .facets-vertical .facets__price .field:last-of-type {
-    margin-left: 1rem;
+  .collection-grid-banner__image-wrapper {
+    height: var(--banner-height-mobile, 12rem);
+    min-height: var(--banner-height-mobile, 12rem);
   }
+
+  .collection-grid-banner--adapt .collection-grid-banner__image-wrapper {
+    height: auto;
+    min-height: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .collection-grid-banner__image-wrapper {
+      height: var(--banner-height-desktop, 15rem);
+      min-height: var(--banner-height-desktop, 15rem);
+    }
+
+    .collection-grid-banner--adapt .collection-grid-banner__image-wrapper {
+      height: auto;
+      min-height: 0;
+    }
+  }
+
+  .collection-grid-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--duration-long) ease;
+  }
+
+  .collection-grid-banner--adapt .collection-grid-banner__image-wrapper {
+    height: auto;
+    min-height: 0;
+    position: relative;
+    width: 100%;
+  }
+
+  .collection-grid-banner--adapt img {
+    position: relative;
+    height: auto;
+    object-fit: contain;
+    top: auto;
+    left: auto;
+  }
+
+  .collection-grid-banner__link:hover img {
+    transform: scale(1.02);
+  }
+
+  .facets-vertical .facets__price {
+  padding: 1.5rem 0;
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+}
+
+.facets-vertical .facets__price .field {
+  flex: 1;
+}
+
+.facets-vertical .facet-checkbox {
+  padding: 0.8rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.4rem;
+  line-height: 1.4;
+  color: rgba(var(--color-foreground), 0.7);
+  transition: color var(--duration-short) ease;
+}
+
+.facets-vertical .facet-checkbox:hover {
+  color: rgb(var(--color-foreground));
+}
+
+.facets-vertical .facet-checkbox > svg {
+  margin-right: 0;
+}
 
   .facets-vertical .active-facets__button {
     margin-bottom: 1.5rem;

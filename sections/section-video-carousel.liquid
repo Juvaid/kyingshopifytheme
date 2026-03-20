@@ -1,0 +1,581 @@
+{%- style -%}
+  .carousel-section-{{ section.id }} {
+    background-color: {{ section.settings.background_color }}; 
+    width: 100%;
+    overflow: hidden;
+    padding-bottom: 40px; 
+    position: relative;
+    min-height: 400px; 
+  }
+
+  .carousel-header-{{ section.id }} {
+    text-align: center;
+    padding-bottom: 20px;
+    padding-top: 30px; 
+  }
+    
+  .carousel-title-{{ section.id }} {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: {{ section.settings.text_color }}; 
+    margin: 0;
+    position: relative;
+    display: inline-block;
+  }
+    
+  .carousel-title-{{ section.id }}::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: {{ section.settings.text_color }}; 
+    margin: 8px auto 0;
+    border-radius: 2px;
+  }
+
+  .story-carousel-{{ section.id }} {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory; 
+    padding: 0 20px;
+    gap: 15px; 
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+  .story-carousel-{{ section.id }}::-webkit-scrollbar { display: none; }
+
+  @media (min-width: 1024px) {
+    .story-carousel-{{ section.id }} { justify-content: center; }
+  }
+
+  .video-card-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 auto;
+    width: {{ section.settings.card_width }}px; 
+    scroll-snap-align: start; 
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.1); 
+    cursor: pointer; 
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .video-card-{{ section.id }}:active { transform: scale(0.98); }
+
+  .card-media-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    padding-bottom: 150%; 
+    background: #000;
+  }
+    
+  .card-media-{{ section.id }} video {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0; 
+    transition: opacity 0.5s ease;
+  }
+    
+  .card-media-{{ section.id }} video.playing { opacity: 1; }
+
+  .card-mini-info-{{ section.id }} {
+    padding: 10px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    height: 64px;
+  }
+    
+  .mini-thumb-{{ section.id }} { width: 44px; height: 44px; border-radius: 5px; object-fit: cover; }
+  
+  .mini-text-{{ section.id }} { 
+    display: flex; 
+    flex-direction: column; 
+    font-size: 13px;
+    line-height: 1.2; 
+    justify-content: center;
+    text-align: left;
+  }
+  
+  .mini-title-{{ section.id }} { font-weight: 700; color: #000; }
+
+  .mini-badge-{{ section.id }} { 
+    margin-left: auto; 
+    background: #242833; 
+    color: #fff; 
+    font-size: 11px; 
+    font-weight: 800; 
+    padding: 4px 8px; 
+    border-radius: 4px; 
+    position: relative;
+    overflow: hidden; 
+    z-index: 1;
+    white-space: nowrap;
+  }
+
+  .mini-badge-{{ section.id }}::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-20deg) translateX(-150%);
+    animation: reelSaber-{{ section.id }} 3s infinite; 
+    z-index: 2;
+  }
+
+  @keyframes reelSaber-{{ section.id }} { 
+    0% { transform: translateX(-150%) skewX(-20deg); } 
+    20% { transform: translateX(250%) skewX(-20deg); } 
+    100% { transform: translateX(250%) skewX(-20deg); } 
+  }
+
+  /* 4. THE POP-UP MODAL - GLOBAL (Shared but namespaced classes) */
+  .v-modal-overlay-{{ section.id }} {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); 
+    backdrop-filter: blur(8px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .v-modal-overlay-{{ section.id }}.open { opacity: 1; pointer-events: auto; }
+
+  .modal-content-{{ section.id }} {
+    width: 90%;
+    max-width: 380px; 
+    background: transparent;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  }
+
+  .v-modal-overlay-{{ section.id }}.open .modal-content-{{ section.id }} { transform: translateY(0); }
+
+  .modal-video-wrapper-{{ section.id }} {
+    width: 100%;
+    position: relative;
+    padding-bottom: 125%; 
+    background: #000;
+  }
+    
+  .modal-video-wrapper-{{ section.id }} video {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover;
+  }
+
+  .modal-product-box-{{ section.id }} {
+    background: #fff;
+    padding: 15px;
+    border-radius: 0 0 20px 20px; 
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .modal-info-row-{{ section.id }} { display: flex; gap: 12px; align-items: center; }
+  .modal-thumb-{{ section.id }} { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; border: 1px solid #eee; }
+  .modal-text-group-{{ section.id }} { display: flex; flex-direction: column; justify-content: center; text-align: left; }
+  .modal-title-{{ section.id }} { font-weight: 700; font-size: 15px; color: #000; margin-bottom: 4px; }
+  
+  .modal-badge-{{ section.id }} { 
+    background: #eee; 
+    font-size: 11px; 
+    padding: 3px 8px; 
+    border-radius: 4px; 
+    font-weight: 700; 
+    color: #333;
+    display: inline-block;
+  }
+
+  .modal-atc-btn-{{ section.id }} {
+    width: 100%;
+    background: #242833;
+    color: #fff;
+    border: none;
+    padding: 14px;
+    font-size: 14px;
+    font-weight: 800;
+    text-transform: uppercase;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 0.5px;
+    transition: background 0.3s;
+  }
+  .modal-atc-btn-{{ section.id }}.adding { background: #555; cursor: wait; }
+  .modal-atc-btn-{{ section.id }}.added { background: #28a745; cursor: default; }
+
+  .modal-nav-{{ section.id }} {
+    position: absolute;
+    top: 40%;
+    transform: translateY(-50%);
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s;
+  }
+  .modal-nav-{{ section.id }}:hover { background: rgba(255,255,255,0.4); }
+  .modal-nav-{{ section.id }} svg { fill: #fff; width: 20px; height: 20px; }
+  .modal-prev-{{ section.id }} { left: 10px; }
+  .modal-next-{{ section.id }} { right: 10px; }
+
+  .modal-close-{{ section.id }} {
+    position: absolute;
+    top: 15px; right: 15px;
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 20;
+  }
+{%- endstyle -%}
+
+<div class="carousel-section-{{ section.id }}">
+  <div class="carousel-header-{{ section.id }}">
+    <h2 class="carousel-title-{{ section.id }}">{{ section.settings.heading }}</h2>
+  </div>
+
+  <div class="story-carousel-{{ section.id }}" id="InfiniteCarousel-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      {%- assign product = block.settings.product -%}
+      <div class="video-card-{{ section.id }}" onclick="openModal{{ section.id | replace: '-', '_' }}({{ forloop.index0 }})" {{ block.shopify_attributes }}>
+        <div class="card-media-{{ section.id }}">
+          <video class="lazy-video-{{ section.id }}" data-src="{{ block.settings.video_url }}" poster="{{ block.settings.poster_image | image_url: width: 600 }}" muted loop playsinline preload="none"></video>
+        </div>
+        <div class="card-mini-info-{{ section.id }}">
+          <img 
+            src="{{ block.settings.thumb_image | default: block.settings.poster_image | default: product.featured_image | image_url: width: 100 }}" 
+            class="mini-thumb-{{ section.id }}" 
+            loading="lazy" 
+            width="44" 
+            height="44"
+          >
+          <div class="mini-text-{{ section.id }}">
+            <span class="mini-title-{{ section.id }}">{{ block.settings.title | default: product.title }}</span>
+          </div>
+          {%- if block.settings.discount != blank -%}
+            <div class="mini-badge-{{ section.id }}">{{ block.settings.discount }}</div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<div class="v-modal-overlay-{{ section.id }}" id="VideoModal-{{ section.id }}">
+  <div class="modal-content-{{ section.id }}">
+    <div class="modal-close-{{ section.id }}" onclick="closeModal{{ section.id | replace: '-', '_' }}()">&times;</div>
+      
+    <div class="modal-nav-{{ section.id }} modal-prev-{{ section.id }}" onclick="changeVideo{{ section.id | replace: '-', '_' }}(-1)">
+      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+    </div>
+    <div class="modal-nav-{{ section.id }} modal-next-{{ section.id }}" onclick="changeVideo{{ section.id | replace: '-', '_' }}(1)">
+      <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+    </div>
+
+    <div class="modal-video-wrapper-{{ section.id }}">
+      <video id="ModalVideo-{{ section.id }}" loop playsinline autoplay muted></video>
+    </div>
+      
+    <div class="modal-product-box-{{ section.id }}">
+      <div class="modal-info-row-{{ section.id }}">
+        <img id="ModalThumb-{{ section.id }}" src="" class="modal-thumb-{{ section.id }}" width="50" height="50" loading="lazy">
+        <div class="modal-text-group-{{ section.id }}">
+          <div class="modal-title-{{ section.id }}" id="ModalTitle-{{ section.id }}">Product Name</div>
+          <span class="modal-badge-{{ section.id }}" id="ModalDiscount-{{ section.id }}">33% OFF</span>
+        </div>
+      </div>
+      <button class="modal-atc-btn-{{ section.id }}" id="ModalAtcBtn-{{ section.id }}">ADD TO CART</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const mediaData{{ section.id | replace: '-', '_' }} = [
+      {%- for block in section.blocks -%}
+        {%- assign product = block.settings.product -%}
+        { 
+          video: "{{ block.settings.video_url }}", 
+          poster: "{{ block.settings.poster_image | image_url: width: 800 }}",
+          title: "{{ block.settings.title | default: product.title | escape }}",
+          discount: "{{ block.settings.discount | escape }}",
+          thumb: "{{ block.settings.thumb_image | default: block.settings.poster_image | default: product.featured_image | image_url: width: 200 }}",
+          product_url: "{{ product.url }}",
+          variant_id: "{{ product.selected_or_first_available_variant.id }}"
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ];
+
+    let currentModalIndex{{ section.id | replace: '-', '_' }} = 0;
+    let autoScrollInterval{{ section.id | replace: '-', '_' }};
+
+    function startAutoScroll() {
+      const carousel = document.getElementById('InfiniteCarousel-{{ section.id }}');
+      const cardWidth = {{ section.settings.card_width }} + 15; 
+      if (autoScrollInterval{{ section.id | replace: '-', '_' }}) clearInterval(autoScrollInterval{{ section.id | replace: '-', '_' }});
+
+      autoScrollInterval{{ section.id | replace: '-', '_' }} = setInterval(() => {
+        if(window.getComputedStyle(document.getElementById('VideoModal-{{ section.id }}')).opacity > 0) return;
+        const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+        if (carousel.scrollLeft >= maxScroll - 50) {
+          carousel.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          carousel.scrollBy({ left: cardWidth, behavior: 'smooth' });
+        }
+      }, {{ section.settings.auto_scroll_speed }} * 1000); 
+    }
+
+    function initObserver() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          const video = entry.target;
+          if (entry.isIntersecting) {
+            if(!video.src && video.dataset.src) {
+               video.src = video.dataset.src;
+               video.load();
+            }
+            if(video.paused) {
+              video.play().then(() => {
+                video.classList.add('playing'); 
+              }).catch(() => {});
+            }
+          } else {
+            if(!video.paused) {
+               video.pause();
+               video.classList.remove('playing');
+            }
+          }
+        });
+      }, { root: null, threshold: 0.5 });
+
+      const videos = document.querySelectorAll('.lazy-video-{{ section.id }}');
+      videos.forEach(v => observer.observe(v));
+    }
+
+    window.openModal{{ section.id | replace: '-', '_' }} = function(index) {
+      currentModalIndex{{ section.id | replace: '-', '_' }} = index;
+      loadModalData(index);
+      document.getElementById('VideoModal-{{ section.id }}').classList.add('open');
+      document.body.style.overflow = 'hidden';
+      clearInterval(autoScrollInterval{{ section.id | replace: '-', '_' }});
+    };
+
+    function loadModalData(index) {
+      const data = mediaData{{ section.id | replace: '-', '_' }}[index];
+      const v = document.getElementById('ModalVideo-{{ section.id }}');
+
+      v.src = data.video;
+      v.poster = data.poster;
+      document.getElementById('ModalThumb-{{ section.id }}').src = data.thumb;
+      document.getElementById('ModalTitle-{{ section.id }}').innerText = data.title;
+      document.getElementById('ModalDiscount-{{ section.id }}').innerText = data.discount;
+      if (!data.discount) document.getElementById('ModalDiscount-{{ section.id }}').style.display = 'none';
+      else document.getElementById('ModalDiscount-{{ section.id }}').style.display = 'inline-block';
+        
+      v.muted = false; 
+      v.currentTime = 0;
+      v.play();
+
+      const btn = document.getElementById('ModalAtcBtn-{{ section.id }}');
+      btn.innerText = "ADD TO CART";
+      btn.classList.remove('added', 'adding');
+        
+      btn.onclick = async function() {
+        if(!data.variant_id) {
+          window.location.href = data.product_url;
+          return;
+        }
+         
+        btn.innerText = "ADDING...";
+        btn.classList.add('adding');
+
+        try {
+          const response = await fetch(window.Shopify.routes.root + 'cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: [{ id: data.variant_id, quantity: 1 }] })
+          });
+
+          if(response.ok) {
+             btn.innerText = "ADDED!";
+             btn.classList.remove('adding');
+             btn.classList.add('added');
+             // Dispatch cart update event for theme modules
+             document.documentElement.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+          } else {
+             window.location.href = data.product_url; 
+          }
+        } catch (err) {
+          window.location.href = data.product_url;
+        }
+      };
+    }
+
+    window.changeVideo{{ section.id | replace: '-', '_' }} = function(direction) {
+      currentModalIndex{{ section.id | replace: '-', '_' }} += direction;
+      const len = mediaData{{ section.id | replace: '-', '_' }}.length;
+      if (currentModalIndex{{ section.id | replace: '-', '_' }} < 0) currentModalIndex{{ section.id | replace: '-', '_' }} = len - 1;
+      if (currentModalIndex{{ section.id | replace: '-', '_' }} >= len) currentModalIndex{{ section.id | replace: '-', '_' }} = 0;
+      loadModalData(currentModalIndex{{ section.id | replace: '-', '_' }});
+    };
+
+    window.closeModal{{ section.id | replace: '-', '_' }} = function() {
+      document.getElementById('VideoModal-{{ section.id }}').classList.remove('open');
+      document.getElementById('ModalVideo-{{ section.id }}').pause();
+      document.body.style.overflow = '';
+      startAutoScroll();
+    };
+
+    document.getElementById('VideoModal-{{ section.id }}').addEventListener('click', function(e) {
+      if (e.target === this) closeModal{{ section.id | replace: '-', '_' }}();
+    });
+
+    document.addEventListener("DOMContentLoaded", function() {
+      initObserver(); 
+      startAutoScroll();
+    });
+
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+       initObserver(); 
+       startAutoScroll();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Video Carousel",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "WATCH & BUY"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 18,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Font Size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#242833"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Heading Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "card_width",
+      "min": 150,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Card Width",
+      "default": 220
+    },
+    {
+      "type": "range",
+      "id": "auto_scroll_speed",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "unit": "s",
+      "label": "Auto-scroll Interval",
+      "default": 6
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video_item",
+      "name": "Video Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Video URL (.mp4 or .webm)",
+          "info": "Upload to Shopify Files and paste the URL here."
+        },
+        {
+          "type": "image_picker",
+          "id": "poster_image",
+          "label": "Poster Image"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Linked Product"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom Title (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "discount",
+          "label": "Discount Badge Text",
+          "default": "33% OFF"
+        },
+        {
+          "type": "image_picker",
+          "id": "thumb_image",
+          "label": "Mini Thumbnail (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Carousel",
+      "blocks": [
+        { "type": "video_item" },
+        { "type": "video_item" },
+        { "type": "video_item" }
+      ]
+    }
+  ]
+}
+{% endschema %}

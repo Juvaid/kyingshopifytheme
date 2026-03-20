@@ -1,0 +1,237 @@
+{%- style -%}
+  .collection-section-{{ section.id }} {
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+    background: {{ section.settings.background_color }};
+  }
+
+  .collection-list-{{ section.id }} {
+    display: flex;
+    gap: {{ section.settings.gap }}px;
+    justify-content: center;
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .collection-item-{{ section.id }} {
+    position: relative;
+    flex: 1;
+    text-decoration: none;
+    overflow: hidden;
+    border-radius: {{ section.settings.border_radius }}px;
+    display: flex; 
+    flex-direction: column;
+    aspect-ratio: 1 / 1; 
+  }
+
+  .collection-item-{{ section.id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .collection-item-{{ section.id }}:hover img {
+    transform: scale(1.08);
+  }
+
+  .collection-text-{{ section.id }} {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 60px 20px 25px 20px; 
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    box-sizing: border-box;
+    text-align: left;
+    z-index: 2;
+  }
+
+  .collection-text-{{ section.id }} h3 {
+    margin: 0;
+    color: #FFFFFF; 
+    font-size: {{ section.settings.font_size }}px; 
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5); 
+    white-space: nowrap;
+  }
+
+  .collection-text-{{ section.id }} h3::after {
+    content: '→';
+    margin-left: 8px;
+    font-size: 1.1em;
+    transition: margin-left 0.3s ease;
+  }
+
+  .collection-item-{{ section.id }}:hover h3::after {
+    margin-left: 15px;
+  }
+
+  @media (max-width: 900px) {
+    .collection-list-{{ section.id }} {
+      flex-wrap: wrap;
+    }
+    .collection-item-{{ section.id }} {
+      flex: 1 1 calc(50% - {{ section.settings.gap | divided_by: 2 }}px); 
+      aspect-ratio: 1 / 1; 
+    }
+  }
+
+  @media (max-width: 600px) {
+    .collection-item-{{ section.id }} {
+      flex: 1 1 100%; 
+      aspect-ratio: auto; 
+      height: {{ section.settings.mobile_height }}px;
+    }
+    .collection-text-{{ section.id }} h3 {
+      font-size: 20px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="collection-section-{{ section.id }}">
+  <div class="collection-list-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      {%- assign collection = block.settings.collection -%}
+      {%- assign image = block.settings.image | default: collection.featured_image -%}
+      
+      <a href="{{ collection.url | default: '#' }}" class="collection-item-{{ section.id }}" {{ block.shopify_attributes }}>
+        {%- if image != blank -%}
+          {{ image | image_url: width: 800 | image_tag: loading: 'lazy', alt: block.settings.title | default: collection.title }}
+        {%- else -%}
+          {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        {%- endif -%}
+        
+        <div class="collection-text-{{ section.id }}">
+          <h3>{{ block.settings.title | default: collection.title | default: "Collection" }}</h3>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection List Square",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "transparent"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Max Width",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between items",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border Radius",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop Font Size",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "min": 150,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile Item Height",
+      "default": 250
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Custom Image (Optional)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Custom Title (Optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection List Square",
+      "blocks": [
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" },
+        { "type": "collection" }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,264 @@
+{%- style -%}
+  .shop-by-notes-{{ section.id }} {
+    padding: {{ section.settings.padding_top_sbn }}px 0 {{ section.settings.padding_bottom_sbn }}px 0;
+    /* Specific background color to match your 'Oye Hoye' theme */
+    background-color: {{ section.settings.background_color }}; 
+    text-align: center;
+    width: 100%;
+  }
+
+  /* Title Styling */
+  .sbn-title-{{ section.id }} {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+    display: inline-block;
+  }
+    
+  /* The Grid Layout */
+  .sbn-grid-{{ section.id }} {
+    display: flex;
+    justify-content: center;
+    gap: {{ section.settings.gap }}px;
+    flex-wrap: wrap;
+    max-width: {{ section.settings.max_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* Individual Note Item */
+  .sbn-item-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    width: {{ section.settings.item_width }}px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    position: relative;
+    color: inherit; 
+  }
+    
+  .sbn-item-{{ section.id }}:hover {
+    transform: translateY(-5px);
+  }
+
+  /* Circular Image Wrapper */
+  .sbn-circle-{{ section.id }} {
+    width: {{ section.settings.item_width }}px;
+    height: {{ section.settings.item_width }}px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.04); 
+    margin-bottom: 12px;
+    border: 1px solid rgba(0,0,0,0.05); 
+    position: relative;
+  }
+    
+  .sbn-circle-{{ section.id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    position: relative;
+    z-index: 1;
+  }
+    
+  .sbn-item-{{ section.id }}:hover .sbn-circle-{{ section.id }} img {
+    transform: scale(1.1);
+  }
+
+  @keyframes saberSweep-{{ section.id }} {
+    0% { left: -100%; opacity: 0; }
+    20% { opacity: 1; }
+    100% { left: 150%; opacity: 0; }
+  }
+
+  .sbn-circle-{{ section.id }}::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%; 
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
+    transform: skewX(-25deg);
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0; 
+  }
+
+  .sbn-item-{{ section.id }}:hover .sbn-circle-{{ section.id }}::after {
+    animation: saberSweep-{{ section.id }} 0.7s ease forwards;
+  }
+
+  .sbn-label-{{ section.id }} {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: inherit; 
+  }
+
+  /* --- MOBILE OPTIMIZATION --- */
+  @media (max-width: 768px) {
+    .shop-by-notes-{{ section.id }} { padding: 10px 0 20px 0; }
+    
+    .sbn-grid-{{ section.id }} {
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding: 10px 20px 30px 20px;
+      gap: 20px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .sbn-grid-{{ section.id }}::-webkit-scrollbar { display: none; }
+     
+    .sbn-item-{{ section.id }} { flex: 0 0 auto; width: 85px; }
+    .sbn-circle-{{ section.id }} { width: 85px; height: 85px; }
+  }
+{%- endstyle -%}
+
+<div class="shop-by-notes-{{ section.id }}">
+  {%- if section.settings.title != blank -%}
+    <h2 class="sbn-title-{{ section.id }}">{{ section.settings.title }}</h2>
+  {%- endif -%}
+
+  <div class="sbn-grid-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      <a href="{{ block.settings.link | default: '#' }}" class="sbn-item-{{ section.id }}" {{ block.shopify_attributes }}>
+        <div class="sbn-circle-{{ section.id }}">
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 180 | image_tag: loading: 'lazy', width: 90, height: 90 }}
+          {%- else -%}
+             {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+        <span class="sbn-label-{{ section.id }}">{{ block.settings.label }}</span>
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Shop By Notes",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "SHOP BY NOTES"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "min": 18,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "label": "Heading Font Size",
+      "default": 22
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#FDF5F0"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "label": "Max Width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Gap between items",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "item_width",
+      "min": 60,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "label": "Item Circle Size (Desktop)",
+      "default": 90
+    },
+    {
+      "type": "header",
+      "content": "Section Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_sbn",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_sbn",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 32
+    }
+  ],
+  "blocks": [
+    {
+      "type": "note",
+      "name": "Note",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Oud"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop By Notes",
+      "blocks": [
+        { "type": "note" },
+        { "type": "note" },
+        { "type": "note" },
+        { "type": "note" },
+        { "type": "note" }
+      ]
+    }
+  ]
+}
+{% endschema %}

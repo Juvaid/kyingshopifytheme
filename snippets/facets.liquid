@@ -53,6 +53,58 @@
                 {{ 'products.facets.filter_by_label' | t }}
               </h2>
             {%- endif -%}
+            {% comment %} Sorting and Product Count for Vertical Layout {% endcomment %}
+            {%- if filter_type == 'vertical' and enable_sorting -%}
+              <div class="facets-vertical-sort-sidebar small-hide">
+                <div class="facet-filters sorting caption">
+                  <div class="facet-filters__field">
+                    <h2 class="facets__heading facets__heading--vertical caption-large text-body">
+                      <label for="SortBy">{{ 'products.facets.sort_by_label' | t }}</label>
+                    </h2>
+                    <div class="select">
+                      <select
+                        name="sort_by"
+                        class="facet-filters__sort select__select caption-large"
+                        id="SortBy"
+                        aria-describedby="a11y-refresh-page-message"
+                      >
+                        {%- for option in results.sort_options -%}
+                          <option
+                            value="{{ option.value | escape }}"
+                            {% if option.value == sort_by %}
+                              selected="selected"
+                            {% endif %}
+                          >
+                            {{ option.name | escape }}
+                          </option>
+                        {%- endfor -%}
+                      </select>
+                      <span class="svg-wrapper">
+                        {{- 'icon-caret.svg' | inline_asset_content -}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="product-count-sidebar light" role="status">
+                  <h2 class="product-count__text text-body">
+                    <span id="ProductCountDesktop">
+                      {%- if results.results_count -%}
+                        {{ 'templates.search.results_with_count' | t: terms: results.terms, count: results.results_count }}
+                      {%- elsif results.products_count == results.all_products_count -%}
+                        {{ 'products.facets.product_count_simple' | t: count: results.products_count }}
+                      {%- else -%}
+                        {{
+                          'products.facets.product_count'
+                          | t: product_count: results.products_count, count: results.all_products_count
+                        }}
+                      {%- endif -%}
+                    </span>
+                  </h2>
+                </div>
+              </div>
+            {%- endif -%}
+
             {% comment %} Pills are right below the title for filter type vertical {% endcomment %}
             {%- if filter_type == 'vertical' -%}
               <div class="active-facets active-facets-desktop">
