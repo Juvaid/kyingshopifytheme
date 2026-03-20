@@ -1,0 +1,49 @@
+{% comment %}
+  GENERIC CARD COMPONENT
+  
+  A reusable card wrapper for testimonials, feature blocks, etc.
+  
+  Design Reference: docs/kying-design-system.md > Components > Cards
+  
+  Params:
+  - class: Additional CSS classes
+  - content: The HTML/Liquid content to be displayed inside the card
+  
+  Usage:
+  {% capture card_body %}
+    <h3>Testimonial</h3>
+    <p>"Amazing product!"</p>
+  {% endcapture %}
+  {% render 'component-card', class: 'testimonial-card', content: card_body %}
+{% endcomment %}
+
+<div class="card {{ class }}">
+  {{ content }}
+</div>
+
+<style>
+  /* ============================================
+     CARD COMPONENT STYLES
+     Design Token Reference: design-tokens.css
+     ============================================ */
+
+  .card {
+    background-color: var(--color-white);
+    border: var(--border-width-sm) solid var(--color-gray-medium);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-standard);
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 640px) {
+    .card {
+      padding: var(--spacing-md);
+    }
+  }
+</style>

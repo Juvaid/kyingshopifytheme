@@ -103,6 +103,20 @@
     </div>
     <!-- END TEST -->
 
+    <!-- TESTING CARD COMPONENT -->
+    <div style="padding: 20px; background: #f9f8f6; margin: 20px;">
+      <h3 style="margin-top: 0;">Card Component Test</h3>
+      <div style="max-width: 400px;">
+        {% capture card_content %}
+          <h4 style="margin-top: 0;">Test Card</h4>
+          <p>"This is a reusable card component test content. It should have a subtle shadow and hover effect."</p>
+          {% render 'component-button', text: 'Card Action', type: 'secondary' %}
+        {% endcapture %}
+        {% render 'component-card', content: card_content %}
+      </div>
+    </div>
+    <!-- END TEST -->
+
     <slider-component class="slider-mobile-gutter{% if section.settings.full_width %} slider-component-full-width{% endif %}{% if show_mobile_slider == false %} page-width{% endif %}{% if show_desktop_slider == false and section.settings.full_width == false %} page-width-desktop{% endif %}{% if show_desktop_slider %} slider-component-desktop{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
       <ul
         id="Slider-{{ section.id }}"
