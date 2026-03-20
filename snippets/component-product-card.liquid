@@ -16,6 +16,9 @@
 {% assign show_quick_add = show_quick_add | default: true %}
 
 <article class="product-card">
+  <a href="{{ product.url | default: '#' }}" class="product-card__link" aria-label="{{ product.title | escape }}">
+    <span class="visually-hidden">{{ product.title }}</span>
+  </a>
   
   {%- if product.featured_image -%}
     <div class="product-card__image-wrapper">
@@ -91,6 +94,7 @@
      ============================================ */
 
   .product-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     background: var(--color-white);
@@ -101,9 +105,19 @@
     height: 100%;
   }
 
-  .product-card:hover {
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+  .product-card__link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .product-card__cta {
+    position: relative;
+    z-index: 2;
+    margin-top: var(--spacing-md);
   }
 
   /* Image */
