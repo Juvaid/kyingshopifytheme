@@ -211,21 +211,45 @@
               <div class="grid-banner-slide-{{ section.id }}{% if forloop.first %} active{% endif %}" {{ block.shopify_attributes }}>
                 <a href="{{ block.settings.link | default: '#' }}" class="grid-banner-link-{{ section.id }}">
                   {%- if block.settings.image != blank or block.settings.mobile_image != blank -%}
-                    {%- assign mobile_image = block.settings.mobile_image | default: block.settings.image -%}
-                    {%- assign desktop_image = block.settings.image | default: block.settings.mobile_image -%}
+                    {%- liquid
+                      assign mobile_image = block.settings.mobile_image | default: block.settings.image
+                      assign desktop_image = block.settings.image | default: block.settings.mobile_image
+                      assign loading_attr = 'lazy'
+                      assign fetch_priority = 'auto'
+                      if forloop.first
+                        assign loading_attr = 'eager'
+                        assign fetch_priority = 'high'
+                      endif
+                    -%}
                     <img 
-                      src="{{ desktop_image | image_url: width: 2000 }}" 
+                      srcset="{%- if desktop_image.width >= 375 -%}{{ desktop_image | image_url: width: 375 }} 375w,{%- endif -%}
+                        {%- if desktop_image.width >= 550 -%}{{ desktop_image | image_url: width: 550 }} 550w,{%- endif -%}
+                        {%- if desktop_image.width >= 750 -%}{{ desktop_image | image_url: width: 750 }} 750w,{%- endif -%}
+                        {%- if desktop_image.width >= 1100 -%}{{ desktop_image | image_url: width: 1100 }} 1100w,{%- endif -%}
+                        {%- if desktop_image.width >= 1500 -%}{{ desktop_image | image_url: width: 1500 }} 1500w,{%- endif -%}
+                        {%- if desktop_image.width >= 1780 -%}{{ desktop_image | image_url: width: 1780 }} 1780w,{%- endif -%}
+                        {%- if desktop_image.width >= 2000 -%}{{ desktop_image | image_url: width: 2000 }} 2000w,{%- endif -%}
+                        {{ desktop_image | image_url }} {{ desktop_image.width }}w"
+                      src="{{ desktop_image | image_url: width: 1500 }}" 
+                      sizes="(min-width: 1400px) 1400px, 100vw"
                       alt="{{ desktop_image.alt | escape }}" 
                       class="desktop-only-{{ section.id }}" 
-                      loading="lazy" 
+                      loading="{{ loading_attr }}"
+                      fetchpriority="{{ fetch_priority }}"
                       width="{{ desktop_image.width | default: 2000 }}" 
                       height="{{ desktop_image.height | default: 1000 }}"
                     >
                     <img 
-                      src="{{ mobile_image | image_url: width: 1000 }}" 
+                      srcset="{%- if mobile_image.width >= 375 -%}{{ mobile_image | image_url: width: 375 }} 375w,{%- endif -%}
+                        {%- if mobile_image.width >= 550 -%}{{ mobile_image | image_url: width: 550 }} 550w,{%- endif -%}
+                        {%- if mobile_image.width >= 750 -%}{{ mobile_image | image_url: width: 750 }} 750w,{%- endif -%}
+                        {{ mobile_image | image_url }} {{ mobile_image.width }}w"
+                      src="{{ mobile_image | image_url: width: 750 }}" 
+                      sizes="100vw"
                       alt="{{ mobile_image.alt | escape }}" 
                       class="mobile-only-{{ section.id }}" 
-                      loading="lazy" 
+                      loading="{{ loading_attr }}"
+                      fetchpriority="{{ fetch_priority }}"
                       width="{{ mobile_image.width | default: 1000 }}" 
                       height="{{ mobile_image.height | default: 1200 }}"
                     >
@@ -313,7 +337,21 @@
             startAutoPlay();
           }
 
-          startAutoPlay();
+          // Performance: Only autoplay when in view
+          if ('IntersectionObserver' in window) {
+            const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  startAutoPlay();
+                } else {
+                  clearInterval(autoPlayInterval);
+                }
+              });
+            }, { threshold: 0.1 });
+            observer.observe(document.getElementById('GridBanner-{{ section.id }}'));
+          } else {
+            startAutoPlay();
+          }
 
           // Touch Swipe Support
           let touchStartX = 0;

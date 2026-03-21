@@ -1449,6 +1449,27 @@
         "id": "cart_color_scheme",
         "label": "t:sections.all.colors.label",
         "default": "scheme-1"
+      },
+      {
+        "type": "header",
+        "content": "Product Name Truncation"
+      },
+      {
+        "type": "checkbox",
+        "id": "truncate_cart_product_names",
+        "label": "Truncate long product names",
+        "default": true,
+        "info": "Helps save space on mobile by shortening long titles."
+      },
+      {
+        "type": "range",
+        "id": "cart_product_name_limit",
+        "min": 20,
+        "max": 100,
+        "step": 1,
+        "unit": "char",
+        "label": "Character limit",
+        "default": 35
       }
     ]
   },

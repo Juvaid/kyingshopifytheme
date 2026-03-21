@@ -108,7 +108,13 @@
                         <p class="caption-with-letter-spacing">{{ item.product.vendor }}</p>
                       {%- endif -%}
 
-                      <a href="{{ item.url }}" class="cart-item__name h4 break">{{ item.product.title | escape }}</a>
+                      <a href="{{ item.url }}" class="cart-item__name h4 break">
+                        {%- if settings.truncate_cart_product_names -%}
+                          {{- item.product.title | truncate: settings.cart_product_name_limit | escape -}}
+                        {%- else -%}
+                          {{- item.product.title | escape -}}
+                        {%- endif -%}
+                      </a>
 
                       {%- if section.settings.show_unit_price -%}
                         {%- if item.original_price != item.final_price -%}
