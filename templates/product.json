@@ -145,7 +145,7 @@
         "padding_bottom": 12,
         "info_block_spacing": 2,
         "gallery_info_gap": 20,
-        "mobile_info_padding": 0
+        "mobile_info_padding": 8
       }
     },
     "image-with-text": {
