@@ -48,9 +48,9 @@
       "settings": {
         "collection": "all",
         "products_to_show": 8,
-        "title": "PEOPLE'S CHOICE",
+        "title": "",
         "heading_size": "h2",
-        "description": "",
+        "description": "<p>PEOPLE'S CHOICE</p>",
         "show_description": false,
         "description_style": "body",
         "columns_desktop": 4,
