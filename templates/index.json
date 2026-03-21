@@ -14,6 +14,7 @@
       "blocks": {
         "slide_dUBE9e": {
           "type": "slide",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/Banners_for_kying.jpg",
             "link": ""
@@ -37,7 +38,7 @@
         "full_width": true,
         "autoplay": true,
         "autoplay_speed": 5,
-        "border_radius": 6,
+        "border_radius": 14,
         "margin_top": 0,
         "margin_bottom": 0
       }
