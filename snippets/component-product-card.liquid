@@ -107,8 +107,12 @@
                     {{ 'products.product.sold_out' | t }}
                   {%- endif -%}
                 </span>
-                <div class="loading-spinner hidden">
-                  {% render 'loading-spinner' %}
+                <div class="loading__spinner hidden">
+                  {%- if settings.enable_premium_loading_dots -%}
+                    {% render 'loading-dots' %}
+                  {%- else -%}
+                    {% render 'loading-spinner' %}
+                  {%- endif -%}
                 </div>
               </button>
             {%- endform -%}

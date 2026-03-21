@@ -1485,5 +1485,63 @@
         "default": "#e5e5e5"
       }
     ]
+  },
+  {
+    "name": "Quick Add Toast",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Toast Notification Settings"
+      },
+      {
+        "type": "paragraph",
+        "content": "Customize the slide-up toast notification that appears when a product is added to cart via Quick Add."
+      },
+      {
+        "type": "select",
+        "id": "quick_add_toast_position",
+        "label": "Toast Position",
+        "options": [
+          { "value": "bottom-right", "label": "Bottom Right" },
+          { "value": "bottom-left", "label": "Bottom Left" },
+          { "value": "bottom-center", "label": "Bottom Center" }
+        ],
+        "default": "bottom-right"
+      },
+      {
+        "type": "range",
+        "id": "quick_add_toast_duration",
+        "label": "Auto-Dismiss Duration",
+        "min": 2000,
+        "max": 9500,
+        "step": 500,
+        "default": 5000,
+        "unit": "ms"
+      },
+      {
+        "type": "text",
+        "id": "quick_add_toast_continue_text",
+        "label": "\"Continue Shopping\" Button Label",
+        "default": "Continue Shopping"
+      },
+      {
+        "type": "text",
+        "id": "quick_add_toast_view_cart_text",
+        "label": "\"View Cart\" Button Label",
+        "default": "View Cart"
+      }
+    ]
+  },
+  {
+    "name": "Loading Animations",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_premium_loading_dots",
+        "label": "Enable Premium Loading Dots",
+        "default": true,
+        "info": "Replaces the default spinner with modern loading dots."
+      }
+    ]
   }
 ]

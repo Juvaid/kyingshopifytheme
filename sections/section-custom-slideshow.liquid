@@ -74,21 +74,21 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
+    width: {{ section.settings.arrow_size }}px;
+    height: {{ section.settings.arrow_size }}px;
     background: rgba(255,255,255,0.3);
     backdrop-filter: blur(5px);
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    display: flex;
+    display: {%- if section.settings.show_arrows -%}flex{%- else -%}none{%- endif -%};
     align-items: center;
     justify-content: center;
     z-index: 10;
     transition: background 0.3s;
   }
   .slide-nav-{{ section.id }}:hover { background: rgba(255,255,255,0.5); }
-  .slide-nav-{{ section.id }} svg { width: 24px; height: 24px; fill: #000; }
+  .slide-nav-{{ section.id }} svg { width: calc({{ section.settings.arrow_size }}px * 0.5); height: calc({{ section.settings.arrow_size }}px * 0.5); fill: #000; }
   .slide-prev-{{ section.id }} { left: 20px; }
   .slide-next-{{ section.id }} { right: 20px; }
 
@@ -144,12 +144,14 @@
   </div>
 
   {%- if section.blocks.size > 1 -%}
-    <button class="slide-nav-{{ section.id }} slide-prev-{{ section.id }}" onclick="moveSlide{{ section.id | replace: '-', '_' }}(-1)">
-      <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
-    </button>
-    <button class="slide-nav-{{ section.id }} slide-next-{{ section.id }}" onclick="moveSlide{{ section.id | replace: '-', '_' }}(1)">
-      <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
-    </button>
+    {%- if section.settings.show_arrows -%}
+      <button class="slide-nav-{{ section.id }} slide-prev-{{ section.id }}" onclick="moveSlide{{ section.id | replace: '-', '_' }}(-1)">
+        <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+      </button>
+      <button class="slide-nav-{{ section.id }} slide-next-{{ section.id }}" onclick="moveSlide{{ section.id | replace: '-', '_' }}(1)">
+        <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+      </button>
+    {%- endif -%}
 
     <div class="slide-dots-{{ section.id }}">
       {%- for block in section.blocks -%}
@@ -257,6 +259,26 @@
       "unit": "s",
       "label": "Autoplay Speed",
       "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Navigation Controls"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show Navigation Arrows",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "arrow_size",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Arrow Button Size",
+      "default": 40
     },
     {
       "type": "range",

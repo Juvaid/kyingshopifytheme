@@ -1930,6 +1930,26 @@ input[type='checkbox'] {
   background-color: var(--quantity-hover-bg, #e5e5e5) !important;
 }
 
+/* Global Button Loading State */
+.loading__spinner {
+  display: none;
+}
+
+.loading > span {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.loading > .loading__spinner {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.btn-quick-add, .button, .btn {
+  position: relative;
+}
+
 .quantity__button:first-child {
   margin-left: calc(var(--inputs-border-width));
 }
