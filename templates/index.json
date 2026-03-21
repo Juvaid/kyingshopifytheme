@@ -34,10 +34,10 @@
       "name": "Custom Slideshow",
       "settings": {
         "slideshow_height": "adapt",
-        "full_width": true,
+        "full_width": false,
         "autoplay": true,
         "autoplay_speed": 5,
-        "border_radius": 6,
+        "border_radius": 14,
         "margin_top": 0,
         "margin_bottom": 0
       }
@@ -49,7 +49,7 @@
         "products_to_show": 8,
         "title": "",
         "heading_size": "h2",
-        "description": "",
+        "description": "<p>PEOPLE'S CHOICE</p>",
         "show_description": false,
         "description_style": "body",
         "columns_desktop": 4,
