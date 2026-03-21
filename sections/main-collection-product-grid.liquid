@@ -46,14 +46,20 @@
   }
 
   .grid-banner-wrapper-{{ section.id }} {
-    display: flex;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     width: 100%;
-    will-change: transform;
     {%- if section.settings.grid_banner_height_mode == 'adapt' -%}
       height: auto;
     {%- else -%}
       height: {{ section.settings.grid_banner_height_mobile }}px;
+    {%- endif -%}
+
+    {%- if section.settings.grid_banner_transition == 'fade' -%}
+      display: block;
+      position: relative;
+    {%- else -%}
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
     {%- endif -%}
   }
 
@@ -65,25 +71,68 @@
     }
   }
 
-  .grid-banner-slide-{{ section.id }} {
-    flex: 0 0 100%;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-  }
+  /* Slide rules */
+  {%- if section.settings.grid_banner_transition == 'fade' -%}
+    .grid-banner-slide-{{ section.id }} {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .grid-banner-slide-{{ section.id }}.active {
+      opacity: 1;
+      z-index: 2;
+    }
+  {%- else -%}
+    .grid-banner-slide-{{ section.id }} {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+  {%- endif -%}
 
-  .grid-banner-slide-{{ section.id }} a {
+  .grid-banner-link-{{ section.id }} {
     display: block;
     width: 100%;
     height: 100%;
+    position: relative;
   }
 
-  .grid-banner-slide-{{ section.id }} img {
+  .grid-banner-link-{{ section.id }} img {
     width: 100%;
     height: 100%;
     display: block;
     object-fit: cover;
+  }
+
+  /* Text Overlay */
+  .grid-banner-text-{{ section.id }} {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 90%;
+    z-index: 3;
+    pointer-events: none;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  .grid-banner-text-{{ section.id }} h2 { 
+    margin: 0 0 1rem; color: inherit; font-size: 2.5rem; font-weight: 700; letter-spacing: -0.01em; 
+  }
+  .grid-banner-text-{{ section.id }} p { 
+    margin: 0; color: inherit; font-size: 1.4rem; 
+  }
+  @media screen and (min-width: 750px) {
+    .grid-banner-text-{{ section.id }} h2 { font-size: 4rem; letter-spacing: -0.02em; }
+    .grid-banner-text-{{ section.id }} p { font-size: 1.8rem; }
   }
 
   .grid-banner-nav-{{ section.id }} {
@@ -139,6 +188,15 @@
     .desktop-only-{{ section.id }} { display: none; }
     .mobile-only-{{ section.id }} { display: block; }
   }
+
+  @media screen and (min-width: 750px) {
+    .product-grid .grid__item--featured {
+      grid-column: span 2;
+    }
+    .product-grid .grid__item--featured .card-wrapper {
+      height: 100%;
+    }
+  }
 {%- endstyle -%}
 
 <div class="section-{{ section.id }}-padding gradient color-{{ section.settings.color_scheme }}">
@@ -148,8 +206,8 @@
         <div class="grid-banner-slideshow-{{ section.id }}" id="GridBanner-{{ section.id }}">
           <div class="grid-banner-wrapper-{{ section.id }}" id="GridBannerWrapper-{{ section.id }}">
             {%- for block in section.blocks -%}
-              <div class="grid-banner-slide-{{ section.id }}" {{ block.shopify_attributes }}>
-                <a href="{{ block.settings.link | default: '#' }}">
+              <div class="grid-banner-slide-{{ section.id }}{% if forloop.first %} active{% endif %}" {{ block.shopify_attributes }}>
+                <a href="{{ block.settings.link | default: '#' }}" class="grid-banner-link-{{ section.id }}">
                   {%- if block.settings.image != blank or block.settings.mobile_image != blank -%}
                     {%- assign mobile_image = block.settings.mobile_image | default: block.settings.image -%}
                     {%- assign desktop_image = block.settings.image | default: block.settings.mobile_image -%}
@@ -171,6 +229,17 @@
                     >
                   {%- else -%}
                     {{ 'hero-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {%- endif -%}
+
+                  {%- if block.settings.heading != blank or block.settings.subheading != blank -%}
+                    <div class="grid-banner-text-{{ section.id }}" style="color: {{ block.settings.text_color }};">
+                      {%- if block.settings.heading != blank -%}
+                        <h2 class="h1">{{ block.settings.heading }}</h2>
+                      {%- endif -%}
+                      {%- if block.settings.subheading != blank -%}
+                        <p class="h3">{{ block.settings.subheading }}</p>
+                      {%- endif -%}
+                    </div>
                   {%- endif -%}
                 </a>
               </div>
@@ -203,6 +272,9 @@
           const autoplaySpeed = {{ section.settings.grid_banner_autoplay_speed | times: 1000 }};
           let autoPlayInterval;
 
+          const transitionType = "{{ section.settings.grid_banner_transition }}";
+          const slides = document.querySelectorAll('.grid-banner-slide-{{ section.id }}');
+
           window.moveGridSlide{{ section.id | replace: '-', '_' }} = function(direction) {
             currentSlide = (currentSlide + direction + totalSlides) % totalSlides;
             updateSlideshow();
@@ -216,7 +288,13 @@
           };
 
           function updateSlideshow() {
-            wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+            if (transitionType === 'slide') {
+              wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+            } else {
+              slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+              });
+            }
             dots.forEach((dot, index) => {
               dot.classList.toggle('active', index === currentSlide);
             });
@@ -304,8 +382,12 @@
               "
             >
               {%- for product in collection.products -%}
+                {%- assign is_featured = false -%}
+                {%- if section.settings.make_first_product_featured and forloop.first -%}
+                  {%- assign is_featured = true -%}
+                {%- endif -%}
                 <li
-                  class="grid__item{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+                  class="grid__item{% if is_featured %} grid__item--featured{% endif %}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
                   {% if settings.animations_reveal_on_scroll %}
                     data-cascade
                     style="--animation-order: {{ forloop.index }};"
@@ -372,6 +454,12 @@
         }
       ]
     },    
+    {
+      "type": "checkbox",
+      "id": "make_first_product_featured",
+      "default": false,
+      "label": "Make first product featured (Spans 2 columns)"
+    },
     {
       "type": "color_scheme",
       "id": "color_scheme",
@@ -541,6 +629,16 @@
     },
     {
       "type": "select",
+      "id": "grid_banner_transition",
+      "options": [
+        { "value": "slide", "label": "Slide" },
+        { "value": "fade", "label": "Fade" }
+      ],
+      "default": "slide",
+      "label": "Transition Style"
+    },
+    {
+      "type": "select",
       "id": "grid_banner_height_mode",
       "options": [
         {
@@ -639,6 +737,24 @@
           "type": "url",
           "id": "link",
           "label": "Slide Link"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Discover Our Collection"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "Shop the latest arrivals"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text Color",
+          "default": "#ffffff"
         }
       ]
     }

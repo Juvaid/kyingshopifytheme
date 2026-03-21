@@ -31,10 +31,32 @@
       padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
     }
 
+    /* Dynamic Product Spacing */
+    .section-{{ section.id }}-padding .product__info-container > * + * {
+      margin-top: {{ section.settings.info_block_spacing }}px !important;
+      margin-bottom: 0 !important;
+    }
+
     @media screen and (min-width: 750px) {
       .section-{{ section.id }}-padding {
         padding-top: {{ section.settings.padding_top }}px;
         padding-bottom: {{ section.settings.padding_bottom }}px;
+      }
+      
+      .section-{{ section.id }}-padding .product__media-wrapper media-gallery {
+        gap: {{ section.settings.gallery_info_gap }}px !important;
+      }
+    }
+
+    @media screen and (max-width: 749px) {
+      .section-{{ section.id }}-padding .product__info-wrapper {
+        padding-left: {{ section.settings.mobile_info_padding }}px !important;
+        padding-right: {{ section.settings.mobile_info_padding }}px !important;
+      }
+      
+      /* Reduce gap between thumbnails and info on mobile */
+      .section-{{ section.id }}-padding .product__media-wrapper {
+        margin-bottom: 2rem !important;
       }
     }
   {%- endstyle -%}
@@ -101,7 +123,24 @@
                   <h1>{{ product.title | escape }}</h1>
                 </div>
               {%- when 'price' -%}
-                <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
+                <div id="price-{{ section.id }}" class="product__price-container" role="status" {{ block.shopify_attributes }}>
+                  {%- style -%}
+                    #price-{{ section.id }} .price {
+                      font-size: {{ block.settings.price_size }}rem;
+                      font-weight: {{ block.settings.price_weight }};
+                      color: {{ block.settings.price_color }};
+                    }
+                    #price-{{ section.id }} .price-item--sale {
+                      color: {{ block.settings.sale_price_color }};
+                    }
+                    #price-{{ section.id }} .price-item--regular {
+                      color: {{ block.settings.compare_at_price_color }};
+                    }
+                    #price-{{ section.id }} .price__badge-sale {
+                      background-color: {{ block.settings.badge_bg_color }};
+                      color: {{ block.settings.badge_text_color }};
+                    }
+                  {%- endstyle -%}
                   {%- render 'price',
                     product: product,
                     use_variant: true,
@@ -192,6 +231,37 @@
                     {{ product.description }}
                   </div>
                 {%- endif -%}
+              {%- when 'ingredient_spotlight' -%}
+                <div class="product__ingredient-spotlight" {{ block.shopify_attributes }}>
+                  {%- if block.settings.heading != blank -%}
+                    <h3 class="h4">{{ block.settings.heading }}</h3>
+                  {%- endif -%}
+                  <div class="ingredient-spotlight__grid">
+                    {%- for i in (1..3) -%}
+                      {%- assign icon_key = 'icon_' | append: i -%}
+                      {%- assign title_key = 'title_' | append: i -%}
+                      {%- assign desc_key = 'desc_' | append: i -%}
+                      
+                      {%- if block.settings[title_key] != blank -%}
+                        <div class="ingredient-spotlight__item">
+                          {%- if block.settings[icon_key] != blank -%}
+                            <div class="ingredient-spotlight__icon">
+                              <img src="{{ block.settings[icon_key] | image_url: width: 100 }}" alt="{{ block.settings[title_key] | escape }}" loading="lazy" width="40" height="40">
+                            </div>
+                          {%- else -%}
+                            <div class="ingredient-spotlight__icon placeholder">
+                              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </div>
+                          {%- endif -%}
+                          <div class="ingredient-spotlight__text">
+                            <strong>{{ block.settings[title_key] }}</strong>
+                            <span>{{ block.settings[desc_key] }}</span>
+                          </div>
+                        </div>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                </div>
               {%- when 'sku' -%}
                 <p
                   class="product__sku{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.sku.size == 0 %} visibility-hidden{% endif %}"
@@ -205,7 +275,7 @@
               {%- when 'custom_liquid' -%}
                 {{ block.settings.custom_liquid }}
               {%- when 'collapsible_tab' -%}
-                <div class="product__accordion accordion quick-add-hidden" {{ block.shopify_attributes }}>
+                <div class="product__accordion accordion accordion--{{ block.settings.accordion_style | default: 'standard' }} quick-add-hidden" {{ block.shopify_attributes }}>
                   <details id="Details-{{ block.id }}-{{ section.id }}">
                     <summary>
                       <div class="summary__title">
@@ -473,6 +543,25 @@
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
               {%- when 'buy_buttons' -%}
+                {%- if block.settings.enable_button_sheen -%}
+                  <style>
+                    .product-form__submit.button--primary:hover::after,
+                    .shopify-payment-button__button--unbranded:hover::after {
+                      animation-duration: {{ block.settings.sheen_speed }}s !important;
+                    }
+                  </style>
+                {%- else -%}
+                  <style>
+                    .product-form__submit.button--primary:hover::after,
+                    .shopify-payment-button__button--unbranded:hover::after {
+                      display: none !important;
+                    }
+                    .product-form__submit.button--primary:hover,
+                    .shopify-payment-button__button--unbranded:hover {
+                      transform: translateY(-2px) !important;
+                    }
+                  </style>
+                {%- endif -%}
                 {%- render 'buy-buttons',
                   block: block,
                   product: product,
@@ -714,11 +803,16 @@
 </product-info>
 
 {%- if section.settings.enable_sticky_atc -%}
-  <div id="sticky-atc-mobile" class="sticky-atc-mobile small-hide medium-hide">
-    <div class="sticky-atc-mobile__container">
-      <div class="sticky-atc-mobile__info">
-        <span class="sticky-atc-mobile__title">{{ product.title }}</span>
-        <span class="sticky-atc-mobile__price" id="sticky-atc-price">{{ product.selected_or_first_available_variant.price | money }}</span>
+  <div id="sticky-atc-bar" class="sticky-atc-bar">
+    <div class="sticky-atc-bar__container">
+      <div class="sticky-atc-bar__info">
+        {%- if product.featured_image -%}
+          <img class="sticky-atc-bar__image" src="{{ product.featured_image | image_url: width: 100 }}" alt="{{ product.featured_image.alt | escape }}" width="50" height="50" loading="lazy">
+        {%- endif -%}
+        <div class="sticky-atc-bar__text">
+          <span class="sticky-atc-bar__title">{{ product.title }}</span>
+          <span class="sticky-atc-bar__price" id="sticky-atc-price">{{ product.selected_or_first_available_variant.price | money }}</span>
+        </div>
       </div>
       <product-form class="product-form">
         <div class="product-form__error-message-wrapper" role="alert" hidden>
@@ -752,18 +846,21 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      const stickyAtc = document.getElementById('sticky-atc-mobile');
+      const stickyAtc = document.getElementById('sticky-atc-bar');
       const mainAtc = document.querySelector('.product-form__buttons');
       
       if (stickyAtc && mainAtc) {
-        window.addEventListener('scroll', function() {
-          const mainAtcPosition = mainAtc.getBoundingClientRect().bottom;
-          if (mainAtcPosition < 0) {
-            stickyAtc.classList.add('show');
-          } else {
-            stickyAtc.classList.remove('show');
-          }
-        });
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+              stickyAtc.classList.add('show');
+            } else {
+              stickyAtc.classList.remove('show');
+            }
+          });
+        }, { threshold: 0.1 });
+        
+        observer.observe(mainAtc);
       }
 
       // Sync variant changes using theme's pubsub
@@ -772,7 +869,6 @@
           const variant = event.data.variant;
           const sectionId = event.data.sectionId;
           
-          // Only update if it's the main product section
           if (sectionId === {{ section.id | json }} || sectionId === {{ section.id | append: '-main' | json }}) {
             if (variant) {
               const stickyIdInput = stickyAtc.querySelector('input[name="id"]');
@@ -781,7 +877,6 @@
               
               if (stickyIdInput) stickyIdInput.value = variant.id;
               
-              // Get price from the main price element to ensure correct formatting/currency
               const mainPrice = document.querySelector('.product__info-container .price');
               if (stickyPrice && mainPrice) {
                 stickyPrice.innerHTML = mainPrice.innerHTML;
@@ -853,7 +948,70 @@
     {
       "type": "price",
       "name": "t:sections.main-product.blocks.price.name",
-      "limit": 1
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Price Styling"
+        },
+        {
+          "type": "range",
+          "id": "price_size",
+          "min": 1,
+          "max": 5,
+          "step": 0.1,
+          "unit": "rem",
+          "label": "Price Font Size",
+          "default": 1.8
+        },
+        {
+          "type": "select",
+          "id": "price_weight",
+          "options": [
+            { "value": "300", "label": "Light" },
+            { "value": "400", "label": "Regular" },
+            { "value": "500", "label": "Medium" },
+            { "value": "600", "label": "Semi-Bold" },
+            { "value": "700", "label": "Bold" }
+          ],
+          "default": "600",
+          "label": "Price Font Weight"
+        },
+        {
+          "type": "color",
+          "id": "price_color",
+          "label": "Price Color",
+          "default": "#1a1a1a"
+        },
+        {
+          "type": "header",
+          "content": "Sale Styling"
+        },
+        {
+          "type": "color",
+          "id": "sale_price_color",
+          "label": "Sale Price Color",
+          "default": "#ff4d4d"
+        },
+        {
+          "type": "color",
+          "id": "compare_at_price_color",
+          "label": "Compare At Price Color",
+          "default": "#1a1a1a"
+        },
+        {
+          "type": "color",
+          "id": "badge_bg_color",
+          "label": "Sale Badge Background",
+          "default": "#f4e2e2"
+        },
+        {
+          "type": "color",
+          "id": "badge_text_color",
+          "label": "Sale Badge Text Color",
+          "default": "#ff4d4d"
+        }
+      ]
     },
     {
       "type": "sku",
@@ -991,6 +1149,25 @@
           "default": true,
           "label": "t:sections.main-product.blocks.buy_buttons.settings.show_gift_card_recipient.label",
           "info": "t:sections.main-product.blocks.buy_buttons.settings.show_gift_card_recipient.info"
+        },
+        {
+          "type": "header",
+          "content": "Button Animations"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_button_sheen",
+          "default": true,
+          "label": "Enable 'Grow & Sheen' Hover Effect"
+        },
+        {
+          "type": "range",
+          "id": "sheen_speed",
+          "min": 0.5,
+          "max": 3.0,
+          "step": 0.1,
+          "label": "Sheen Animation Duration (seconds)",
+          "default": 0.8
         }
       ]
     },
@@ -1025,9 +1202,95 @@
       ]
     },
     {
+      "type": "ingredient_spotlight",
+      "name": "Ingredient Spotlight",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Key Ingredients",
+          "label": "Heading"
+        },
+        {
+          "type": "header",
+          "content": "Ingredient 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_1",
+          "label": "Icon/Image"
+        },
+        {
+          "type": "text",
+          "id": "title_1",
+          "label": "Name",
+          "default": "Vitamin C"
+        },
+        {
+          "type": "text",
+          "id": "desc_1",
+          "label": "Description",
+          "default": "Brightens skin"
+        },
+        {
+          "type": "header",
+          "content": "Ingredient 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_2",
+          "label": "Icon/Image"
+        },
+        {
+          "type": "text",
+          "id": "title_2",
+          "label": "Name",
+          "default": "Niacinamide"
+        },
+        {
+          "type": "text",
+          "id": "desc_2",
+          "label": "Description",
+          "default": "Refines pores"
+        },
+        {
+          "type": "header",
+          "content": "Ingredient 3"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon_3",
+          "label": "Icon/Image"
+        },
+        {
+          "type": "text",
+          "id": "title_3",
+          "label": "Name",
+          "default": "Hyaluronic Acid"
+        },
+        {
+          "type": "text",
+          "id": "desc_3",
+          "label": "Description",
+          "default": "Deep hydration"
+        }
+      ]
+    },
+    {
       "type": "collapsible_tab",
       "name": "t:sections.main-product.blocks.collapsible_tab.name",
       "settings": [
+        {
+          "type": "select",
+          "id": "accordion_style",
+          "label": "Accordion Style",
+          "options": [
+            { "value": "standard", "label": "Standard" },
+            { "value": "minimal", "label": "Minimalist" }
+          ],
+          "default": "standard"
+        },
         {
           "type": "text",
           "id": "heading",
@@ -2334,6 +2597,40 @@
       "unit": "px",
       "label": "t:sections.all.padding.padding_bottom",
       "default": 36
+    },
+    {
+      "type": "header",
+      "content": "Custom Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "info_block_spacing",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Spacing Between Info Blocks",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "gallery_info_gap",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "px",
+      "label": "Gallery & Info Gap (Desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "mobile_info_padding",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Info Side Padding",
+      "default": 16
     }
   ]
 }

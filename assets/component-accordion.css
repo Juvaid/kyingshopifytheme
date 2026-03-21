@@ -63,3 +63,26 @@
 .accordion__content img {
   max-width: 100%;
 }
+
+/* Minimalist Accordion Style */
+.accordion--minimal {
+  border: none;
+  margin-top: 1.5rem;
+}
+
+.accordion--minimal + .accordion--minimal {
+  margin-top: 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.accordion--minimal summary {
+  padding: 1.8rem 0;
+}
+
+.accordion--minimal .accordion__title {
+  text-transform: none;
+  font-weight: 500;
+  font-size: 1.6rem;
+  letter-spacing: -0.01em;
+  color: #1a1a1a;
+}

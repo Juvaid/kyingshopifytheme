@@ -144,7 +144,7 @@
     position: absolute;
     top: 10px;
     left: 10px;
-    background: #ff4d4d;
+    background: {{ settings.card_badge_bg | default: '#ff4d4d' }};
     color: #fff;
     padding: 3px 8px;
     border-radius: 4px;
@@ -248,7 +248,7 @@
   .product-card__price {
     font-size: 15px;
     font-weight: 700;
-    color: #ff4d4d;
+    color: {{ settings.card_price_color | default: '#ff4d4d' }};
   }
 
   .product-card__rating {

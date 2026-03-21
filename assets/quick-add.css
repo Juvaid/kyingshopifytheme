@@ -359,6 +359,18 @@ quick-add-modal .product-form__buttons {
   padding: 0.8rem;
   min-width: 100%;
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.7) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  color: #1a1a1a !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.3s ease !important;
+}
+
+.quick-add__submit:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  transform: translateY(-2px) !important;
 }
 
 quick-add-modal .product-media-container.constrain-height {

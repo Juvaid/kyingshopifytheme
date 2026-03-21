@@ -1451,5 +1451,39 @@
         "default": "scheme-1"
       }
     ]
+  },
+  {
+    "name": "Custom Product Cards",
+    "settings": [
+      {
+        "type": "color",
+        "id": "card_badge_bg",
+        "label": "Badge Background Color",
+        "default": "#ff4d4d"
+      },
+      {
+        "type": "color",
+        "id": "card_price_color",
+        "label": "Price Text Color",
+        "default": "#ff4d4d"
+      }
+    ]
+  },
+  {
+    "name": "Custom Quantity Selectors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "quantity_bg_color",
+        "label": "Background Color",
+        "default": "#f5f5f5"
+      },
+      {
+        "type": "color",
+        "id": "quantity_hover_color",
+        "label": "Hover Background Color",
+        "default": "#e5e5e5"
+      }
+    ]
   }
 ]
