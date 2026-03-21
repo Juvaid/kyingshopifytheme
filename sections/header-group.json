@@ -26,6 +26,13 @@
         "announcement-bar-0"
       ],
       "settings": {
+        "sticky_bar": false,
+        "text_size": "medium",
+        "navigation_type": "arrows",
+        "scrolling_speed": 10,
+        "bg_color": "#14878f",
+        "bg_gradient": "",
+        "text_color": "#ffffff",
         "color_scheme": "",
         "show_line_separator": false,
         "show_social": false,
@@ -35,6 +42,7 @@
     },
     "header": {
       "type": "header",
+      "disabled": true,
       "settings": {
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
