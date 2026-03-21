@@ -37,6 +37,8 @@
         "full_width": false,
         "autoplay": true,
         "autoplay_speed": 5,
+        "show_arrows": false,
+        "arrow_size": 40,
         "border_radius": 14,
         "margin_top": 0,
         "margin_bottom": 0
