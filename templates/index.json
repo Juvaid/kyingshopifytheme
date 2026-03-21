@@ -105,6 +105,7 @@
         "marquee_item_YxjA96",
         "marquee_item_MBhK4n"
       ],
+      "disabled": true,
       "name": "Custom Marquee",
       "settings": {
         "background_color": "#ffffff",
