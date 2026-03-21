@@ -121,7 +121,7 @@
     "cart_type": "notification",
     "show_vendor": false,
     "show_cart_note": false,
-    "cart_drawer_collection": "",
+    "cart_drawer_collection": "kying-blemfix",
     "card_badge_bg": "#14878f",
     "card_price_color": "#14878f",
     "sections": {
