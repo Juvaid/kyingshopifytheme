@@ -33,7 +33,7 @@
       ],
       "name": "Custom Slideshow",
       "settings": {
-        "slideshow_height": "adapt",
+        "slideshow_height": "small",
         "full_width": true,
         "autoplay": true,
         "autoplay_speed": 5,
