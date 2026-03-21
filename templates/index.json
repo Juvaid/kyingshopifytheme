@@ -9,6 +9,39 @@
  */
 {
   "sections": {
+    "section_custom_slideshow_FfC6Ap": {
+      "type": "section-custom-slideshow",
+      "blocks": {
+        "slide_dUBE9e": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Banners_for_kying.jpg",
+            "link": ""
+          }
+        },
+        "slide_3TL7hQ": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/banner.jpg",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_dUBE9e",
+        "slide_3TL7hQ"
+      ],
+      "name": "Custom Slideshow",
+      "settings": {
+        "slideshow_height": "adapt",
+        "full_width": true,
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "border_radius": 6,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    },
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
@@ -39,6 +72,7 @@
     }
   },
   "order": [
+    "section_custom_slideshow_FfC6Ap",
     "featured_collection"
   ]
 }
