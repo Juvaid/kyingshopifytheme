@@ -124,6 +124,8 @@
     "cart_drawer_collection": "kying-blemfix",
     "card_badge_bg": "#14878f",
     "card_price_color": "#14878f",
+    "truncate_cart_product_names": true,
+    "cart_product_name_limit": 35,
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
