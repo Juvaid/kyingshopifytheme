@@ -91,7 +91,11 @@
 
     _showToast(product) {
       // Populate product info
-      if (this.titleEl) this.titleEl.textContent = product.product_title;
+      let displayTitle = product.product_title;
+      if (this.settings.truncateEnabled && displayTitle.length > this.settings.truncateLimit) {
+        displayTitle = displayTitle.substring(0, this.settings.cart_product_name_limit || this.settings.truncateLimit) + '...';
+      }
+      if (this.titleEl) this.titleEl.textContent = displayTitle;
       if (this.priceEl) this.priceEl.textContent = this._formatMoney(product.final_price);
       if (this.imageEl && product.image) {
         this.imageEl.src = product.image.replace(/\.(\w+)(\?|$)/, '_120x120.$1$2');

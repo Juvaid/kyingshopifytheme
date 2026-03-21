@@ -109,11 +109,20 @@
                       {%- endif -%}
 
                       <a href="{{ item.url }}" class="cart-item__name h4 break">
-                        {%- if settings.truncate_cart_product_names -%}
-                          {{- item.product.title | truncate: settings.cart_product_name_limit | escape -}}
+                      <a href="{{ item.url }}" class="cart-item__name h4 break">
+                        {%- liquid
+                          assign truncate_enabled = section.settings.truncate_cart_product_names
+                          if truncate_enabled == nil
+                            assign truncate_enabled = settings.truncate_cart_product_names
+                          endif
+                          assign truncate_limit = section.settings.cart_product_name_limit | default: settings.cart_product_name_limit | default: 35
+                        -%}
+                        {%- if truncate_enabled -%}
+                          {{- item.product.title | truncate: truncate_limit | escape -}}
                         {%- else -%}
                           {{- item.product.title | escape -}}
                         {%- endif -%}
+                      </a>
                       </a>
 
                       {%- if section.settings.show_unit_price -%}
@@ -497,6 +506,27 @@
       "default": false,
       "label": "Show unit price under product title",
       "info": "This helps prevent the price from showing twice on mobile layouts."
+    },
+    {
+      "type": "header",
+      "content": "Product Name Truncation"
+    },
+    {
+      "type": "checkbox",
+      "id": "truncate_cart_product_names",
+      "label": "Truncate long product names",
+      "default": true,
+      "info": "Helps save space on mobile by shortening long titles."
+    },
+    {
+      "type": "range",
+      "id": "cart_product_name_limit",
+      "min": 20,
+      "max": 100,
+      "step": 1,
+      "unit": "char",
+      "label": "Character limit",
+      "default": 35
     },
     {
       "type": "header",

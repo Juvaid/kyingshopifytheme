@@ -44,7 +44,9 @@
   window.QuickAddToastSettings = {
     duration: {{ settings.quick_add_toast_duration | default: 5000 }},
     position: '{{ settings.quick_add_toast_position | default: "bottom-right" }}',
-    continueShopping: '{{ settings.quick_add_toast_continue_text | default: "Continue Shopping" }}'
+    continueShopping: '{{ settings.quick_add_toast_continue_text | default: "Continue Shopping" }}',
+    truncateEnabled: {{ settings.truncate_cart_product_names | default: false }},
+    truncateLimit: {{ settings.cart_product_name_limit | default: 35 }}
   };
 </script>
 

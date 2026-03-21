@@ -151,8 +151,15 @@
                           {%- endif -%}
 
                           <a href="{{ item.url }}" class="cart-item__name h4 break">
-                            {%- if settings.truncate_cart_product_names -%}
-                              {{- item.product.title | truncate: settings.cart_product_name_limit | escape -}}
+                            {%- liquid
+                              assign truncate_enabled = settings.truncate_cart_product_names
+                              if truncate_enabled == nil
+                                assign truncate_enabled = settings.truncate_cart_product_names
+                              endif
+                              assign truncate_limit = settings.cart_product_name_limit | default: settings.cart_product_name_limit | default: 35
+                            -%}
+                            {%- if truncate_enabled -%}
+                              {{- item.product.title | truncate: truncate_limit | escape -}}
                             {%- else -%}
                               {{- item.product.title | escape -}}
                             {%- endif -%}
