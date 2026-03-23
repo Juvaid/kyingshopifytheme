@@ -58,10 +58,10 @@
               <div class="facets-vertical-sort-sidebar small-hide">
                 <div class="facet-filters sorting caption">
                   <div class="facet-filters__field">
-                    <h2 class="facets__heading facets__heading--vertical caption-large text-body">
+                    <h2 class="facets__heading facets__heading--vertical caption-large text-body facets__heading--standardized">
                       <label for="SortBy">{{ 'products.facets.sort_by_label' | t }}</label>
                     </h2>
-                    <div class="select">
+                    <div class="select select--facets">
                       <select
                         name="sort_by"
                         class="facet-filters__sort select__select caption-large"
@@ -111,7 +111,7 @@
                 <div class="active-facets-vertical-filter">
                   {%- unless results.filters == empty -%}
                     <h2
-                      class="facets__heading facets__heading--vertical caption-large text-body"
+                      class="facets__heading facets__heading--vertical caption-large text-body facets__heading--standardized"
                       id="verticalTitle"
                       tabindex="-1"
                     >
@@ -181,12 +181,10 @@
                     id="Details-{{ filter.param_name | escape }}-{{ section.id }}"
                     class="{% if filter_type == 'horizontal' %}disclosure-has-popup facets__disclosure{% else %} facets__disclosure-vertical{% endif %} js-filter"
                     data-index="{{ forloop.index }}"
-                    {% if filter_type == 'vertical' and forloop.index == 1 %}
-                      open
-                    {% endif %}
+                    {% if filter_type == 'vertical' %}{% if expand_filters or forloop.index == 1 %}open{% endif %}{% endif %}
                   >
                     <summary
-                      class="facets__summary caption-large focus-offset"
+                      class="facets__summary caption-large focus-offset facets__summary--{{ filter_header_style | default: 'bold' }}"
                       aria-label="{{ filter.label | escape }} ({{ 'products.facets.filters_selected.one' | t: count: filter.active_values.size }})"
                     >
                       <div>
@@ -203,7 +201,9 @@
                             {{ 'products.facets.filter_and_operator_subtitle' | t }}
                           </span>
                         {%- endif -%}
-                        {{- 'icon-caret.svg' | inline_asset_content -}}
+                        <span class="svg-wrapper">
+                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        </span>
                       </div>
                     </summary>
                     <div
@@ -241,7 +241,7 @@
                           endif
                         -%}
                         <ul
-                          class="{{ visual_layout_class }}{% if filter_type == 'vertical' %} facets__list--vertical{% else %} facets__list{% endif %} list-unstyled"
+                          class="{{ visual_layout_class }}{% if filter_type == 'vertical' %} facets__list--vertical{% else %} facets__list{% endif %} facets__list--swatch-{{ swatch_shape | default: 'circle' }} list-unstyled"
                           role="list"
                         >
                           {%- for value in sorted_values -%}
@@ -315,8 +315,6 @@
                                       {%- endif -%}
                                     </div>
                                   {%- else -%}
-                                    {{- 'square.svg' | inline_asset_content -}}
-
                                     <div class="svg-wrapper">
                                       {{- 'icon-checkmark.svg' | inline_asset_content -}}
                                     </div>
@@ -352,14 +350,14 @@
                     id="Details-{{ filter.param_name | escape }}-{{ section.id }}"
                     class="{% if filter_type == 'horizontal' %}disclosure-has-popup facets__disclosure{% else %} facets__disclosure-vertical{% endif %} js-filter"
                     data-index="{{ forloop.index }}"
-                    {% if filter_type == 'vertical' and forloop.index == 1 %}
-                      open
-                    {% endif %}
+                    {% if filter_type == 'vertical' %}{% if expand_filters or forloop.index == 1 %}open{% endif %}{% endif %}
                   >
-                    <summary class="facets__summary caption-large focus-offset">
+                    <summary class="facets__summary caption-large focus-offset facets__summary--{{ filter_header_style | default: 'bold' }}">
                       <div>
                         <span>{{ filter.label | escape }}</span>
-                        {{- 'icon-caret.svg' | inline_asset_content -}}
+                        <span class="svg-wrapper">
+                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        </span>
                       </div>
                     </summary>
                     <div
@@ -380,7 +378,7 @@
                         {%- endif -%}
                       </div>
                       <price-range class="facets__price">
-                        {% render 'price-facet', filter: filter, id_prefix: 'Filter-', filter_type: filter_type %}
+                        {% render 'price-facet', filter: filter, id_prefix: 'Filter-', filter_type: filter_type, enable_price_slider: enable_price_slider %}
                       </price-range>
                     </div>
                   </details>
@@ -686,8 +684,9 @@
                                       </div>
                                     {%- else -%}
                                       <span class="mobile-facets__highlight"></span>
-                                      {{- 'square.svg' | inline_asset_content -}}
-                                      {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                                      <div class="svg-wrapper">
+                                        {{- 'icon-checkmark.svg' | inline_asset_content -}}
+                                      </div>
                                     {%- endif %}
 
                                     {{ text_value }}
@@ -746,7 +745,7 @@
                           </p>
 
                           <price-range class="facets__price">
-                            {% render 'price-facet', filter: filter, id_prefix: 'Mobile-Filter-' %}
+                            {% render 'price-facet', filter: filter, id_prefix: 'Mobile-Filter-', enable_price_slider: enable_price_slider %}
                           </price-range>
                           <div class="mobile-facets__footer">
                             <facet-remove class="mobile-facets__clear-wrapper">

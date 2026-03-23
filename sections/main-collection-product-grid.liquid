@@ -369,6 +369,7 @@
     <div class="{% if section.settings.filter_type == 'vertical' %} facets-vertical page-width{% endif %}">
       {{ 'component-facets.css' | asset_url | stylesheet_tag }}
       <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+      <script src="{{ 'price-range-slider.js' | asset_url }}" defer="defer"></script>
       {%- if section.settings.enable_filtering or section.settings.enable_sorting -%}
         <aside
           aria-labelledby="verticalTitle"
@@ -381,7 +382,11 @@
             enable_filtering: section.settings.enable_filtering,
             enable_sorting: section.settings.enable_sorting,
             filter_type: section.settings.filter_type,
-            paginate: paginate
+            paginate: paginate,
+            enable_price_slider: section.settings.enable_price_slider,
+            expand_filters: section.settings.expand_filters,
+            filter_header_style: section.settings.filter_header_style,
+            swatch_shape: section.settings.swatch_shape
           %}
         </aside>
       {%- endif -%}
@@ -646,6 +651,43 @@
       "id": "enable_sorting",
       "default": true,
       "label": "t:sections.main-collection-product-grid.settings.enable_sorting.label"
+    },
+    {
+      "type": "header",
+      "content": "Filter Enhancements"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_price_slider",
+      "default": true,
+      "label": "Enable Price Range Slider"
+    },
+    {
+      "type": "checkbox",
+      "id": "expand_filters",
+      "default": true,
+      "label": "Expand filters by default"
+    },
+    {
+      "type": "select",
+      "id": "filter_header_style",
+      "options": [
+        { "value": "default", "label": "Default" },
+        { "value": "bold", "label": "Bold" },
+        { "value": "uppercase", "label": "Uppercase" }
+      ],
+      "default": "bold",
+      "label": "Filter Header Style"
+    },
+    {
+      "type": "select",
+      "id": "swatch_shape",
+      "options": [
+        { "value": "circle", "label": "Circle" },
+        { "value": "square", "label": "Square" }
+      ],
+      "default": "circle",
+      "label": "Swatch Shape"
     },
     {
       "type": "header",
