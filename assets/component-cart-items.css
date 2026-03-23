@@ -396,3 +396,217 @@ cart-remove-button .icon-remove {
     padding-left: 0;
   }
 }
+/* Modern Card Layout */
+.cart-items-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.cart-item-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+  display: flex;
+  gap: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cart-item-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.cart-item-card__media {
+  width: 100px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.cart-item-card__image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.cart-item-card__info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cart-item-card__details .cart-item-card__name {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+.cart-item-card__details .cart-item-card__name:hover {
+  color: var(--color-foreground);
+}
+
+.cart-item-card__prices-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 1rem;
+  gap: 0.75rem;
+}
+
+.cart-item-card__price-wrapper {
+  color: #1a1a1a;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.drawer .cart-item-card__price-wrapper {
+  font-size: 0.9em;
+}
+
+.cart-item-card__discounted-prices {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Pill Style Actions */
+.cart-item-card__actions--pill {
+  display: inline-flex;
+  align-items: center;
+  background: #f8f8f8;
+  border-radius: 30px;
+  padding: 3px;
+  border: 1px solid #eeeeee;
+}
+
+.cart-item-card__actions--pill .quantity {
+  min-height: 0 !important;
+  min-width: unset !important;
+  width: auto !important;
+  border: none !important;
+  background: transparent !important;
+  margin: 0;
+  padding: 0;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-item-card__actions--pill .quantity:after,
+.cart-item-card__actions--pill .quantity:before {
+  display: none !important;
+}
+
+/* Drawer Specific Refinements */
+.drawer .cart-items-cards {
+  gap: 1rem;
+}
+
+.drawer .cart-item-card {
+  padding: 0.85rem;
+  gap: 0.75rem;
+}
+
+.drawer .cart-item-card__media {
+  width: 70px;
+}
+
+.cart-item-card__actions--pill .quantity__button {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  border-radius: 50% !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff !important;
+  border: 1px solid #eeeeee !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.cart-item-card__actions--pill .quantity__button:hover {
+  background: #f0f0f0 !important;
+  transform: scale(1.05);
+}
+
+.cart-item-card__actions--pill .quantity__input {
+  width: 24px !important;
+  height: 28px !important;
+  min-width: 24px !important;
+  min-height: 28px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  text-align: center;
+  flex-grow: 0 !important;
+  margin: 0 !important;
+}
+
+.cart-item-card__actions--pill cart-remove-button {
+  margin-left: 6px;
+  border-left: 1px solid #dddddd;
+  padding-left: 6px;
+}
+
+.cart-item-card__actions--pill cart-remove-button .button {
+  min-width: 28px !important;
+  min-height: 28px !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  color: #888;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.cart-item-card__actions--pill cart-remove-button .svg-wrapper,
+.cart-item-card__actions--pill cart-remove-button svg {
+  width: 16px !important;
+  height: 16px !important;
+  display: block;
+}
+
+.cart-item-card__actions--pill cart-remove-button .button:hover {
+  color: #ff4d4d;
+}
+
+@media screen and (max-width: 500px) {
+  .cart-item-card {
+    flex-direction: row;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .cart-item-card__media {
+    width: 60px;
+  }
+  
+  .cart-item-card__prices-actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  
+  .cart-item-card__actions--pill {
+    width: auto;
+  }
+
+  .cart-item-card__details .cart-item-card__name {
+    font-size: 1.1rem;
+  }
+}

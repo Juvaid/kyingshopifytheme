@@ -616,6 +616,46 @@
         "unit": "px",
         "label": "t:settings_schema.global.settings.blur.label",
         "default": 0
+      },
+      {
+        "type": "header",
+        "content": "Discount Badge"
+      },
+      {
+        "type": "color",
+        "id": "discount_badge_color",
+        "label": "Discount badge color",
+        "default": "#e22120"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_card_rating",
+        "label": "Show product rating",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "card_rating_location",
+        "label": "Rating location",
+        "options": [
+          {
+            "value": "on_image",
+            "label": "On image"
+          },
+          {
+            "value": "above_title",
+            "label": "Above title"
+          },
+          {
+            "value": "below_title",
+            "label": "Below title"
+          },
+          {
+            "value": "below_price",
+            "label": "Below price"
+          }
+        ],
+        "default": "on_image"
       }
     ]
   },
@@ -1440,9 +1480,21 @@
       },
       {
         "type": "collection",
-        "id": "cart_drawer_collection",
-        "label": "t:settings_schema.cart.settings.cart_drawer.collection.label",
-        "info": "t:settings_schema.cart.settings.cart_drawer.collection.info"
+        "id": "cart_drawer_upsell_collection",
+        "label": "Cart drawer upsell collection",
+        "info": "Products to show in the 'You might also like' section."
+      },
+      {
+        "type": "text",
+        "id": "cart_drawer_upsell_heading",
+        "label": "Upsell heading",
+        "default": "You might also like"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_discount_code",
+        "label": "Show discount code field",
+        "default": true
       },
       {
         "type": "color_scheme",
@@ -1470,6 +1522,42 @@
         "unit": "ch",
         "label": "Character limit",
         "default": 35
+      },
+      {
+        "type": "header",
+        "content": "Cart Design"
+      },
+      {
+        "type": "select",
+        "id": "cart_item_style",
+        "label": "Cart item style",
+        "options": [
+          {
+            "value": "standard",
+            "label": "Standard (Table)"
+          },
+          {
+            "value": "card",
+            "label": "Modern Card"
+          }
+        ],
+        "default": "card"
+      },
+      {
+        "type": "select",
+        "id": "quantity_selector_style",
+        "label": "Quantity selector style",
+        "options": [
+          {
+            "value": "standard",
+            "label": "Standard"
+          },
+          {
+            "value": "pill",
+            "label": "Pill"
+          }
+        ],
+        "default": "pill"
       }
     ]
   },

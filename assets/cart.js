@@ -93,13 +93,11 @@ class CartItems extends HTMLElement {
         .then((response) => response.text())
         .then((responseText) => {
           const html = new DOMParser().parseFromString(responseText, 'text/html');
-          const selectors = ['cart-drawer-items', '.cart-drawer__footer'];
-          for (const selector of selectors) {
-            const targetElement = document.querySelector(selector);
-            const sourceElement = html.querySelector(selector);
-            if (targetElement && sourceElement) {
-              targetElement.replaceWith(sourceElement);
-            }
+          // Only replace the items list – not the entire footer to preserve promo code etc.
+          const targetItems = document.querySelector('cart-drawer-items');
+          const sourceItems = html.querySelector('cart-drawer-items');
+          if (targetItems && sourceItems) {
+            targetItems.replaceWith(sourceItems);
           }
         })
         .catch((e) => {
@@ -170,7 +168,7 @@ class CartItems extends HTMLElement {
           const items = document.querySelectorAll('.cart-item');
 
           if (parsedState.errors) {
-            quantityElement.value = quantityElement.getAttribute('value');
+            if (quantityElement) quantityElement.value = quantityElement.getAttribute('value');
             this.updateLiveRegions(line, parsedState.errors);
             return;
           }
@@ -191,16 +189,20 @@ class CartItems extends HTMLElement {
               section.selector
             );
           });
-          const updatedValue = parsedState.items[line - 1] ? parsedState.items[line - 1].quantity : undefined;
-          let message = '';
-          if (items.length === parsedState.items.length && updatedValue !== parseInt(quantityElement.value)) {
-            if (typeof updatedValue === 'undefined') {
-              message = window.cartStrings.error;
-            } else {
-              message = window.cartStrings.quantityError.replace('[quantity]', updatedValue);
+
+          // Guard: these elements may not exist when the last item is removed
+          if (parsedState.item_count > 0) {
+            const updatedValue = parsedState.items[line - 1] ? parsedState.items[line - 1].quantity : undefined;
+            let message = '';
+            if (items.length === parsedState.items.length && updatedValue !== parseInt(quantityElement?.value)) {
+              if (typeof updatedValue === 'undefined') {
+                message = window.cartStrings.error;
+              } else {
+                message = window.cartStrings.quantityError.replace('[quantity]', updatedValue);
+              }
             }
+            this.updateLiveRegions(line, message);
           }
-          this.updateLiveRegions(line, message);
 
           const lineItem =
             document.getElementById(`CartItem-${line}`) || document.getElementById(`CartDrawer-Item-${line}`);

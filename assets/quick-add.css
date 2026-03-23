@@ -416,3 +416,58 @@ quick-add-bulk .quantity__input {
 .quantity__input-disabled {
   pointer-events: none;
 }
+
+/* ============================================================
+   Quick Add Button — Loading State
+   ============================================================ */
+
+.btn-quick-add {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hide text while loading */
+.btn-quick-add[data-loading="true"] > span {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Show dots while loading */
+.btn-quick-add .btn-quick-add__dots {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.btn-quick-add[data-loading="true"] .btn-quick-add__dots {
+  opacity: 1;
+}
+
+.btn-quick-add__dots span {
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  animation: qa-dot-pulse 1.2s infinite ease-in-out both;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.btn-quick-add__dots span:nth-child(1) { animation-delay: 0s; }
+.btn-quick-add__dots span:nth-child(2) { animation-delay: 0.2s; }
+.btn-quick-add__dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes qa-dot-pulse {
+  0%, 100% { transform: scale(0.4); opacity: 0.4; }
+  50%       { transform: scale(1);   opacity: 1; }
+}

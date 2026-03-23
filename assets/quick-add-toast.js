@@ -18,6 +18,9 @@
       this.titleEl = document.getElementById('quick-add-toast-title');
       this.priceEl = document.getElementById('quick-add-toast-price');
       this.imageEl = document.getElementById('quick-add-toast-image');
+      this.labelEl = this.toast.querySelector('.quick-add-toast__label');
+      this.imageWrapEl = this.toast.querySelector('.quick-add-toast__image-wrap');
+      this.actionsEl = this.toast.querySelector('.quick-add-toast__actions');
 
       this._bindEvents();
       this._initFormInterception();
@@ -38,54 +41,60 @@
 
     _initFormInterception() {
       // Use event delegation to capture all current and future quick-add forms
-      document.addEventListener('submit', (e) => {
-        const form = e.target;
-        if (!form.matches('.form[data-type="add-to-cart-form"]')) return;
-        e.preventDefault();
-        const btn = form.querySelector('.btn-quick-add');
-        if (btn) this._handleSubmit(form, btn);
-      }, true); // capture phase so we get it before any other handlers
+      document.addEventListener(
+        'submit',
+        (e) => {
+          const form = e.target;
+          if (!form.action?.includes('/cart/add')) return;
+          // Ignore if inside cart drawer: let the drawer handle its own inline updates
+          if (form.closest('cart-drawer') || form.closest('.cart-drawer')) return;
+          
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          const btn = form.querySelector('.btn-quick-add');
+          if (btn) this._handleSubmit(form, btn);
+        },
+        true,
+      ); // capture phase so we get it before any other handlers
     }
 
     async _handleSubmit(form, btn) {
-      if (btn.disabled || btn.dataset.loading === 'true') return;
+      if (btn.dataset.loading === 'true') return;
 
-      // Set loading state
+      // Start loading — CSS drives all the visuals via [data-loading="true"]
       btn.dataset.loading = 'true';
       btn.setAttribute('aria-disabled', 'true');
-      const spinner = btn.querySelector('.loading__spinner');
-      const span = btn.querySelector('span');
-      if (spinner) spinner.classList.remove('hidden');
-      if (span) span.classList.add('hidden');
+
+      const startTime = Date.now();
 
       try {
         const formData = new FormData(form);
         const response = await fetch('/cart/add.js', {
           method: 'POST',
-          headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
-          body: formData
+          headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
+          body: formData,
         });
 
         const data = await response.json();
+
+        // Ensure minimum 800ms loading visible for better UX
+        const elapsed = Date.now() - startTime;
+        if (elapsed < 800) await new Promise(r => setTimeout(r, 800 - elapsed));
 
         if (!response.ok || data.status) {
           this._showError(data.description || 'Could not add item to cart.');
           return;
         }
 
-        // Success — show toast with product info
         this._showToast(data);
         this._updateCartCount();
-
       } catch (err) {
         console.error('[QuickAddToast] Error:', err);
         this._showError('Something went wrong. Please try again.');
       } finally {
-        // Reset button
+        // Stop loading
         btn.dataset.loading = 'false';
         btn.removeAttribute('aria-disabled');
-        if (spinner) spinner.classList.add('hidden');
-        if (span) span.classList.remove('hidden');
       }
     }
 
@@ -93,14 +102,21 @@
       // Populate product info
       let displayTitle = product.product_title;
       if (this.settings.truncateEnabled && displayTitle.length > this.settings.truncateLimit) {
-        displayTitle = displayTitle.substring(0, this.settings.cart_product_name_limit || this.settings.truncateLimit) + '...';
+        displayTitle =
+          displayTitle.substring(0, this.settings.cart_product_name_limit || this.settings.truncateLimit) + '...';
       }
       if (this.titleEl) this.titleEl.textContent = displayTitle;
       if (this.priceEl) this.priceEl.textContent = this._formatMoney(product.final_price);
       if (this.imageEl && product.image) {
         this.imageEl.src = product.image.replace(/\.(\w+)(\?|$)/, '_120x120.$1$2');
         this.imageEl.alt = product.product_title;
+        if (this.imageWrapEl) this.imageWrapEl.style.display = '';
+      } else {
+        if (this.imageWrapEl) this.imageWrapEl.style.display = 'none';
       }
+
+      if (this.labelEl) this.labelEl.style.display = '';
+      if (this.actionsEl) this.actionsEl.style.display = '';
 
       this.toast.removeAttribute('hidden');
       // Force reflow then animate in
@@ -138,7 +154,9 @@
       // Show a brief error toast
       if (this.titleEl) this.titleEl.textContent = message;
       if (this.priceEl) this.priceEl.textContent = '';
-      if (this.imageEl) this.imageEl.src = '';
+      if (this.imageWrapEl) this.imageWrapEl.style.display = 'none';
+      if (this.labelEl) this.labelEl.style.display = 'none';
+      if (this.actionsEl) this.actionsEl.style.display = 'none';
       this.toast.removeAttribute('hidden');
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -155,11 +173,11 @@
         const cart = await res.json();
         const count = cart.item_count;
         // Update all cart count bubbles
-        document.querySelectorAll('[data-cart-count], .cart-count-bubble span[aria-hidden]').forEach(el => {
+        document.querySelectorAll('[data-cart-count], .cart-count-bubble span[aria-hidden]').forEach((el) => {
           el.textContent = count;
         });
         const bubbles = document.querySelectorAll('.cart-count-bubble');
-        bubbles.forEach(b => {
+        bubbles.forEach((b) => {
           if (count === 0) {
             b.style.display = 'none';
           } else {
@@ -179,7 +197,7 @@
         return new Intl.NumberFormat(document.documentElement.lang || 'en-IN', {
           style: 'currency',
           currency: currencyCode,
-          minimumFractionDigits: 0
+          minimumFractionDigits: 0,
         }).format(cents / 100);
       } catch {
         return `${currencyCode} ${amount}`;
@@ -193,5 +211,4 @@
   } else {
     new QuickAddToast();
   }
-
 })();

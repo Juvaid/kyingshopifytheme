@@ -1,24 +1,14 @@
-.product--no-media .rating-wrapper {
-  text-align: center;
-}
-
-.rating {
-  display: inline-block;
-  margin: 0;
-}
-
-.product .rating-star {
-  --letter-spacing: 0.8;
-  --font-size: 1.7;
-}
-
-.card-wrapper .rating-star {
-  --letter-spacing: 0.7;
-  --font-size: 1.4;
+.rating-wrapper {
+  margin: 0.5rem 0;
+  display: flex !important;
+  align-items: center;
+  gap: 1rem;
 }
 
 .rating-star {
-  --color-rating-star: rgb(var(--color-foreground));
+  --color-rating-star: #ffb400;
+  --letter-spacing: 0.8;
+  --font-size: 1.7;
   --percent: calc(
     (
         var(--rating) / var(--rating-max) + var(--rating-decimal) * var(--font-size) /
@@ -29,7 +19,7 @@
   font-size: calc(var(--font-size) * 1rem);
   line-height: 1;
   display: inline-block;
-  font-family: Times;
+  font-family: Arial, sans-serif;
   margin: 0;
 }
 
@@ -41,6 +31,7 @@
     rgba(var(--color-foreground), 0.15) var(--percent)
   );
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
