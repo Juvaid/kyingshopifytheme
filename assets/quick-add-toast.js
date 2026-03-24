@@ -23,7 +23,7 @@
       this.actionsEl = this.toast.querySelector('.quick-add-toast__actions');
 
       this._bindEvents();
-      this._initFormInterception();
+      this._initSubscriber();
     }
 
     _bindEvents() {
@@ -39,63 +39,17 @@
       });
     }
 
-    _initFormInterception() {
-      // Use event delegation to capture all current and future quick-add forms
-      document.addEventListener(
-        'submit',
-        (e) => {
-          const form = e.target;
-          if (!form.action?.includes('/cart/add')) return;
-          // Ignore if inside cart drawer: let the drawer handle its own inline updates
-          if (form.closest('cart-drawer') || form.closest('.cart-drawer')) return;
-          
-          e.preventDefault();
-          e.stopImmediatePropagation();
-          const btn = form.querySelector('.btn-quick-add');
-          if (btn) this._handleSubmit(form, btn);
-        },
-        true,
-      ); // capture phase so we get it before any other handlers
+    _initSubscriber() {
+      if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
+        subscribe(PUB_SUB_EVENTS.cartUpdate, this.onCartUpdate.bind(this));
+      }
     }
 
-    async _handleSubmit(form, btn) {
-      if (btn.dataset.loading === 'true') return;
+    onCartUpdate(event) {
+      if (event.source !== 'product-form' || !event.isQuickAdd || !event.cartData || event.cartData.status) return;
 
-      // Start loading — CSS drives all the visuals via [data-loading="true"]
-      btn.dataset.loading = 'true';
-      btn.setAttribute('aria-disabled', 'true');
-
-      const startTime = Date.now();
-
-      try {
-        const formData = new FormData(form);
-        const response = await fetch('/cart/add.js', {
-          method: 'POST',
-          headers: { 'X-Requested-With': 'XMLHttpRequest', Accept: 'application/json' },
-          body: formData,
-        });
-
-        const data = await response.json();
-
-        // Ensure minimum 800ms loading visible for better UX
-        const elapsed = Date.now() - startTime;
-        if (elapsed < 800) await new Promise(r => setTimeout(r, 800 - elapsed));
-
-        if (!response.ok || data.status) {
-          this._showError(data.description || 'Could not add item to cart.');
-          return;
-        }
-
-        this._showToast(data);
-        this._updateCartCount();
-      } catch (err) {
-        console.error('[QuickAddToast] Error:', err);
-        this._showError('Something went wrong. Please try again.');
-      } finally {
-        // Stop loading
-        btn.dataset.loading = 'false';
-        btn.removeAttribute('aria-disabled');
-      }
+      this._showToast(event.cartData);
+      this._updateCartCount();
     }
 
     _showToast(product) {

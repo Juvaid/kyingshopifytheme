@@ -6,10 +6,12 @@ if (!customElements.get('product-form')) {
         super();
 
         this.form = this.querySelector('form');
+        if (!this.form) return;
         this.variantIdInput.disabled = false;
         this.form.addEventListener('submit', this.onSubmitHandler.bind(this));
         this.cart = document.querySelector('cart-notification') || document.querySelector('cart-drawer');
         this.submitButton = this.querySelector('[type="submit"]');
+        if (!this.submitButton) return;
         this.submitButtonText = this.submitButton.querySelector('span');
 
         if (document.querySelector('cart-drawer')) this.submitButton.setAttribute('aria-haspopup', 'dialog');
@@ -18,6 +20,12 @@ if (!customElements.get('product-form')) {
       }
 
       onSubmitHandler(evt) {
+        if (!this.cart) return; // Fallback to native form submission if no JS cart component
+
+        const submitter = evt.submitter || document.activeElement;
+        // If the submitter is NOT our 'add' button (e.g. it's the 'Buy It Now' button), let the form submit normally
+        if (submitter && submitter.getAttribute('name') !== 'add') return;
+
         evt.preventDefault();
         if (this.submitButton.getAttribute('aria-disabled') === 'true') return;
 
@@ -25,20 +33,22 @@ if (!customElements.get('product-form')) {
 
         this.submitButton.setAttribute('aria-disabled', true);
         this.submitButton.classList.add('loading');
-        this.querySelector('.loading__spinner').classList.remove('hidden');
+        const loadingElement = this.querySelector('.loading-dots') || this.querySelector('.loading__spinner');
+        if (loadingElement) loadingElement.classList.remove('hidden');
 
         const config = fetchConfig('javascript');
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
         delete config.headers['Content-Type'];
 
         const formData = new FormData(this.form);
-        if (this.cart) {
-          const isQuickAdd = this.closest('product-card') || this.classList.contains('quick-add-form');
-          const sectionsToRender = isQuickAdd 
-            ? ['cart-icon-bubble'] 
-            : this.cart.getSectionsToRender().map((section) => section.id);
+        const isQuickAdd = this.closest('.product-card') || this.classList.contains('quick-add-form');
 
-          formData.append('sections', sectionsToRender.join(','));
+        if (this.cart) {
+          formData.append(
+            'sections',
+            this.cart.getSectionsToRender().map((section) => section.id)
+              .join(',')
+          );
           formData.append('sections_url', window.location.pathname);
           this.cart.setActiveElement(document.activeElement);
         }
@@ -50,20 +60,21 @@ if (!customElements.get('product-form')) {
           .then((response) => {
             const elapsedTime = Date.now() - startTime;
             const delay = Math.max(0, 600 - elapsedTime);
-            
+
             setTimeout(() => {
-              this.handleResponse(response, formData, evt);
+              this.handleResponse(response, formData, isQuickAdd);
             }, delay);
           })
           .catch((e) => {
             console.error(e);
             this.submitButton.classList.remove('loading');
             this.submitButton.removeAttribute('aria-disabled');
-            this.querySelector('.loading__spinner').classList.add('hidden');
+            const loadingElement = this.querySelector('.loading-dots') || this.querySelector('.loading__spinner');
+            if (loadingElement) loadingElement.classList.add('hidden');
           });
       }
 
-      handleResponse(response, formData, evt) {
+      handleResponse(response, formData, isQuickAdd) {
         if (response.status) {
           publish(PUB_SUB_EVENTS.cartError, {
             source: 'product-form',
@@ -77,7 +88,8 @@ if (!customElements.get('product-form')) {
           if (!soldOutMessage) {
             this.submitButton.classList.remove('loading');
             this.submitButton.removeAttribute('aria-disabled');
-            this.querySelector('.loading__spinner').classList.add('hidden');
+            const loadingElement = this.querySelector('.loading-dots') || this.querySelector('.loading__spinner');
+            if (loadingElement) loadingElement.classList.add('hidden');
             return;
           }
           this.submitButton.setAttribute('aria-disabled', true);
@@ -95,20 +107,21 @@ if (!customElements.get('product-form')) {
               'modalClosed',
               () => {
                 setTimeout(() => {
-                  this.cart.renderContents(response);
+                  this.cart.renderContents(response, !isQuickAdd);
                 });
               },
-              { once: true }
+              { once: true },
             );
             quickAddModal.hide(true);
           } else {
-            this.cart.renderContents(response);
+            this.cart.renderContents(response, !isQuickAdd);
           }
 
           publish(PUB_SUB_EVENTS.cartUpdate, {
             source: 'product-form',
             productVariantId: formData.get('id'),
             cartData: response,
+            isQuickAdd: isQuickAdd
           });
         }
 
@@ -116,7 +129,8 @@ if (!customElements.get('product-form')) {
         this.submitButton.classList.remove('loading');
         if (this.cart && this.cart.classList.contains('is-empty')) this.cart.classList.remove('is-empty');
         if (!this.error) this.submitButton.removeAttribute('aria-disabled');
-        this.querySelector('.loading__spinner').classList.add('hidden');
+        const loadingElement = this.querySelector('.loading-dots') || this.querySelector('.loading__spinner');
+        if (loadingElement) loadingElement.classList.add('hidden');
       }
 
       handleErrorMessage(errorMessage = false) {
@@ -147,6 +161,6 @@ if (!customElements.get('product-form')) {
       get variantIdInput() {
         return this.form.querySelector('[name=id]');
       }
-    }
+    },
   );
 }

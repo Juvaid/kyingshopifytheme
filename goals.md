@@ -10,6 +10,10 @@
 - [x] Implement Product Card Component <!-- id: 11 -->
 - [x] Read and analyze requirements in existing .md files <!-- id: 6 -->
 - [x] Fix Quantity Selector Corner Radius <!-- id: 13 -->
+- [x] Implement Tabbed Collection Section <!-- id: 20 -->
+- [x] Improve Collection List Section (Premium Grid) <!-- id: 21 -->
+- [x] Implement Multi-Image Row Section <!-- id: 22 -->
+- [ ] Implement Before/After Image Section <!-- id: 24 -->
 - [ ] Implement Form Input Component <!-- id: 14 -->
 - [ ] Implement Grid (Responsive) Component <!-- id: 15 -->
 - [ ] Implement Testimonial Component <!-- id: 16 -->

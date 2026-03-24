@@ -47,11 +47,18 @@
 
   .grid-banner-wrapper-{{ section.id }} {
     width: 100%;
-    {%- if section.settings.grid_banner_height_mode == 'adapt' and section.blocks.first.settings.image != blank -%}
-      height: auto;
-      aspect-ratio: {{ section.blocks.first.settings.image.aspect_ratio }};
-    {%- elsif section.settings.grid_banner_height_mode == 'adapt' -%}
-      height: 400px;
+    {%- if section.settings.grid_banner_height_mode == 'adapt' -%}
+      {%- if section.blocks.first.settings.image != blank -%}
+        aspect-ratio: {{ section.blocks.first.settings.image.aspect_ratio }};
+      {%- else -%}
+        height: 400px;
+      {%- endif -%}
+
+      {%- if section.blocks.first.settings.mobile_image != blank -%}
+        @media screen and (max-width: 749px) {
+          aspect-ratio: {{ section.blocks.first.settings.mobile_image.aspect_ratio }};
+        }
+      {%- endif -%}
     {%- else -%}
       height: {{ section.settings.grid_banner_height_mobile }}px;
     {%- endif -%}

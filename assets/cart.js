@@ -78,7 +78,7 @@ class CartItems extends HTMLElement {
         inputValue,
         event,
         document.activeElement.getAttribute('name'),
-        event.target.dataset.quantityVariantId
+        event.target.dataset.quantityVariantId,
       );
     }
   }
@@ -146,6 +146,20 @@ class CartItems extends HTMLElement {
     const eventTarget = event.currentTarget instanceof CartRemoveButton ? 'clear' : 'change';
     const cartPerformanceUpdateMarker = CartPerformance.createStartingMarker(`${eventTarget}:user-action`);
 
+    // Handle removal animation
+    if (quantity === 0) {
+      const lineItem = document.getElementById(`CartItem-${line}`) || document.getElementById(`CartDrawer-Item-${line}`);
+      if (lineItem) {
+        lineItem.classList.add('cart-item--removing');
+        setTimeout(() => this.performUpdate(line, quantity, eventTarget, name, variantId, cartPerformanceUpdateMarker), 300);
+        return;
+      }
+    }
+
+    this.performUpdate(line, quantity, eventTarget, name, variantId, cartPerformanceUpdateMarker);
+  }
+
+  performUpdate(line, quantity, eventTarget, name, variantId, cartPerformanceUpdateMarker) {
     this.enableLoading(line);
 
     const body = JSON.stringify({
@@ -186,8 +200,17 @@ class CartItems extends HTMLElement {
               document.getElementById(section.id);
             elementToReplace.innerHTML = this.getSectionInnerHTML(
               parsedState.sections[section.section],
-              section.selector
+              section.selector,
             );
+
+            // Trigger pop animation for updated quantity
+            if (section.id === 'main-cart-items' || section.id === 'CartDrawer') {
+              const input = elementToReplace.querySelector(`#Quantity-${line}, #Drawer-quantity-${line}`);
+              if (input) {
+                input.classList.add('cart-quantity--pop');
+                setTimeout(() => input.classList.remove('cart-quantity--pop'), 400);
+              }
+            }
           });
 
           // Guard: these elements may not exist when the last item is removed
@@ -247,7 +270,8 @@ class CartItems extends HTMLElement {
   }
 
   getSectionInnerHTML(html, selector) {
-    return new DOMParser().parseFromString(html, 'text/html').querySelector(selector).innerHTML;
+    const parsed = new DOMParser().parseFromString(html, 'text/html').querySelector(selector);
+    return parsed ? parsed.innerHTML : '';
   }
 
   enableLoading(line) {
@@ -289,11 +313,11 @@ if (!customElements.get('cart-note')) {
           debounce((event) => {
             const body = JSON.stringify({ note: event.target.value });
             fetch(`${routes.cart_update_url}`, { ...fetchConfig(), ...{ body } }).then(() =>
-              CartPerformance.measureFromEvent('note-update:user-action', event)
+              CartPerformance.measureFromEvent('note-update:user-action', event),
             );
-          }, ON_CHANGE_DEBOUNCE_TIMER)
+          }, ON_CHANGE_DEBOUNCE_TIMER),
         );
       }
-    }
+    },
   );
 }

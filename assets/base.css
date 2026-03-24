@@ -1940,6 +1940,19 @@ input[type='checkbox'] {
   opacity: 0 !important;
 }
 
+.loading > .loading-dots {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+}
+
 .loading > .loading__spinner {
   display: flex !important;
   opacity: 1 !important;

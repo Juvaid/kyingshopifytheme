@@ -747,6 +747,25 @@
                 </product-recommendations>
               {%- when 'icon-with-text' -%}
                 {% render 'icon-with-text', block: block %}
+              {%- when 'before_after' -%}
+                {%- if block.settings.before_image != blank and block.settings.after_image != blank -%}
+                  <div class="product__before-after" {{ block.shopify_attributes }}>
+                    {% render 'before-after-card',
+                      before_image: block.settings.before_image,
+                      after_image: block.settings.after_image,
+                      before_text: block.settings.before_text,
+                      after_text: block.settings.after_text,
+                      initial_position: block.settings.drag_initial_position,
+                      aspect_ratio: block.settings.image_aspect_ratio,
+                      max_height: block.settings.image_max_height,
+                      before_text_color: '#fff',
+                      after_text_color: '#fff',
+                      drag_cursor_background: '#fff',
+                      drag_cursor_color: '#000',
+                      section_id: block.id
+                    %}
+                  </div>
+                {%- endif -%}
             {%- endcase -%}
           {%- endfor -%}
           <a href="{{ product.url }}" class="link product__view-details animate-arrow">
@@ -1792,6 +1811,70 @@
           "id": "enable_quick_add",
           "label": "t:sections.main-product.blocks.complementary_products.settings.enable_quick_add.label",
           "default": false
+        }
+      ]
+    },
+    {
+      "type": "before_after",
+      "name": "Before/after image",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "To show different images for each product: 1. Create product metafields. 2. Use the 'Dynamic Source' icon on the image pickers below. 3. Alternatively, create a unique Product Template."
+        },
+        {
+          "type": "image_picker",
+          "id": "before_image",
+          "label": "Before image"
+        },
+        {
+          "type": "image_picker",
+          "id": "after_image",
+          "label": "After image"
+        },
+        {
+          "type": "text",
+          "id": "before_text",
+          "default": "Before",
+          "label": "Before label"
+        },
+        {
+          "type": "text",
+          "id": "after_text",
+          "default": "After",
+          "label": "After label"
+        },
+        {
+          "type": "select",
+          "id": "image_aspect_ratio",
+          "options": [
+            { "value": "natural", "label": "Natural" },
+            { "value": "1 / 1", "label": "Square (1:1)" },
+            { "value": "4 / 5", "label": "Portrait (4:5)" },
+            { "value": "16 / 9", "label": "Landscape (16:9)" }
+          ],
+          "default": "natural",
+          "label": "Image aspect ratio"
+        },
+        {
+          "type": "range",
+          "id": "image_max_height",
+          "min": 200,
+          "max": 1000,
+          "step": 10,
+          "unit": "px",
+          "label": "Image Max Height",
+          "default": 400
+        },
+        {
+          "type": "range",
+          "id": "drag_initial_position",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Drag initial position",
+          "default": 50
         }
       ]
     },

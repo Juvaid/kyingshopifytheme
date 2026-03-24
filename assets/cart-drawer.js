@@ -43,7 +43,7 @@ class CartDrawer extends HTMLElement {
         const focusElement = this.querySelector('.drawer__inner') || this.querySelector('.drawer__close');
         trapFocus(containerToTrapFocusOn, focusElement);
       },
-      { once: true }
+      { once: true },
     );
 
     document.body.classList.add('overflow-hidden');
@@ -70,13 +70,13 @@ class CartDrawer extends HTMLElement {
     cartDrawerNote.parentElement.addEventListener('keyup', onKeyUpEscape);
   }
 
-  renderContents(parsedState) {
+  renderContents(parsedState, shouldOpen = true) {
     this.querySelector('.drawer__inner').classList.contains('is-empty') &&
       this.querySelector('.drawer__inner').classList.remove('is-empty');
     this.productId = parsedState.id;
     this.getSectionsToRender().forEach((section) => {
       if (!parsedState.sections || !parsedState.sections[section.id]) return;
-      
+
       const sectionElement = section.selector
         ? document.querySelector(section.selector)
         : document.getElementById(section.id);
@@ -87,7 +87,16 @@ class CartDrawer extends HTMLElement {
 
     setTimeout(() => {
       this.querySelector('#CartDrawer-Overlay').addEventListener('click', this.close.bind(this));
-      this.open();
+      
+      // Animate entry for the new item
+      const items = this.querySelectorAll('.cart-item');
+      if (items.length > 0) {
+        // If we have a productId, it was just added. Animate that specific item or the first one.
+        const newItem = Array.from(items).find(item => item.dataset.id === this.productId) || items[0];
+        if (newItem) newItem.classList.add('cart-item--added');
+      }
+
+      if (shouldOpen) this.open();
     });
   }
 

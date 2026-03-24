@@ -15,6 +15,23 @@ cart-items.is-empty .title-wrapper-with-link,
   display: block;
 }
 
+.drawer.is-empty .drawer__inner-empty,
+cart-drawer.is-empty .drawer__inner-empty {
+  display: block !important;
+}
+
+.drawer:not(.is-empty) .drawer__inner-empty,
+cart-drawer:not(.is-empty) .drawer__inner-empty {
+  display: none !important;
+}
+
+.drawer.is-empty cart-drawer-items,
+.drawer.is-empty .drawer__footer,
+cart-drawer.is-empty cart-drawer-items,
+cart-drawer.is-empty .drawer__footer {
+  display: none !important;
+}
+
 .cart__warnings {
   display: none;
   text-align: center;
@@ -239,3 +256,93 @@ cart-items {
     gap: 1rem;
   }
 }
+
+/* Cart Animations */
+@keyframes cartItemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cartItemSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
+.cart-item--added {
+  animation: cartItemSlideIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards !important;
+}
+
+.cart-item--removing {
+  animation: cartItemSlideOut 0.3s cubic-bezier(0.4, 0, 1, 1) forwards !important;
+  pointer-events: none !important;
+}
+
+.cart-item {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Bin Icon Interactions */
+.cart-remove-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cart-remove-button:hover {
+  transform: scale(1.1) rotate(5deg);
+  color: #ff4d4d !important; /* Subtle red hint for removal */
+}
+
+.cart-remove-button:active {
+  transform: scale(0.9);
+}
+
+.cart-remove-button .svg-wrapper {
+  transition: transform 0.3s ease;
+}
+
+/* Quantity Pill Interactions */
+.quantity {
+  transition: all 0.3s ease;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+
+.quantity:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+
+.quantity__button {
+  transition: all 0.2s ease;
+}
+
+.quantity__button:hover {
+  transform: scale(1.15);
+  background-color: rgba(var(--color-foreground), 0.05) !important;
+}
+
+.quantity__button:active {
+  transform: scale(0.85);
+}
+
+/* Quantity Pop Animation */
+@keyframes cartQuantityPop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.cart-quantity--pop {
+  animation: cartQuantityPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+

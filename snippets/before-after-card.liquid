@@ -1,0 +1,109 @@
+{% comment %}
+    Renders a before/after image comparison slider.
+    Accepts:
+    - before_image: {Object} Image object for the "before" state
+    - after_image: {Object} Image object for the "after" state
+    - before_text: {String} Text for the "before" label
+    - after_text: {String} Text for the "after" label
+    - initial_position: {Number} Initial drag position (0-100)
+    - aspect_ratio: {String} Aspect ratio for the container
+    - max_height: {Number} Maximum height for the container
+    - before_text_color: {Color} Color for the "before" label text
+    - after_text_color: {Color} Color for the "after" label text
+    - drag_cursor_background: {Color} Background color for the drag handle
+    - drag_cursor_color: {Color} Icon color for the drag handle
+    - section_id: {String} Unique ID for the instance
+    - blocks: {Array} Blocks for product hotspots (optional)
+{% endcomment %}
+
+{{ 'component-before-after.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'before-after-slider.js' | asset_url }}" defer="defer"></script>
+
+<style>
+  .ba-container--{{ section_id }} {
+    {% if aspect_ratio != 'natural' %}
+      aspect-ratio: {{ aspect_ratio }};
+    {% endif %}
+    max-height: {{ max_height }}px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  .ba-label--before-{{ section_id }} { color: {{ before_text_color }}; }
+  .ba-label--after-{{ section_id }} { color: {{ after_text_color }}; }
+  
+  .ba-handle--{{ section_id }}, 
+  .ba-cursor--{{ section_id }} { 
+    background: {{ drag_cursor_background }}; 
+  }
+  
+  .ba-cursor--{{ section_id }} svg { 
+    fill: {{ drag_cursor_color }}; 
+  }
+</style>
+
+<before-after-slider 
+  data-initial-position="{{ initial_position }}"
+  id="BeforeAfter-{{ section_id }}"
+>
+  <div class="ba-image-container ba-container--{{ section_id }}">
+    {%- if before_image != blank -%}
+      {{ before_image | image_url: width: 2000 | image_tag: 
+        class: 'ba-image-before',
+        loading: 'lazy',
+        alt: 'Before image'
+      }}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+
+    {%- if after_image != blank -%}
+      {{ after_image | image_url: width: 2000 | image_tag: 
+        class: 'ba-image-after',
+        loading: 'lazy',
+        alt: 'After image'
+      }}
+    {%- else -%}
+       <div class="ba-image-after" style="background: #e5e5e5; display: flex; align-items: center; justify-content: center;">
+         {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+       </div>
+    {%- endif -%}
+
+    <div class="ba-label ba-label--before ba-label--before-{{ section_id }}">{{ before_text }}</div>
+    <div class="ba-label ba-label--after ba-label--after-{{ section_id }}">{{ after_text }}</div>
+
+    <div class="ba-handle ba-handle--{{ section_id }}">
+      <div class="ba-cursor ba-cursor--{{ section_id }}">
+        <svg viewBox="0 0 24 24"><path d="M8 7h2v10H8zm6 0h2v10h-2z"/></svg>
+      </div>
+    </div>
+  </div>
+
+  {%- if blocks -%}
+    {%- for block in blocks -%}
+      {%- if block.type == 'product' and block.settings.product != blank -%}
+        <div class="ba-hotspot" 
+          style="top: {{ block.settings.vertical_position }}%; left: {{ block.settings.horizontal_position }}%;"
+          {{ block.shopify_attributes }}
+        >
+          <div class="ba-hotspot__trigger" onclick="this.parentElement.classList.toggle('active')"></div>
+          <div class="ba-card">
+            <a href="{{ block.settings.product.url }}" class="ba-card__inner">
+              <img 
+                src="{{ block.settings.product.featured_image | image_url: width: 120 }}" 
+                alt="{{ block.settings.product.title | escape }}" 
+                class="ba-card__img"
+                loading="lazy"
+                width="60"
+                height="60"
+              >
+              <div class="ba-card__info">
+                <h3 class="ba-card__title">{{ block.settings.product.title | escape }}</h3>
+                <p class="ba-card__price">{{ block.settings.product.price | money }}</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+</before-after-slider>
