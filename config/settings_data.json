@@ -52,6 +52,7 @@
     "card_shadow_horizontal_offset": 0,
     "card_shadow_vertical_offset": 4,
     "card_shadow_blur": 5,
+    "discount_badge_color": "#e22120",
     "collection_card_style": "standard",
     "collection_card_image_padding": 0,
     "collection_card_text_alignment": "left",
@@ -120,12 +121,13 @@
     "currency_code_enabled": true,
     "cart_type": "drawer",
     "show_vendor": false,
-    "show_cart_note": false,
-    "cart_drawer_collection": "new-launch",
-    "card_badge_bg": "#14878f",
-    "card_price_color": "#14878f",
+    "show_cart_note": true,
+    "cart_drawer_upsell_collection": "money-saving-combos",
     "truncate_cart_product_names": true,
     "cart_product_name_limit": 35,
+    "card_badge_bg": "#14878f",
+    "card_price_color": "#14878f",
+    "cart_drawer_collection": "new-launch",
     "sections": {
       "main-password-header": {
         "type": "main-password-header",
@@ -140,7 +142,6 @@
         }
       }
     },
-    "discount_badge_color": "#e22120",
     "content_for_index": [],
     "blocks": {
       "14060646107696862457": {
