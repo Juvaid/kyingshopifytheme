@@ -12,24 +12,24 @@
     "section_custom_slideshow_FfC6Ap": {
       "type": "section-custom-slideshow",
       "blocks": {
-        "slide_dUBE9e": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Banners_for_kying.jpg",
-            "link": ""
-          }
-        },
         "slide_3TL7hQ": {
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/banner.jpg",
             "link": ""
           }
+        },
+        "slide_dUBE9e": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Banners_for_kying.jpg",
+            "link": ""
+          }
         }
       },
       "block_order": [
-        "slide_dUBE9e",
-        "slide_3TL7hQ"
+        "slide_3TL7hQ",
+        "slide_dUBE9e"
       ],
       "name": "Custom Slideshow",
       "settings": {
