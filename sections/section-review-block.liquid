@@ -8,7 +8,7 @@
 
   .review-header-{{ section.id }} {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 24px;
   }
   
   .review-header-{{ section.id }} h2 {
@@ -34,7 +34,7 @@
   .review-card-{{ section.id }} {
     background: {{ section.settings.card_background }};
     border-radius: {{ section.settings.border_radius }}px;
-    padding: 30px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -79,16 +79,23 @@
      transition: transform 0.3s ease;
   }
   
-  .review-card-{{ section.id }} .r-stars { color: #FFB800; font-size: 18px; margin-bottom: 12px; letter-spacing: 2px; }
-  .review-card-{{ section.id }} .r-title { font-weight: 700; font-size: 18px; margin-bottom: 10px; color: #222; }
-  .review-card-{{ section.id }} .r-body { font-size: 15px; line-height: 1.6; color: #555; margin-bottom: 25px; flex-grow: 1; }
-  .review-card-{{ section.id }} .r-footer { display: flex; align-items: center; border-top: 1px solid #eee; padding-top: 20px; }
+  .review-card-{{ section.id }} .r-stars { color: #FFB800; font-size: 16px; margin-bottom: 8px; letter-spacing: 1.5px; }
+  .review-card-{{ section.id }} .r-title { font-weight: 700; font-size: 16px; margin-bottom: 6px; color: #222; }
+  .review-card-{{ section.id }} .r-body { font-size: 14px; line-height: 1.5; color: #555; margin-bottom: 16px; flex-grow: 1; }
+  .review-card-{{ section.id }} .r-footer { display: flex; align-items: center; border-top: 1px solid #eee; padding-top: 12px; }
 
   .review-card-{{ section.id }} .r-avatar {
-    width: 40px; height: 40px; background: #f0f0f0; border-radius: 50%;
+    width: 36px; height: 36px; background: #f0f0f0; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-weight: bold; color: #555; font-size: 16px; margin-right: 12px;
+    font-weight: bold; color: #555; font-size: 14px; margin-right: 12px;
     transform: translateZ(30px);
+    overflow: hidden;
+  }
+
+  .review-card-{{ section.id }} .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .review-card-{{ section.id }} .r-meta { display: flex; flex-direction: column; }
@@ -103,8 +110,8 @@
       display: flex;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
-      gap: 20px;
-      padding: 20px 20px 40px 20px;
+      gap: 12px;
+      padding: 12px 16px 24px 16px;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       transform-style: flat;
@@ -112,7 +119,8 @@
     .review-grid-{{ section.id }}::-webkit-scrollbar { display: none; }
 
     .review-card-{{ section.id }} {
-      min-width: 280px; max-width: 300px;
+      min-width: 260px; max-width: 280px;
+      padding: 16px;
       scroll-snap-align: center;
       transform: none !important; 
       transition: transform 0.3s ease, box-shadow 0.3s ease !important;
