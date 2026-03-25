@@ -29,6 +29,8 @@
       class="
         card article-card
         card--{{ settings.blog_card_style }}
+        article-card--{{ image_view_style | default: 'cover' }}
+        article-card--layout-{{ layout_style | default: 'standard' }}
         {% if media_height and media_height != 'adapt' %} article-card__image--{{ media_height }}{% endif %}
         {% if article.image and show_image %} card--media{% else %} card--text{% endif %}
         {% if settings.blog_card_style == 'card' %} color-{{ settings.blog_card_color_scheme }} gradient{% endif %}
@@ -43,7 +45,7 @@
         {%- if show_image == true and article.image -%}
           <div class="article-card__image-wrapper card__media">
             <div
-              class="article-card__image media media--hover-effect"
+              class="article-card__image media media--hover-effect article-card__image--{{ image_view_style | default: 'cover' }}"
               {% if section.settings.media_height == 'adapt' %}
                 style="padding-bottom: {{ 1 | divided_by: article.image.aspect_ratio | times: 100 }}%;"
               {% endif %}
@@ -77,7 +79,7 @@
           <div class="card__information">
             <h3 class="card__heading{% if show_excerpt %} h2{% endif %}">
               <a href="{{ article.url }}" class="full-unstyled-link">
-                {{ article.title | truncate: 50 | escape }}
+                {{ article.title | escape }}
               </a>
             </h3>
             <div class="article-card__info caption-with-letter-spacing h5">
@@ -92,9 +94,17 @@
               {%- if article.excerpt.size > 0 or article.content.size > 0 -%}
                 <p class="article-card__excerpt rte-width">
                   {%- if article.excerpt.size > 0 -%}
-                    {{ article.excerpt | strip_html | truncatewords: 30 }}
+                    {%- if truncate_limit == 0 or truncate_limit == null -%}
+                        {{ article.excerpt | strip_html }}
+                    {%- else -%}
+                        {{ article.excerpt | strip_html | truncatewords: truncate_limit }}
+                    {%- endif -%}
                   {%- else -%}
-                    {{ article.content | strip_html | truncatewords: 30 }}
+                    {%- if truncate_limit == 0 or truncate_limit == null -%}
+                        {{ article.content | strip_html }}
+                    {%- else -%}
+                        {{ article.content | strip_html | truncatewords: truncate_limit }}
+                    {%- endif -%}
                   {%- endif -%}
                 </p>
               {%- endif -%}

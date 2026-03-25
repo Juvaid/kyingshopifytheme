@@ -75,7 +75,10 @@
                 show_image: section.settings.show_image,
                 show_date: section.settings.show_date,
                 show_author: section.settings.show_author,
-                show_excerpt: true
+                show_excerpt: true,
+                truncate_limit: section.settings.description_truncate_limit,
+                image_view_style: section.settings.image_view_style,
+                layout_style: section.settings.blog_card_layout
               %}
             </li>
           {%- endfor -%}
@@ -287,6 +290,52 @@
       "id": "show_author",
       "default": false,
       "label": "t:sections.featured-blog.settings.show_author.label"
+    },
+    {
+      "type": "range",
+      "id": "description_truncate_limit",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30,
+      "label": "Description truncate limit (words)",
+      "info": "Set to 0 to show the full excerpt/content (not recommended for grid layouts)."
+    },
+    {
+      "type": "select",
+      "id": "image_view_style",
+      "options": [
+        {
+          "value": "cover",
+          "label": "Fill (Crop)"
+        },
+        {
+          "value": "contain",
+          "label": "Show Whole (Fit)"
+        }
+      ],
+      "default": "cover",
+      "label": "Image view experience"
+    },
+    {
+      "type": "select",
+      "id": "blog_card_layout",
+      "options": [
+        {
+          "value": "standard",
+          "label": "Standard"
+        },
+        {
+          "value": "minimalist",
+          "label": "Minimalist"
+        },
+        {
+          "value": "boxed",
+          "label": "Boxed"
+        }
+      ],
+      "default": "standard",
+      "label": "Blog card layout style"
     },
     {
       "type": "color_scheme",

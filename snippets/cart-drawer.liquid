@@ -33,34 +33,47 @@
       tabindex="-1"
     >
       <div class="drawer__inner-empty {% if cart != empty %}hidden{% endif %}">
-        <div class="cart-drawer__warnings center{% if settings.cart_drawer_collection != blank %} cart-drawer__warnings--has-collection{% endif %}">
-          <div class="cart-drawer__empty-content">
-            <h2 class="cart__empty-text">{{ 'sections.cart.empty' | t }}</h2>
-            <button
-              class="drawer__close"
-              type="button"
-              onclick="this.closest('cart-drawer').close()"
-              aria-label="{{ 'accessibility.close' | t }}"
-            >
-              <span class="svg-wrapper">
-                {{- 'icon-close.svg' | inline_asset_content -}}
-              </span>
-            </button>
-            <a href="{{ routes.all_products_collection_url }}" class="button">
-              {{ 'general.continue_shopping' | t }}
-            </a>
+        <button
+          class="drawer__close"
+          type="button"
+          onclick="this.closest('cart-drawer').close()"
+          aria-label="{{ 'accessibility.close' | t }}"
+        >
+          <span class="svg-wrapper">
+            {{- 'icon-close.svg' | inline_asset_content -}}
+          </span>
+        </button>
 
+        <div class="cart-drawer__empty-hero center">
+          <div class="cart-drawer__empty-icon">
+            <span class="svg-wrapper">
+              {{- 'icon-cart-empty.svg' | inline_asset_content -}}
+            </span>
+          </div>
+          <h2 class="cart-drawer__empty-heading">{{ 'sections.cart.empty' | t }}</h2>
+          <p class="cart-drawer__empty-subtext">
+            Your cart is waiting to be filled. Explore our latest arrivals and discover pieces you'll love.
+          </p>
+          <div class="cart-drawer__empty-actions">
+            <a href="{{ routes.all_products_collection_url }}" class="button button--primary button--full-width">
+              CONTINUE SHOPPING
+            </a>
+            
             {%- if shop.customer_accounts_enabled and customer == null -%}
-              <p class="cart__login-title h3">{{ 'sections.cart.login.title' | t }}</p>
-              <p class="cart__login-paragraph">
-                {{ 'sections.cart.login.paragraph_html' | t: link: routes.account_login_url }}
-              </p>
+              <div class="cart-drawer__empty-login">
+                <p>{{ 'sections.cart.login.title' | t }}</p>
+                <a href="{{ routes.account_login_url }}" class="link underlined-link">{{ 'customer.log_in' | t }}</a>
+              </div>
             {%- endif -%}
           </div>
         </div>
+
         {%- if settings.cart_drawer_collection != blank -%}
-          <div class="cart-drawer__collection">
-            {% render 'card-collection', card_collection: settings.cart_drawer_collection, columns: 1 %}
+          <div class="cart-drawer__empty-featured">
+            <h3 class="cart-drawer__empty-featured-title">Top Collections For You</h3>
+            <div class="cart-drawer__collection-wrapper">
+              {% render 'card-collection', card_collection: settings.cart_drawer_collection, columns: 1 %}
+            </div>
           </div>
         {%- endif -%}
       </div>
