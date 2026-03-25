@@ -119,10 +119,10 @@
       ],
       "name": "Premium Collection List",
       "settings": {
-        "title": "Collections",
-        "heading_size": "h1",
+        "title": "EXPLORE BY NEED",
+        "heading_size": "h2",
         "description": "",
-        "header_alignment": "center",
+        "header_alignment": "left",
         "columns_desktop": 4,
         "columns_mobile": "2",
         "max_width": 1400,
