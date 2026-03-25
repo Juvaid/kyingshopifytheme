@@ -39,7 +39,7 @@
         "autoplay_speed": 5,
         "show_arrows": false,
         "arrow_size": 40,
-        "border_radius": 14,
+        "border_radius": 4,
         "margin_top": 0,
         "margin_bottom": 0
       }
@@ -82,29 +82,37 @@
     "section_collection_list_square_tcj4tW": {
       "type": "section-collection-list-square",
       "blocks": {
+        "collection_fLcwdB": {
+          "type": "collection",
+          "settings": {
+            "collection": "kying-bright-lift",
+            "title": ""
+          }
+        },
         "collection_4D3Grm": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "kying-blemfix",
             "title": ""
           }
         },
         "collection_XHUB6A": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "kying-bright-lift",
             "title": ""
           }
         },
         "collection_baUJbj": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "money-saving-combos",
             "title": ""
           }
         }
       },
       "block_order": [
+        "collection_fLcwdB",
         "collection_4D3Grm",
         "collection_XHUB6A",
         "collection_baUJbj"
@@ -130,16 +138,74 @@
         "overlay_opacity": 70,
         "show_arrow": true,
         "hover_effect": "zoom",
-        "background_color": "#FFFFFF",
+        "background_color": "#ffffff",
         "color_scheme": "",
         "padding_top": 36,
         "padding_bottom": 36
+      }
+    },
+    "section_review_block_K9TGJn": {
+      "type": "section-review-block",
+      "blocks": {
+        "review_aReQUk": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Blemfix",
+            "body": "Honestly surprised by the longevity. I put it on in the morning and was still getting compliments at dinner. The packaging feels very premium too.",
+            "name": "Riya Menon",
+            "avatar_image": "shopify://shop_images/Hot_Girl_Hidden_Face_DP.jpg",
+            "verified": true
+          }
+        },
+        "review_cTpNJf": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Brightlift",
+            "body": "Really good product has a good soft smell and feels good after using it on the face and absorbs quickly from the others that I have used I really liked💕",
+            "name": "Kavya Sharma",
+            "avatar_image": "shopify://shop_images/38205986f9b9e40c369338537d0f7c7f.jpg",
+            "verified": true
+          }
+        },
+        "review_BWJRmn": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "title": "Sunscreen",
+            "body": "This stuff goes on smooth, no white cast at all. Plus, it dries fast so I'm not left feeling greasy. Huge points for that!",
+            "name": "Ishaan",
+            "avatar_image": "shopify://shop_images/download_7cc01c83-6096-4a9a-abe9-29fafab4fe33.jpg",
+            "verified": true
+          }
+        }
+      },
+      "block_order": [
+        "review_aReQUk",
+        "review_cTpNJf",
+        "review_BWJRmn"
+      ],
+      "name": "Review Block",
+      "settings": {
+        "heading": " 1,00,000+ Satisfied fam",
+        "heading_size": 26,
+        "show_aggregate": true,
+        "aggregate_text": "4.9/5 based on 5,200+ reviews",
+        "card_background": "#ffffff",
+        "columns_desktop": 3,
+        "gap": 30,
+        "border_radius": 12,
+        "padding_top": 40,
+        "padding_bottom": 40,
+        "max_width": 1200
       }
     }
   },
   "order": [
     "section_custom_slideshow_FfC6Ap",
     "tabbed_collection_n3Xajh",
-    "section_collection_list_square_tcj4tW"
+    "section_collection_list_square_tcj4tW",
+    "section_review_block_K9TGJn"
   ]
 }
