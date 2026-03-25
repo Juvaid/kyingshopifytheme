@@ -39,7 +39,7 @@
         "autoplay_speed": 5,
         "show_arrows": false,
         "arrow_size": 40,
-        "border_radius": 14,
+        "border_radius": 4,
         "margin_top": 0,
         "margin_bottom": 0
       }
@@ -130,7 +130,7 @@
         "overlay_opacity": 70,
         "show_arrow": true,
         "hover_effect": "zoom",
-        "background_color": "#FFFFFF",
+        "background_color": "#ffffff",
         "color_scheme": "",
         "padding_top": 36,
         "padding_bottom": 36
