@@ -82,29 +82,37 @@
     "section_collection_list_square_tcj4tW": {
       "type": "section-collection-list-square",
       "blocks": {
+        "collection_fLcwdB": {
+          "type": "collection",
+          "settings": {
+            "collection": "kying-bright-lift",
+            "title": ""
+          }
+        },
         "collection_4D3Grm": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "kying-blemfix",
             "title": ""
           }
         },
         "collection_XHUB6A": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "kying-bright-lift",
             "title": ""
           }
         },
         "collection_baUJbj": {
           "type": "collection",
           "settings": {
-            "collection": "",
+            "collection": "money-saving-combos",
             "title": ""
           }
         }
       },
       "block_order": [
+        "collection_fLcwdB",
         "collection_4D3Grm",
         "collection_XHUB6A",
         "collection_baUJbj"
