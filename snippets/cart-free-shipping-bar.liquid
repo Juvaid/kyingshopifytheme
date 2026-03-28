@@ -1,0 +1,28 @@
+{%- if settings.show_free_shipping_bar -%}
+  <div class="cart-free-shipping" data-cart-total="{{ cart.total_price }}">
+    {%- liquid
+      assign threshold_in_cents = settings.free_shipping_threshold | times: 100
+      assign cart_total = cart.total_price
+      
+      if cart_total >= threshold_in_cents
+        assign progress = 100
+      else
+        assign progress = cart_total | times: 100.0 | divided_by: threshold_in_cents | round
+        assign difference = threshold_in_cents | minus: cart_total
+      endif
+      
+      assign formatted_difference = difference | money
+      assign progress_message = settings.free_shipping_message | replace: '[amount]', formatted_difference
+    -%}
+    <div class="free-shipping__text{% if progress == 100 %} free-shipping__text--success{% endif %}">
+      {%- if progress == 100 -%}
+        {{ settings.free_shipping_success_message | escape }}
+      {%- else -%}
+        {{ progress_message }}
+      {%- endif -%}
+    </div>
+    <div class="free-shipping__bar">
+      <div class="free-shipping__progress{% if progress == 100 %} free-shipping__progress--success{% endif %}" style="width: {{ progress }}%;"></div>
+    </div>
+  </div>
+{%- endif -%}

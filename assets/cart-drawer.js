@@ -3,7 +3,8 @@ class CartDrawer extends HTMLElement {
     super();
 
     this.addEventListener('keyup', (evt) => evt.code === 'Escape' && this.close());
-    this.querySelector('#CartDrawer-Overlay').addEventListener('click', this.close.bind(this));
+    const overlay = this.querySelector('#CartDrawer-Overlay');
+    if (overlay) overlay.addEventListener('click', this.close.bind(this));
     this.setHeaderCartIconAccessibility();
   }
 
@@ -29,7 +30,8 @@ class CartDrawer extends HTMLElement {
     if (triggeredBy) this.setActiveElement(triggeredBy);
     const cartDrawerNote = this.querySelector('[id^="Details-"] summary');
     if (cartDrawerNote && !cartDrawerNote.hasAttribute('role')) this.setSummaryAccessibility(cartDrawerNote);
-    // here the animation doesn't seem to always get triggered. A timeout seem to help
+
+    // Use timeout to ensure animation triggers correctly
     setTimeout(() => {
       this.classList.add('animate', 'active');
     });
@@ -41,7 +43,7 @@ class CartDrawer extends HTMLElement {
           ? this.querySelector('.drawer__inner-empty')
           : document.getElementById('CartDrawer');
         const focusElement = this.querySelector('.drawer__inner') || this.querySelector('.drawer__close');
-        trapFocus(containerToTrapFocusOn, focusElement);
+        if (containerToTrapFocusOn) trapFocus(containerToTrapFocusOn, focusElement);
       },
       { once: true },
     );
@@ -59,7 +61,7 @@ class CartDrawer extends HTMLElement {
     cartDrawerNote.setAttribute('role', 'button');
     cartDrawerNote.setAttribute('aria-expanded', 'false');
 
-    if (cartDrawerNote.nextElementSibling.getAttribute('id')) {
+    if (cartDrawerNote.nextElementSibling && cartDrawerNote.nextElementSibling.getAttribute('id')) {
       cartDrawerNote.setAttribute('aria-controls', cartDrawerNote.nextElementSibling.id);
     }
 
@@ -67,32 +69,44 @@ class CartDrawer extends HTMLElement {
       event.currentTarget.setAttribute('aria-expanded', !event.currentTarget.closest('details').hasAttribute('open'));
     });
 
-    cartDrawerNote.parentElement.addEventListener('keyup', onKeyUpEscape);
+    if (cartDrawerNote.parentElement) {
+      cartDrawerNote.parentElement.addEventListener('keyup', onKeyUpEscape);
+    }
   }
 
   renderContents(parsedState, shouldOpen = true) {
-    this.querySelector('.drawer__inner').classList.contains('is-empty') &&
-      this.querySelector('.drawer__inner').classList.remove('is-empty');
     this.productId = parsedState.id;
-    this.getSectionsToRender().forEach((section) => {
-      if (!parsedState.sections || !parsedState.sections[section.id]) return;
 
-      const sectionElement = section.selector
-        ? document.querySelector(section.selector)
-        : document.getElementById(section.id);
+    if (parsedState.sections) {
+      this.getSectionsToRender().forEach((section) => {
+        const sectionId = section.section || section.id;
+        if (!parsedState.sections[sectionId]) return;
 
-      if (!sectionElement) return;
-      sectionElement.innerHTML = this.getSectionInnerHTML(parsedState.sections[section.id], section.selector);
-    });
+        const sectionElement = section.selector
+          ? document.querySelector(section.selector)
+          : document.getElementById(section.id);
+
+        if (!sectionElement) return;
+
+        const html = parsedState.sections[sectionId];
+        const selector = section.selector || `#${section.id}`;
+        sectionElement.innerHTML = this.getSectionInnerHTML(html, selector);
+      });
+    }
+
+    this.classList.toggle('is-empty', parsedState.item_count === 0);
 
     setTimeout(() => {
-      this.querySelector('#CartDrawer-Overlay').addEventListener('click', this.close.bind(this));
-      
+      const overlay = this.querySelector('#CartDrawer-Overlay');
+      if (overlay) overlay.addEventListener('click', this.close.bind(this));
+
       // Animate entry for the new item
       const items = this.querySelectorAll('.cart-item');
       if (items.length > 0) {
-        // If we have a productId, it was just added. Animate that specific item or the first one.
-        const newItem = Array.from(items).find(item => item.dataset.id === this.productId) || items[0];
+        const newItem =
+          Array.from(items).find(
+            (item) => item.dataset.id && item.dataset.id.toString() === this.productId?.toString(),
+          ) || items[0];
         if (newItem) newItem.classList.add('cart-item--added');
       }
 
@@ -100,20 +114,40 @@ class CartDrawer extends HTMLElement {
     });
   }
 
-  getSectionInnerHTML(html, selector = '.shopify-section') {
-    return new DOMParser().parseFromString(html, 'text/html').querySelector(selector).innerHTML;
-  }
-
   getSectionsToRender() {
     return [
       {
-        id: 'cart-drawer',
-        selector: '#CartDrawer',
+        id: 'CartDrawer-CartItems',
+        section: 'cart-drawer',
+        selector: '#CartDrawer-CartItems',
+      },
+      {
+        id: 'CartDrawer-Footer',
+        section: 'cart-drawer',
+        selector: '#CartDrawer-Footer',
       },
       {
         id: 'cart-icon-bubble',
       },
+      {
+        id: 'CartDrawer-Empty-Featured',
+        section: 'cart-drawer',
+        selector: '#CartDrawer-Empty-Featured',
+      },
+
+      {
+        id: 'CartDrawer-EmptyState',
+        section: 'cart-drawer',
+        selector: '.drawer__inner-empty',
+      },
     ];
+  }
+
+  getSectionInnerHTML(html, selector = '.shopify-section') {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const target = doc.querySelector(selector);
+    if (target) return target.innerHTML;
+    return '';
   }
 
   getSectionDOM(html, selector = '.shopify-section') {
@@ -131,14 +165,30 @@ class CartDrawerItems extends CartItems {
   getSectionsToRender() {
     return [
       {
-        id: 'CartDrawer',
+        id: 'CartDrawer-CartItems',
         section: 'cart-drawer',
-        selector: 'cart-drawer-items',
+        selector: '#CartDrawer-CartItems',
+      },
+      {
+        id: 'CartDrawer-Footer',
+        section: 'cart-drawer',
+        selector: '#CartDrawer-Footer',
       },
       {
         id: 'cart-icon-bubble',
         section: 'cart-icon-bubble',
-        selector: '.shopify-section',
+        selector: '#cart-icon-bubble',
+      },
+      {
+        id: 'CartDrawer-Empty-Featured',
+        section: 'cart-drawer',
+        selector: '#CartDrawer-Empty-Featured',
+      },
+
+      {
+        id: 'CartDrawer-EmptyState',
+        section: 'cart-drawer',
+        selector: '.drawer__inner-empty',
       },
     ];
   }

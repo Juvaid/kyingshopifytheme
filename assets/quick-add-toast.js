@@ -48,6 +48,10 @@
     onCartUpdate(event) {
       if (event.source !== 'product-form' || !event.isQuickAdd || !event.cartData || event.cartData.status) return;
 
+      // Skip toast if cart drawer is active
+      const cartDrawer = document.querySelector('cart-drawer');
+      if (cartDrawer && cartDrawer.classList.contains('active')) return;
+
       this._showToast(event.cartData);
       this._updateCartCount();
     }
@@ -123,13 +127,31 @@
 
     async _updateCartCount() {
       try {
-        const res = await fetch('/cart.js');
-        const cart = await res.json();
+        const cartUrl = window.routes ? window.routes.cart_url : '/cart';
+        const res = await fetch(`${cartUrl}?sections=cart-icon-bubble`);
+        const parsedState = await res.json();
+        const html = parsedState['cart-icon-bubble'];
+
+        if (html) {
+          const targetIcon = document.getElementById('cart-icon-bubble');
+          if (targetIcon) {
+            const doc = new DOMParser().parseFromString(html, 'text/html');
+            const sourceIcon = doc.querySelector('#cart-icon-bubble') || doc.querySelector('.shopify-section');
+            if (sourceIcon) {
+              targetIcon.innerHTML = sourceIcon.innerHTML;
+            }
+          }
+        }
+
+        // Also update any other standalone cart counts on the page
+        const cartJsonRes = await fetch(`${cartUrl}.js`);
+        const cart = await cartJsonRes.json();
         const count = cart.item_count;
-        // Update all cart count bubbles
+
         document.querySelectorAll('[data-cart-count], .cart-count-bubble span[aria-hidden]').forEach((el) => {
           el.textContent = count;
         });
+
         const bubbles = document.querySelectorAll('.cart-count-bubble');
         bubbles.forEach((b) => {
           if (count === 0) {

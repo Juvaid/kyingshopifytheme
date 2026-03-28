@@ -53,17 +53,19 @@ cart-drawer.is-empty .drawer__inner {
   padding: 0;
 }
 
-cart-drawer.is-empty .drawer__header {
-  display: none;
+cart-drawer.is-empty cart-drawer-items,
+cart-drawer.is-empty .cart-drawer__upsell,
+cart-drawer.is-empty .cart-drawer__footer {
+  display: none !important;
 }
 
-cart-drawer:not(.is-empty) .cart-drawer__warnings,
-cart-drawer:not(.is-empty) .cart-drawer__collection {
-  display: none;
+.cart-drawer__upsell:empty,
+.cart-drawer__empty-featured:empty {
+  display: none !important;
 }
 
-.cart-drawer__warnings--has-collection .cart__login-title {
-  margin-top: 2.5rem;
+cart-drawer:not(.is-empty) .drawer__inner-empty {
+  display: none !important;
 }
 
 .drawer.active .drawer__inner {
@@ -405,11 +407,7 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   color: rgba(var(--color-foreground), 0.7);
 }
 
-.cart-drawer__upsell-items {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
+
 
 .cart-drawer__upsell-item .card-wrapper {
   background: #ffffff;
@@ -532,12 +530,13 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 
 .cart-drawer__upsell-items {
   display: flex;
+  flex-direction: row;
   overflow-x: auto;
   gap: 1.2rem;
-  padding-bottom: 1rem;
+  padding: 0.5rem 0.5rem 1.5rem;
+  margin: 0 -0.5rem;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  /* Hide scrollbar by default for cleaner look, reveal on hover */
   scrollbar-width: thin; 
 }
 
@@ -667,4 +666,166 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
     .cart-drawer__empty-subtext {
         margin-bottom: 2rem;
     }
+}
+/* Premium Cart Drawer UI Enhancements */
+
+/* Premium Glassmorphism Footer */
+.drawer__footer--premium {
+  position: sticky !important;
+  bottom: 0;
+  z-index: 10;
+  background: rgba(var(--color-background), 0.85);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(var(--color-foreground), 0.08);
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.05);
+  padding: 2rem 2.5rem;
+}
+
+/* Enhancing Checkout Button */
+#CartDrawer-Checkout {
+  border-radius: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+#CartDrawer-Checkout:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Premium Promo Code Field */
+.cart-drawer__discount-code {
+  margin-bottom: 1.5rem;
+}
+.cart-drawer__discount-field {
+  display: flex !important;
+  align-items: center;
+  position: relative;
+  background: rgba(var(--color-foreground), 0.03);
+  border-radius: 0.6rem;
+  padding: 0.4rem;
+  border: 1px solid rgba(var(--color-foreground), 0.1);
+  transition: border-color 0.2s ease;
+}
+.cart-drawer__discount-field:focus-within {
+  border-color: rgb(var(--color-foreground));
+}
+.cart-drawer__discount-field .svg-wrapper {
+  margin-left: 1rem;
+  color: rgba(var(--color-foreground), 0.5);
+}
+.cart-drawer__discount-input {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  flex-grow: 1;
+  padding: 1rem;
+}
+.cart-drawer__discount-input:focus {
+  outline: none;
+  box-shadow: none !important;
+}
+.cart-drawer__discount-apply {
+  border-radius: 0.4rem !important;
+  padding: 0.8rem 1.6rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0;
+  min-height: auto;
+}
+
+/* Upsell Carousel (Horizontal Swipe) */
+.cart-drawer__upsell-carousel {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+  scrollbar-width: none;
+}
+.cart-drawer__upsell-carousel::-webkit-scrollbar {
+  display: none;
+}
+.cart-drawer__upsell-item {
+  flex: 0 0 calc(50% - 1rem);
+  max-width: 160px;
+}
+
+/* Soften Product Card styling inside drawer */
+.cart-items-cards .cart-item-card {
+  border-radius: 0.8rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  border: 1px solid rgba(var(--color-foreground), 0.05);
+  margin: 0 2rem 1.5rem 2rem;
+  background: rgb(var(--color-background));
+  padding: 1.5rem;
+}
+.drawer__cart-items-wrapper {
+  padding-top: 2rem;
+}
+
+/* Micro-animations & Transitions */
+@keyframes fadeInSlideUp {
+  0% { opacity: 0; transform: translateY(10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseSuccess {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.cart-item-card {
+  animation: fadeInSlideUp 0.4s ease forwards;
+}
+
+.free-shipping__text--success {
+  animation: pulseSuccess 2s infinite ease-in-out;
+}
+
+#CartDrawer-Checkout {
+  position: relative;
+  overflow: hidden;
+}
+
+#CartDrawer-Checkout::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  animation: shine 4s infinite;
+}
+
+.free-shipping__progress {
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Empty State Polish */
+.cart-drawer__empty-hero {
+  background: radial-gradient(circle at center, rgba(var(--color-foreground), 0.02) 0%, transparent 70%);
+}
+
+.cart-drawer__empty-icon {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+}
+
+.cart-drawer__empty-hero:hover .cart-drawer__empty-icon {
+  transform: translateY(-5px) rotate(5deg);
 }
