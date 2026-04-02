@@ -22,6 +22,7 @@
   padding: 0 1.5rem;
   border: 0.1rem solid rgba(var(--color-foreground), 0.2);
   border-right: 0;
+  background: linear-gradient(rgba(var(--color-foreground), 0.03), rgba(var(--color-foreground), 0.03)), rgb(var(--color-background));
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -55,7 +56,8 @@ cart-drawer.is-empty .drawer__inner {
 
 cart-drawer.is-empty cart-drawer-items,
 cart-drawer.is-empty .cart-drawer__upsell,
-cart-drawer.is-empty .cart-drawer__footer {
+cart-drawer.is-empty .cart-drawer__footer,
+cart-drawer.is-empty .drawer__header {
   display: none !important;
 }
 
@@ -117,6 +119,7 @@ cart-drawer:not(.is-empty) .drawer__inner-empty {
 .drawer__footer {
   border-top: 0.1rem solid rgba(var(--color-foreground), 0.2);
   padding: 1.5rem 0;
+  flex-shrink: 0;
 }
 
 cart-drawer-items.is-empty + .drawer__footer {
@@ -166,7 +169,8 @@ cart-drawer {
 .cart-drawer__form {
   flex-grow: 1;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  width: 100%;
 }
 
 .cart-drawer__collection {
@@ -189,6 +193,8 @@ cart-drawer {
 }
 
 cart-drawer-items {
+  display: flex;
+  flex-direction: column;
   overflow: auto;
   flex: 1;
   content-visibility: visible;
@@ -393,8 +399,9 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 
 /* Drawer Upsell & Promo Code */
 .cart-drawer__upsell {
-  margin-top: 2rem;
-  padding: 2rem 0;
+  margin-top: 1.5rem;
+  padding: 0 0 1.5rem 0;
+  flex-shrink: 0;
   border-top: 0.1rem solid rgba(var(--color-foreground), 0.08);
 }
 
@@ -414,6 +421,27 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   border: 1px solid rgba(var(--color-foreground), 0.08);
   border-radius: 8px;
   overflow: hidden;
+}
+
+.cart-drawer__upsell-item .card__heading {
+  font-size: 1rem !important; /* extremely small font for mini-list */
+  line-height: 1.2 !important;
+  margin-bottom: 0.2rem;
+}
+
+.cart-drawer__upsell-item .price {
+  font-size: 1rem !important;
+}
+
+.cart-drawer__upsell-item .button {
+  min-height: 32px !important;
+  font-size: 1rem !important;
+  padding: 0 1rem !important;
+  margin-top: 0.5rem !important;
+}
+
+.cart-drawer__upsell-item .card__inner {
+  --ratio-percent: 100% !important; /* Force square to compress height */
 }
 
 .cart-drawer__discount-code {
@@ -549,9 +577,9 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 }
 
 .cart-drawer__upsell-item {
-  flex: 0 0 130px !important; /* Forces fixed compact width */
-  width: 130px !important;
-  max-width: 130px !important;
+  flex: 0 0 105px !important; /* Extremely compact width */
+  width: 105px !important;
+  max-width: 105px !important;
   scroll-snap-align: start;
 }
 
@@ -740,8 +768,8 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   display: flex !important;
   flex-wrap: nowrap !important;
   overflow-x: auto;
-  gap: 1.5rem;
-  padding-bottom: 1rem;
+  gap: 1rem;
+  padding-bottom: 0.5rem;
   scrollbar-width: none;
 }
 .cart-drawer__upsell-carousel::-webkit-scrollbar {
@@ -749,7 +777,7 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 }
 .cart-drawer__upsell-item {
   flex: 0 0 calc(50% - 1rem);
-  max-width: 160px;
+  max-width: 110px;
 }
 
 /* Soften Product Card styling inside drawer */

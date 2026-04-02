@@ -123,7 +123,7 @@
                     {%- for item in cart.items -%}
                       <div
                         class="cart-item-card {% if item.parent_relationship.parent != null %}cart-item-card--nested{% endif %}"
-                        id="CartItem-{{ item.index | plus: 1 }}"
+                        id="CartItem-{{ item.index }}"
                         data-id="{{ item.variant_id }}"
                       >
                         <div class="cart-item-card__media">
@@ -242,7 +242,13 @@
                                       | escape
                                     -}}
                                   </span>
-                                  <span class="svg-wrapper">{{- 'icon-minus.svg' | inline_asset_content -}}</span>
+                                  <span class="svg-wrapper">
+                                    {%- if item.quantity == 1 -%}
+                                      {{- 'icon-remove.svg' | inline_asset_content -}}
+                                    {%- else -%}
+                                      {{- 'icon-minus.svg' | inline_asset_content -}}
+                                    {%- endif -%}
+                                  </span>
                                 </button>
                                 <input
                                   class="quantity__input"
@@ -258,8 +264,8 @@
                                   {% endif %}
                                   step="{{ item.variant.quantity_rule.increment }}"
                                   aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
-                                  id="Drawer-quantity-{{ item.index | plus: 1 }}"
-                                  data-index="{{ item.index | plus: 1 }}"
+                                  id="Drawer-quantity-{{ item.index }}"
+                                  data-index="{{ item.index }}"
                                 >
                                 <button class="quantity__button" name="plus" type="button">
                                   <span class="visually-hidden">
@@ -273,18 +279,7 @@
                                 </button>
                               </quantity-input>
 
-                              <cart-remove-button
-                                id="CartDrawer-Remove-{{ item.index | plus: 1 }}"
-                                data-index="{{ item.index | plus: 1 }}"
-                              >
-                                <button
-                                  type="button"
-                                  class="button button--tertiary"
-                                  aria-label="{{ 'sections.cart.remove_title' | t: title: item.title | escape }}"
-                                >
-                                  <span class="svg-wrapper">{{- 'icon-remove.svg' | inline_asset_content -}}</span>
-                                </button>
-                              </cart-remove-button>
+
                             </div>
                           </div>
                         </div>
@@ -323,7 +318,7 @@
                     <tbody role="rowgroup">
                       {%- for item in cart.items -%}
                         <tr
-                          id="CartDrawer-Item-{{ item.index | plus: 1 }}"
+                          id="CartDrawer-Item-{{ item.index }}"
                           data-id="{{ item.variant_id }}"
                           class="cart-item{% if item.parent_relationship.parent != null %} cart-item__nested-line{% endif %}"
                           role="row"
@@ -517,7 +512,11 @@
                                         -}}
                                       </span>
                                       <span class="svg-wrapper">
-                                        {{- 'icon-minus.svg' | inline_asset_content -}}
+                                        {%- if item.quantity == 1 -%}
+                                          {{- 'icon-remove.svg' | inline_asset_content -}}
+                                        {%- else -%}
+                                          {{- 'icon-minus.svg' | inline_asset_content -}}
+                                        {%- endif -%}
                                       </span>
                                     </button>
                                     <input
@@ -536,8 +535,8 @@
                                       step="{{ item.variant.quantity_rule.increment }}"
                                       {% # theme-check-enable %}
                                       aria-label="{{ 'products.product.quantity.input_label' | t: product: item.product.title | escape }}"
-                                      id="Drawer-quantity-{{ item.index | plus: 1 }}"
-                                      data-index="{{ item.index | plus: 1 }}"
+                                      id="Drawer-quantity-{{ item.index }}"
+                                      data-index="{{ item.index }}"
                                       {% if item.instructions and item.instructions.can_update_quantity == false %}
                                         disabled
                                       {% endif %}
@@ -563,24 +562,7 @@
                                     </button>
                                   </quantity-input>
                                 </div>
-                                <cart-remove-button
-                                  id="CartDrawer-Remove-{{ item.index | plus: 1 }}"
-                                  data-index="{{ item.index | plus: 1 }}"
-                                >
-                                  <button
-                                    type="button"
-                                    class="button button--tertiary cart-remove-button"
-                                    aria-label="{{ 'sections.cart.remove_title' | t: title: item.title | escape }}"
-                                    data-variant-id="{{ item.variant.id }}"
-                                    {% if item.instructions and item.instructions.can_remove == false %}
-                                      class="hidden"
-                                    {% endif %}
-                                  >
-                                    <span class="svg-wrapper">
-                                      {{- 'icon-remove.svg' | inline_asset_content -}}
-                                    </span>
-                                  </button>
-                                </cart-remove-button>
+
                               </div>
                               {%- if has_qty_rules or has_vol_pricing -%}
                                 <button
@@ -668,7 +650,7 @@
                                 </div>
                               {%- endif -%}
                               <div
-                                id="CartDrawer-LineItemError-{{ item.index | plus: 1 }}"
+                                id="CartDrawer-LineItemError-{{ item.index }}"
                                 class="cart-item__error"
                                 role="alert"
                               >

@@ -34,6 +34,11 @@ class CartItems extends HTMLElement {
       if (event.source === 'cart-items') {
         return;
       }
+      // product-form.js already updates the cart-drawer directly via renderContents().
+      // Skipping this redundant fetch prevents race conditions that blank out the drawer items.
+      if (event.source === 'product-form' && this.tagName === 'CART-DRAWER-ITEMS') {
+        return;
+      }
       return this.onCartUpdate();
     });
   }
@@ -64,7 +69,7 @@ class CartItems extends HTMLElement {
     const index = event.target.dataset.index;
     let message = '';
 
-    if (inputValue < event.target.dataset.min) {
+    if (inputValue < event.target.dataset.min && inputValue !== 0) {
       message = window.quickOrderListStrings.min_error.replace('[min]', event.target.dataset.min);
     } else if (inputValue > parseInt(event.target.max)) {
       message = window.quickOrderListStrings.max_error.replace('[max]', event.target.max);
@@ -98,7 +103,7 @@ class CartItems extends HTMLElement {
     const targetSelector = isDrawer ? '#CartDrawer-CartItems' : 'cart-items';
 
     const sections = ['cart-icon-bubble', sectionId];
-    return fetch(`${routes.cart_url}?sections=${sections.join(',')}`)
+    return fetch(`${routes.cart_url}?sections=${sections.join(',')}&update=${Date.now()}`)
       .then((response) => response.json())
       .then((parsedState) => {
         const sourceHtml = parsedState[sectionId];
@@ -227,10 +232,11 @@ class CartItems extends HTMLElement {
   performUpdate(line, quantity, eventTarget, name, variantId, cartPerformanceUpdateMarker) {
     this.enableLoading(line);
 
+    const sectionsToRender = this.getSectionsToRender().map((section) => section.section);
     const body = JSON.stringify({
       line: parseInt(line),
       quantity: parseInt(quantity),
-      sections: this.getSectionsToRender().map((section) => section.section),
+      sections: Array.from(new Set(sectionsToRender)),
       sections_url: window.location.pathname,
     });
 

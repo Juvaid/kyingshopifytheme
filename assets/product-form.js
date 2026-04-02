@@ -44,10 +44,10 @@ if (!customElements.get('product-form')) {
         const isQuickAdd = this.closest('.product-card') || this.classList.contains('quick-add-form');
 
         if (this.cart) {
+          const sectionsToRender = this.cart.getSectionsToRender().map((section) => section.section || section.id);
           formData.append(
             'sections',
-            this.cart.getSectionsToRender().map((section) => section.id)
-              .join(',')
+            Array.from(new Set(sectionsToRender)).join(',')
           );
           formData.append('sections_url', window.location.pathname);
           this.cart.setActiveElement(document.activeElement);
