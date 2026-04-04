@@ -16,6 +16,7 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/brighlt_lift_banner_212eb9d4-3985-4bbc-b622-7720c5668694.jpg",
+            "mobile_image": "shopify://shop_images/brighlt_lift_bannermobile.jpg",
             "link": ""
           }
         },
