@@ -12,6 +12,13 @@
     "section_custom_slideshow_FfC6Ap": {
       "type": "section-custom-slideshow",
       "blocks": {
+        "slide_VGMppF": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/brighlt_lift_banner_212eb9d4-3985-4bbc-b622-7720c5668694.jpg",
+            "link": ""
+          }
+        },
         "slide_3TL7hQ": {
           "type": "slide",
           "settings": {
@@ -28,6 +35,7 @@
         }
       },
       "block_order": [
+        "slide_VGMppF",
         "slide_3TL7hQ",
         "slide_dUBE9e"
       ],
