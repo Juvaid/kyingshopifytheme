@@ -146,7 +146,7 @@
         "settings": {
           "truncate_cart_product_names": true,
           "cart_product_name_limit": 35,
-          "empty_cart_collection": "",
+          "empty_cart_collection": "kying-hyaloeronic",
           "empty_cart_heading": "Top Collections For You",
           "empty_cart_collection_columns": 1,
           "cart_drawer_upsell_collection": "kying-hyaloeronic",
