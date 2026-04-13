@@ -1559,3 +1559,21 @@ input.mobile-facets__checkbox {
 .facets__display-vertical {
   padding-top: 0.5rem;
 }
+
+/* Sticky mobile filter/sort bar */
+@media screen and (max-width: 989px) {
+  .facets-container {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: rgb(var(--color-background));
+    padding-top: 0;
+    padding-bottom: 0.5rem;
+    margin-top: -1px;
+    transition: box-shadow var(--duration-default) ease;
+  }
+
+  .facets-container.is-sticky {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+}

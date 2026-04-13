@@ -85,3 +85,50 @@
   transform: rotate(-45deg);
   transform-origin: left;
 }
+
+/* Premium Swatch Tooltip */
+.swatch-input__label {
+  position: relative;
+}
+
+.swatch-input__label::before,
+.swatch-input__label::after {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 10;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, 5px);
+}
+
+.swatch-input__label::before {
+  content: attr(data-tooltip);
+  background-color: var(--color-foreground, #1a1612);
+  color: var(--color-background, #fff);
+  font-size: 1.1rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.swatch-input__label::after {
+  content: '';
+  box-sizing: border-box;
+  margin-bottom: 4px;
+  border: 4px solid transparent;
+  border-top-color: var(--color-foreground, #1a1612);
+}
+
+.swatch-input__label:hover::before,
+.swatch-input__label:hover::after,
+.swatch-input__input:focus-visible + .swatch-input__label::before,
+.swatch-input__input:focus-visible + .swatch-input__label::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}

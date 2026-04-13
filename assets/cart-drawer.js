@@ -3,9 +3,18 @@ class CartDrawer extends HTMLElement {
     super();
 
     this.addEventListener('keyup', (evt) => evt.code === 'Escape' && this.close());
-    const overlay = this.querySelector('#CartDrawer-Overlay');
-    if (overlay) overlay.addEventListener('click', this.close.bind(this));
+    this.bindOverlay();
     this.setHeaderCartIconAccessibility();
+  }
+
+  bindOverlay() {
+    const overlay = this.querySelector('#CartDrawer-Overlay');
+    if (overlay) {
+      // Remove old listeners by cloning
+      const newOverlay = overlay.cloneNode(true);
+      overlay.parentNode.replaceChild(newOverlay, overlay);
+      newOverlay.addEventListener('click', this.close.bind(this));
+    }
   }
 
   setHeaderCartIconAccessibility() {
@@ -16,12 +25,24 @@ class CartDrawer extends HTMLElement {
     cartLink.setAttribute('aria-haspopup', 'dialog');
     cartLink.addEventListener('click', (event) => {
       event.preventDefault();
-      this.open(cartLink);
+      if (document.body.dataset.cartPending === 'true') {
+        // Add-to-cart is in-flight: open drawer now with loading indicator,
+        // then refresh once the server confirms the add.
+        this.classList.add('is-loading');
+        this.open(cartLink);
+        const unsubscribe = subscribe(PUB_SUB_EVENTS.cartUpdate, () => {
+          unsubscribe();
+          this.refreshSections().then(() => this.classList.remove('is-loading'));
+        });
+      } else {
+        // No pending add — fetch latest cart, then open.
+        this.refreshSections().then(() => this.open(cartLink));
+      }
     });
     cartLink.addEventListener('keydown', (event) => {
       if (event.code.toUpperCase() === 'SPACE') {
         event.preventDefault();
-        this.open(cartLink);
+        this.refreshSections().then(() => this.open(cartLink));
       }
     });
   }
@@ -49,6 +70,52 @@ class CartDrawer extends HTMLElement {
     );
 
     document.body.classList.add('overflow-hidden');
+  }
+
+  /**
+   * Fetches the latest cart sections from the server and directly
+   * updates the DOM. Uses the Section Rendering API format which
+   * returns { sectionId: htmlString } at the top level.
+   */
+  refreshSections() {
+    const sectionDefs = this.getSectionsToRender();
+    const sectionNames = [...new Set(sectionDefs.map((s) => s.section || s.id))];
+    const url = `${window.routes.cart_url}?sections=${sectionNames.join(',')}`;
+
+    return fetch(url)
+      .then((res) => res.json())
+      .then((sectionsHtml) => {
+        sectionDefs.forEach((section) => {
+          const sectionId = section.section || section.id;
+          const html = sectionsHtml[sectionId];
+          if (!html) return;
+
+          const sectionElement = section.selector
+            ? document.querySelector(section.selector)
+            : document.getElementById(section.id);
+          if (!sectionElement) return;
+
+          const selector = section.selector || `#${section.id}`;
+          const newInnerHTML = this.getSectionInnerHTML(html, selector);
+          if (newInnerHTML !== '') {
+            sectionElement.innerHTML = newInnerHTML;
+          }
+        });
+
+        // Determine is-empty state from the data-item-count attribute
+        const cartDrawerHtml = sectionsHtml['cart-drawer'];
+        if (cartDrawerHtml) {
+          const doc = new DOMParser().parseFromString(cartDrawerHtml, 'text/html');
+          const cartItemsEl = doc.querySelector('#CartDrawer-CartItems');
+          const itemCount = cartItemsEl ? parseInt(cartItemsEl.dataset.itemCount || '0', 10) : 0;
+          this.classList.toggle('is-empty', itemCount === 0);
+        }
+
+        this.bindOverlay();
+      })
+      .catch((err) => {
+        console.error('Cart drawer refresh failed:', err);
+      });
   }
 
   close() {
@@ -94,14 +161,27 @@ class CartDrawer extends HTMLElement {
       });
     }
 
-    this.classList.toggle('is-empty', parsedState.item_count === 0);
+    let isEmpty = false;
+    if (typeof parsedState.item_count !== 'undefined') {
+      isEmpty = parsedState.item_count === 0;
+    } else if (parsedState.sections && parsedState.sections['cart-drawer']) {
+      const doc = new DOMParser().parseFromString(parsedState.sections['cart-drawer'], 'text/html');
+      const cartItemsEl = doc.querySelector('#CartDrawer-CartItems');
+      const itemCount = cartItemsEl ? parseInt(cartItemsEl.dataset.itemCount || '0', 10) : 0;
+      isEmpty = itemCount === 0;
+    }
+
+    this.classList.toggle('is-empty', isEmpty);
+    const cartDrawerItems = this.querySelector('cart-drawer-items');
+    if (cartDrawerItems) cartDrawerItems.classList.toggle('is-empty', isEmpty);
+    const footer = this.querySelector('#CartDrawer-Footer');
+    if (footer) footer.classList.toggle('hidden', isEmpty);
 
     setTimeout(() => {
-      const overlay = this.querySelector('#CartDrawer-Overlay');
-      if (overlay) overlay.addEventListener('click', this.close.bind(this));
+      this.bindOverlay();
 
       // Animate entry for the new item
-      const items = this.querySelectorAll('.cart-item');
+      const items = this.querySelectorAll('.cart-item, .cart-item-card');
       if (items.length > 0) {
         const newItem =
           Array.from(items).find(
@@ -128,6 +208,13 @@ class CartDrawer extends HTMLElement {
       },
       {
         id: 'cart-icon-bubble',
+        section: 'cart-icon-bubble',
+        selector: '#cart-icon-bubble',
+      },
+      {
+        id: 'CartDrawer-Upsell',
+        section: 'cart-drawer',
+        selector: '#CartDrawer-Upsell',
       },
       {
         id: 'CartDrawer-Empty-Featured',
@@ -178,6 +265,11 @@ class CartDrawerItems extends CartItems {
         id: 'cart-icon-bubble',
         section: 'cart-icon-bubble',
         selector: '#cart-icon-bubble',
+      },
+      {
+        id: 'CartDrawer-Upsell',
+        section: 'cart-drawer',
+        selector: '#CartDrawer-Upsell',
       },
       {
         id: 'CartDrawer-Empty-Featured',

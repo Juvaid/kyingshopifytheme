@@ -7,24 +7,57 @@
   - product (required): Shopify product object
   - show_rating: true/false (default: true)
   - show_quick_add: true/false (default: true)
+  - show_compare_at_price: true/false (default: true)
+  - show_product_type: true/false (default: false)
+  - show_variant_count: true/false (default: false)
+  - card_title_lines: number 1-4 (default: 2)
+  - card_hover_effect: none/lift/zoom/shadow (default: lift)
+  - card_content_alignment: left/center/right (default: left)
+  - card_image_padding: number 0-20 (default: 0)
+  - show_sale_badge: true/false (default: true)
+  - sale_badge_style: percentage/amount/text (default: percentage)
+  - badge_position: top_left/top_right (default: top_left)
+  - card_border_radius: number 0-30 (default: 12)
 
   Usage:
   {% render 'component-product-card', product: product, show_rating: true, show_quick_add: true %}
 {% endcomment %}
 
-<article class="product-card {% if is_compact %}product-card--compact{% endif %}">
-  {%- if product.compare_at_price > product.price -%}
-    {%- assign savings = product.compare_at_price
-      | minus: product.price
-      | times: 100.0
-      | divided_by: product.compare_at_price
-      | round
-    -%}
+{%- liquid
+  assign hover_class = card_hover_effect | default: 'lift'
+  assign align_class = card_content_alignment | default: 'left'
+  assign title_lines = card_title_lines | default: 2
+  assign img_padding = card_image_padding | default: 0
+  assign border_radius = card_border_radius | default: 12
+  assign badge_pos = badge_position | default: 'top_left'
+  assign badge_style = sale_badge_style | default: 'percentage'
+  assign show_badge = show_sale_badge | default: true
+-%}
+
+<article
+  class="product-card product-card--hover-{{ hover_class }} product-card--align-{{ align_class }} {% if is_compact %}product-card--compact{% endif %}"
+  style="--card-border-radius: {{ border_radius }}px; --card-image-padding: {{ img_padding }}px; --card-title-lines: {{ title_lines }};"
+>
+  {%- if product.compare_at_price > product.price and show_badge -%}
+    {%- if badge_style == 'percentage' -%}
+      {%- assign savings = product.compare_at_price
+        | minus: product.price
+        | times: 100.0
+        | divided_by: product.compare_at_price
+        | round
+      -%}
+      {%- assign badge_text = 'SAVE ' | append: savings | append: '%' -%}
+    {%- elsif badge_style == 'amount' -%}
+      {%- assign savings_amount = product.compare_at_price | minus: product.price -%}
+      {%- assign badge_text = 'SAVE ' | append: savings_amount | money -%}
+    {%- else -%}
+      {%- assign badge_text = 'SALE' -%}
+    {%- endif -%}
     <div
-      class="product-card__badge"
-      style="background-color: {{ settings.discount_badge_color | default: 'g#131313ff' }};"
+      class="product-card__badge product-card__badge--{{ badge_pos }}"
+      style="background-color: {{ settings.discount_badge_color | default: '#131313ff' }};"
     >
-      SAVE {{ savings }}%
+      {{ badge_text }}
     </div>
   {%- endif -%}
 
@@ -85,6 +118,11 @@
       {%- if settings.card_rating_location == 'above_title' -%}
         {{ rating_html }}
       {%- endif -%}
+
+      {%- if show_product_type and product.type != blank -%}
+        <span class="product-card__product-type">{{ product.type }}</span>
+      {%- endif -%}
+
       <h3 class="product-card__title">
         {%- if product -%}
           {{ product.title }}
@@ -92,15 +130,23 @@
           {{ 'onboarding.product_title' | t }}
         {%- endif -%}
       </h3>
+
       {%- if settings.card_rating_location == 'below_title' -%}
         {{ rating_html }}
+      {%- endif -%}
+
+      {%- if show_variant_count and product.variants.size > 1 -%}
+        <span class="product-card__variant-count">{{ product.variants.size }} options</span>
       {%- endif -%}
     </div>
 
     <div class="product-card__footer">
       <div class="product-card__pricing">
         {%- if product -%}
-          <span class="product-card__price">
+          {%- if show_compare_at_price and product.compare_at_price > product.price -%}
+            <span class="product-card__compare-price">{{ product.compare_at_price | money }}</span>
+          {%- endif -%}
+          <span class="product-card__price{% if show_compare_at_price and product.compare_at_price > product.price %} product-card__price--sale{% endif %}">
             {{ product.price | money }}
           </span>
           {%- if settings.card_rating_location == 'below_price' -%}

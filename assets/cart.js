@@ -232,6 +232,9 @@ class CartItems extends HTMLElement {
   performUpdate(line, quantity, eventTarget, name, variantId, cartPerformanceUpdateMarker) {
     this.enableLoading(line);
 
+    // Safety timeout: always unlock UI after 10s max
+    const safetyTimer = setTimeout(() => this.disableLoading(line), 10000);
+
     const sectionsToRender = this.getSectionsToRender().map((section) => section.section);
     const body = JSON.stringify({
       line: parseInt(line),
@@ -331,6 +334,7 @@ class CartItems extends HTMLElement {
         if (errors) errors.textContent = window.cartStrings.error;
       })
       .finally(() => {
+        clearTimeout(safetyTimer);
         this.disableLoading(line);
         CartPerformance.measureFromMarker(`${eventTarget}:user-action`, cartPerformanceUpdateMarker);
       });
@@ -377,6 +381,9 @@ class CartItems extends HTMLElement {
   }
 
   disableLoading(line) {
+    // Forcefully remove disabled state from all possible containers
+    document.querySelectorAll('.cart__items--disabled').forEach((el) => el.classList.remove('cart__items--disabled'));
+
     const mainCartItems = document.getElementById('main-cart-items') || document.getElementById('CartDrawer-CartItems');
     if (mainCartItems) mainCartItems.classList.remove('cart__items--disabled');
 

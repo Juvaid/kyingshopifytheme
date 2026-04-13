@@ -308,7 +308,7 @@
     </a>
 
     {%- if settings.cart_type == 'drawer' -%}
-      {%- render 'cart-drawer' -%}
+    {%- section 'cart-drawer' -%}
     {%- endif -%}
 
     {% sections 'header-group' %}
@@ -377,6 +377,7 @@
       <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
     {%- endif -%}
 
+    {%- render 'back-to-top' -%}
     {%- render 'quick-add-toast' -%}
     <script src="{{ 'quick-add-toast.js' | asset_url }}" defer="defer"></script>
   </body>

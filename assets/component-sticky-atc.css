@@ -1,0 +1,110 @@
+.sticky-atc {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgb(var(--color-background));
+  border-top: 1px solid rgba(var(--color-foreground), 0.08);
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  z-index: 100;
+  padding: 1rem 0;
+  visibility: hidden;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+
+.sticky-atc.is-active {
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.sticky-atc__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.sticky-atc__product-info {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  overflow: hidden;
+}
+
+.sticky-atc__image {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  border-radius: 4px;
+  background-color: rgba(var(--color-foreground), 0.04);
+}
+
+.sticky-atc__details {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.sticky-atc__title {
+  font-family: var(--font-heading-family);
+  font-size: 1.6rem;
+  margin: 0 0 0.2rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.sticky-atc__price {
+  font-size: 1.3rem;
+  color: rgba(var(--color-foreground), 0.75);
+}
+
+.sticky-atc__actions {
+  flex-shrink: 0;
+}
+
+.sticky-atc__submit {
+  min-width: 200px;
+  min-height: 44px;
+  position: relative;
+}
+
+.sticky-atc__submit .loading__spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+}
+
+.sticky-atc__submit.loading span {
+  visibility: hidden;
+}
+
+.sticky-atc__submit.loading .loading__spinner {
+  display: block;
+}
+
+@media screen and (max-width: 749px) {
+  .sticky-atc__image,
+  .sticky-atc__title {
+    display: none;
+  }
+  
+  .sticky-atc__price {
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+  
+  .sticky-atc__container {
+    gap: 1rem;
+  }
+  
+  .sticky-atc__submit {
+    min-width: 140px;
+    flex-grow: 1;
+  }
+}

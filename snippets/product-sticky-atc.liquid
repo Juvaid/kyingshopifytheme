@@ -1,0 +1,45 @@
+{%- comment -%}
+  Renders a sticky add to cart bar at the bottom of the screen.
+  Accepts:
+  - product: {Object} Product object
+
+  Usage:
+  {% render 'product-sticky-atc', product: product %}
+{%- endcomment -%}
+
+<link rel="stylesheet" href="{{ 'component-sticky-atc.css' | asset_url }}" media="print" onload="this.media='all'">
+<script src="{{ 'sticky-atc.js' | asset_url }}" defer="defer"></script>
+
+<sticky-atc class="sticky-atc" data-section="{{ section.id }}">
+  <div class="page-width sticky-atc__container">
+    <div class="sticky-atc__product-info">
+      {%- if product.featured_image != blank -%}
+        <img
+          src="{{ product.featured_image | image_url: width: 100 }}"
+          alt="{{ product.featured_image.alt | escape }}"
+          class="sticky-atc__image"
+          loading="lazy"
+          width="50"
+          height="50"
+        >
+      {%- endif -%}
+      <div class="sticky-atc__details">
+        <h3 class="sticky-atc__title">{{ product.title | escape }}</h3>
+        <div class="sticky-atc__price" id="Sticky-Price-{{ section.id }}">
+          {% render 'price', product: product, use_variant: true, show_badges: false %}
+        </div>
+      </div>
+    </div>
+
+    <div class="sticky-atc__actions">
+      <button type="button" class="button button--primary sticky-atc__submit">
+        <span>{{ 'products.product.add_to_cart' | t }}</span>
+        <div class="loading__spinner hidden">
+          <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+            <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+          </svg>
+        </div>
+      </button>
+    </div>
+  </div>
+</sticky-atc>

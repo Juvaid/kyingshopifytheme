@@ -854,6 +854,33 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   transition: transform 0.3s ease;
 }
 
+
 .cart-drawer__empty-hero:hover .cart-drawer__empty-icon {
   transform: translateY(-5px) rotate(5deg);
 }
+
+/* Cart Drawer Loading State Overlay */
+.drawer.is-loading .drawer__inner {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.drawer.is-loading .drawer__inner::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  border: 3px solid rgba(var(--color-foreground), 0.1);
+  border-top-color: rgb(var(--color-foreground));
+  border-radius: 50%;
+  animation: drawer-rotate 0.6s linear infinite;
+  z-index: 10;
+}
+
+@keyframes drawer-rotate {
+  to { transform: rotate(360deg); }
+}
+

@@ -119,8 +119,26 @@
                   {{- block.settings.text -}}
                 </p>
               {%- when 'title' -%}
-                <div class="product__title" {{ block.shopify_attributes }}>
-                  <h1>{{ product.title | escape }}</h1>
+                <div class="product__title-container" id="Title-{{ block.id }}" {{ block.shopify_attributes }}>
+                  <h1 class="product__title h2">{{ product.title | escape }}</h1>
+                  {%- style -%}
+                    #Title-{{ block.id }} {
+                      text-align: {{ block.settings.title_alignment }};
+                      margin-bottom: {{ block.settings.margin_bottom }}px;
+                    }
+                    #Title-{{ block.id }} .product__title {
+                      font-size: {{ block.settings.title_size }}rem;
+                      font-weight: {{ block.settings.title_weight }};
+                      color: {{ block.settings.title_color }};
+                      text-transform: {{ block.settings.text_transform }};
+                      margin: 0;
+                    }
+                    @media screen and (max-width: 749px) {
+                      #Title-{{ block.id }} .product__title {
+                        font-size: calc({{ block.settings.title_size }}rem * 0.8);
+                      }
+                    }
+                  {%- endstyle -%}
                 </div>
               {%- when 'price' -%}
                 <div id="price-{{ section.id }}" class="product__price-container" role="status" {{ block.shopify_attributes }}>
@@ -291,6 +309,68 @@
                       {{ block.settings.page.content }}
                     </div>
                   </details>
+                </div>
+              {%- when 'cosmetics_accordion' -%}
+                <div class="product__accordion accordion accordion--{{ block.settings.accordion_style | default: 'standard' }} quick-add-hidden" {{ block.shopify_attributes }}>
+                  {%- if block.settings.show_overview -%}
+                  <details id="Details-Overview-{{ section.id }}">
+                    <summary>
+                      <div class="summary__title">
+                        {% render 'icon-accordion', icon: 'plant' %}
+                        <h2 class="h4 accordion__title">Overview</h2>
+                      </div>
+                      {{- 'icon-caret.svg' | inline_asset_content -}}
+                    </summary>
+                    <div class="accordion__content rte" id="ProductAccordion-Overview-{{ section.id }}">
+                      {{ product.metafields.cosmetics.overview | default: product.description }}
+                    </div>
+                  </details>
+                  {%- endif -%}
+                  
+                  {%- if block.settings.show_ingredients -%}
+                  <details id="Details-Ingredients-{{ section.id }}">
+                    <summary>
+                      <div class="summary__title">
+                        {% render 'icon-accordion', icon: 'leaf' %}
+                        <h2 class="h4 accordion__title">Key Ingredients</h2>
+                      </div>
+                      {{- 'icon-caret.svg' | inline_asset_content -}}
+                    </summary>
+                    <div class="accordion__content rte" id="ProductAccordion-Ingredients-{{ section.id }}">
+                      {{ product.metafields.cosmetics.ingredients | default: '<p>Add ingredients via product metafields (cosmetics.ingredients)</p>' }}
+                    </div>
+                  </details>
+                  {%- endif -%}
+
+                  {%- if block.settings.show_how_to_use -%}
+                  <details id="Details-HowToUse-{{ section.id }}">
+                    <summary>
+                      <div class="summary__title">
+                        {% render 'icon-accordion', icon: 'clipboard' %}
+                        <h2 class="h4 accordion__title">How to Use</h2>
+                      </div>
+                      {{- 'icon-caret.svg' | inline_asset_content -}}
+                    </summary>
+                    <div class="accordion__content rte" id="ProductAccordion-HowToUse-{{ section.id }}">
+                      {{ product.metafields.cosmetics.how_to_use | default: '<p>Add instructions via product metafields (cosmetics.how_to_use)</p>' }}
+                    </div>
+                  </details>
+                  {%- endif -%}
+
+                  {%- if block.settings.show_results -%}
+                  <details id="Details-Results-{{ section.id }}">
+                    <summary>
+                      <div class="summary__title">
+                        {% render 'icon-accordion', icon: 'star' %}
+                        <h2 class="h4 accordion__title">Results</h2>
+                      </div>
+                      {{- 'icon-caret.svg' | inline_asset_content -}}
+                    </summary>
+                    <div class="accordion__content rte" id="ProductAccordion-Results-{{ section.id }}">
+                      {{ product.metafields.cosmetics.results | default: '<p>Add expected results via product metafields (cosmetics.results)</p>' }}
+                    </div>
+                  </details>
+                  {%- endif -%}
                 </div>
               {%- when 'quantity_selector' -%}
                 <div
@@ -542,6 +622,79 @@
 
               {%- when 'variant_picker' -%}
                 {% render 'product-variant-picker', product: product, block: block, product_form_id: product_form_id %}
+              {%- when 'tags_metafield' -%}
+                <div class="product__tags-block" id="Tags-{{ block.id }}" {{ block.shopify_attributes }}>
+                  {%- if block.settings.heading != blank -%}
+                    <h3 class="product__tags-heading">{{ block.settings.heading }}</h3>
+                  {%- endif -%}
+                  
+                  <ul class="product__tags-list list-unstyled" role="list">
+                    {%- liquid
+                      assign tag_source = nil
+                      if product.metafields.cosmetics.skin_concerns != blank
+                        assign tag_source = product.metafields.cosmetics.skin_concerns.value
+                      elsif block.settings.manual_tags != blank
+                        assign tag_source = block.settings.manual_tags | split: ','
+                      endif
+                    -%}
+
+                    {%- if tag_source != blank -%}
+                      {%- for concern in tag_source -%}
+                        <li class="product__tag-pill">{{ concern | strip }}</li>
+                      {%- endfor -%}
+                    {%- else -%}
+                      {% comment %} Default placeholders only in editor if no source found {% endcomment %}
+                      {%- if request.design_mode -%}
+                        <li class="product__tag-pill">Acne-Prone</li>
+                        <li class="product__tag-pill">Anti-Aging</li>
+                        <li class="product__tag-pill">Hydration</li>
+                      {%- endif -%}
+                    {%- endif -%}
+                  </ul>
+
+                  <style>
+                    #Tags-{{ block.id }} {
+                      margin-top: 1.5rem;
+                      margin-bottom: 1.5rem;
+                      text-align: {{ block.settings.alignment }};
+                    }
+                    #Tags-{{ block.id }} .product__tags-heading {
+                      font-size: 1.3rem;
+                      font-weight: 600;
+                      text-transform: uppercase;
+                      letter-spacing: 0.1em;
+                      margin-bottom: 1rem;
+                      color: rgba(var(--color-foreground), 0.7);
+                    }
+                    #Tags-{{ block.id }} .product__tags-list {
+                      display: flex;
+                      flex-wrap: wrap;
+                      gap: 0.8rem;
+                      justify-content: {% if block.settings.alignment == 'center' %}center{% elsif block.settings.alignment == 'right' %}flex-end{% else %}flex-start{% endif %};
+                    }
+                    #Tags-{{ block.id }} .product__tag-pill {
+                      display: inline-flex;
+                      align-items: center;
+                      padding: 0.6rem 1.4rem;
+                      font-size: {{ block.settings.font_size }}px;
+                      font-weight: 500;
+                      line-height: 1;
+                      border-radius: {{ block.settings.corner_radius }}px;
+                      color: {{ block.settings.tag_text_color }};
+                      background-color: {{ block.settings.tag_bg_color }};
+                      border: 1px solid {{ block.settings.tag_border_color }};
+                      transition: transform 0.2s ease, box-shadow 0.2s ease;
+                      {% if block.settings.enable_glass %}
+                        backdrop-filter: blur(8px);
+                        -webkit-backdrop-filter: blur(8px);
+                      {% endif %}
+                    }
+                    #Tags-{{ block.id }} .product__tag-pill:hover {
+                      transform: translateY(-2px);
+                      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                    }
+                  </style>
+                </div>
               {%- when 'buy_buttons' -%}
                 {%- if block.settings.enable_button_sheen -%}
                   <style>
@@ -569,6 +722,37 @@
                   section_id: section.id,
                   show_pickup_availability: true
                 -%}
+              {%- when 'trust_badge' -%}
+                {{ 'component-trust-badge.css' | asset_url | stylesheet_tag }}
+                <div class="product__trust-badges" {{ block.shopify_attributes }}>
+                  <ul class="list-unstyled" role="list">
+                    {%- if block.settings.show_payment_icons -%}
+                      {%- for type in shop.enabled_payment_types -%}
+                        <li class="list-payment__item">
+                          {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+                        </li>
+                      {%- endfor -%}
+                    {%- endif -%}
+                    {%- if block.settings.custom_svg_1 != blank -%}
+                      <li class="list-payment__item custom-trust-badge">
+                        {{ block.settings.custom_svg_1 }}
+                      </li>
+                    {%- endif -%}
+                    {%- if block.settings.custom_svg_2 != blank -%}
+                      <li class="list-payment__item custom-trust-badge">
+                        {{ block.settings.custom_svg_2 }}
+                      </li>
+                    {%- endif -%}
+                    {%- if block.settings.custom_svg_3 != blank -%}
+                      <li class="list-payment__item custom-trust-badge">
+                        {{ block.settings.custom_svg_3 }}
+                      </li>
+                    {%- endif -%}
+                  </ul>
+                  {%- if block.settings.text != blank -%}
+                    <p class="trust-badge__text caption-large">{{ block.settings.text }}</p>
+                  {%- endif -%}
+                </div>
               {%- when 'rating' -%}
                 <div class="rating-wrapper">
                   {% liquid
@@ -766,6 +950,242 @@
                     %}
                   </div>
                 {%- endif -%}
+              {%- when 'savings_callout' -%}
+                {%- if product.compare_at_price > product.price -%}
+                  {%- assign savings_amount = product.compare_at_price | minus: product.price -%}
+                  {%- assign savings_percent = savings_amount | times: 100.0 | divided_by: product.compare_at_price | round -%}
+                  <div class="product__savings-callout" {{ block.shopify_attributes }}>
+                    <style>
+                      .product__savings-callout {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        padding: 10px 16px;
+                        border-radius: 8px;
+                        background: {{ block.settings.bg_color | default: '#ecfdf5' }};
+                        border: 1px solid {{ block.settings.border_color | default: '#a7f3d0' }};
+                        color: {{ block.settings.text_color | default: '#065f46' }};
+                        font-size: 1.4rem;
+                        font-weight: 600;
+                        line-height: 1.4;
+                      }
+                      .product__savings-icon {
+                        flex-shrink: 0;
+                        width: 20px;
+                        height: 20px;
+                      }
+                    </style>
+                    <svg class="product__savings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                    </svg>
+                    <span>
+                      {%- if block.settings.display_style == 'both' -%}
+                        You save {{ savings_amount | money }} ({{ savings_percent }}%)
+                      {%- elsif block.settings.display_style == 'percent' -%}
+                        You save {{ savings_percent }}% on this product!
+                      {%- else -%}
+                        You save {{ savings_amount | money }}!
+                      {%- endif -%}
+                    </span>
+                  </div>
+                {%- endif -%}
+              {%- when 'countdown_timer' -%}
+                <div class="product__countdown" id="Countdown-{{ block.id }}" {{ block.shopify_attributes }}>
+                  <style>
+                    .product__countdown {
+                      padding: 12px 16px;
+                      border-radius: 8px;
+                      background: {{ block.settings.bg_color | default: '#fef2f2' }};
+                      border: 1px solid {{ block.settings.border_color | default: '#fecaca' }};
+                      color: {{ block.settings.text_color | default: '#991b1b' }};
+                      text-align: center;
+                      font-size: 1.4rem;
+                      font-weight: 600;
+                    }
+                    .product__countdown-label {
+                      margin-bottom: 6px;
+                      font-size: 1.2rem;
+                      text-transform: uppercase;
+                      letter-spacing: 0.08em;
+                      opacity: 0.8;
+                    }
+                    .product__countdown-timer {
+                      display: flex;
+                      justify-content: center;
+                      gap: 8px;
+                      font-size: 1.8rem;
+                      font-weight: 700;
+                      font-variant-numeric: tabular-nums;
+                    }
+                    .product__countdown-unit {
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      min-width: 50px;
+                    }
+                    .product__countdown-unit small {
+                      font-size: 0.9rem;
+                      font-weight: 500;
+                      text-transform: uppercase;
+                      letter-spacing: 0.05em;
+                      opacity: 0.7;
+                      margin-top: 2px;
+                    }
+                    .product__countdown-sep {
+                      font-size: 1.8rem;
+                      line-height: 1.1;
+                      opacity: 0.4;
+                      padding-top: 2px;
+                    }
+                    .product__countdown[hidden] { display: none; }
+                  </style>
+                  <div class="product__countdown-label">{{ block.settings.label | default: 'Sale ends in' }}</div>
+                  <div class="product__countdown-timer" data-countdown
+                    {%- if block.settings.mode == 'date' -%}
+                      data-end-date="{{ block.settings.end_date }}"
+                    {%- else -%}
+                      data-hours="{{ block.settings.daily_hours }}" data-minutes="{{ block.settings.daily_minutes }}"
+                    {%- endif -%}
+                  >
+                    <div class="product__countdown-unit" data-unit-days><span data-days>00</span><small>Days</small></div>
+                    <span class="product__countdown-sep" data-unit-days>:</span>
+                    <div class="product__countdown-unit"><span data-hours>00</span><small>Hours</small></div>
+                    <span class="product__countdown-sep">:</span>
+                    <div class="product__countdown-unit"><span data-mins>00</span><small>Mins</small></div>
+                    <span class="product__countdown-sep">:</span>
+                    <div class="product__countdown-unit"><span data-secs>00</span><small>Secs</small></div>
+                  </div>
+                  <script>
+                    (function() {
+                      const el = document.getElementById('Countdown-{{ block.id }}');
+                      const timer = el.querySelector('[data-countdown]');
+                      const dEl = timer.querySelector('[data-days]');
+                      const hEl = timer.querySelector('[data-hours]');
+                      const mEl = timer.querySelector('[data-mins]');
+                      const sEl = timer.querySelector('[data-secs]');
+                      const dayUnits = el.querySelectorAll('[data-unit-days]');
+                      let end;
+
+                      function parseDate(str) {
+                        if (!str) return null;
+                        const parts = str.split('-');
+                        if (parts.length !== 3) return new Date(str);
+                        // Month is 0-indexed in JS Date
+                        const d = new Date(parts[0], parts[1] - 1, parts[2]);
+                        return isNaN(d.getTime()) ? null : d;
+                      }
+
+                      if (timer.dataset.endDate) {
+                        const parsed = parseDate(timer.dataset.endDate);
+                        end = parsed ? parsed.getTime() : null;
+                      } else {
+                        const now = new Date();
+                        const h = parseInt(timer.dataset.hours || 0);
+                        const m = parseInt(timer.dataset.minutes || 0);
+                        const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0).getTime();
+                        end = todayEnd > now.getTime() ? todayEnd : todayEnd + 86400000;
+                      }
+
+                      if (!end) { el.hidden = true; return; }
+
+                      function tick() {
+                        const diff = Math.max(0, end - Date.now());
+                        if (diff <= 0) { el.hidden = true; return; }
+                        
+                        const d = Math.floor(diff / 86400000);
+                        const h = Math.floor((diff % 86400000) / 3600000);
+                        const m = Math.floor((diff % 3600000) / 60000);
+                        const s = Math.floor((diff % 60000) / 1000);
+
+                        if (d > 0) {
+                          dayUnits.forEach(u => u.style.display = 'flex');
+                          dEl.textContent = String(d).padStart(2, '0');
+                        } else {
+                          dayUnits.forEach(u => u.style.display = 'none');
+                        }
+
+                        hEl.textContent = String(h).padStart(2, '0');
+                        mEl.textContent = String(m).padStart(2, '0');
+                        sEl.textContent = String(s).padStart(2, '0');
+                        el.style.opacity = '1';
+                      }
+                      el.style.opacity = '0';
+                      el.style.transition = 'opacity 0.3s ease';
+                      tick();
+                      setInterval(tick, 1000);
+                    })();
+                  </script>
+                </div>
+              {%- when 'delivery_estimate' -%}
+                <div class="product__delivery-estimate" {{ block.shopify_attributes }}>
+                  <style>
+                    .product__delivery-estimate {
+                      display: flex;
+                      align-items: flex-start;
+                      gap: 10px;
+                      padding: 12px 16px;
+                      border-radius: 8px;
+                      background: {{ block.settings.bg_color | default: '#f0f9ff' }};
+                      border: 1px solid {{ block.settings.border_color | default: '#bae6fd' }};
+                      color: {{ block.settings.text_color | default: '#0c4a6e' }};
+                      font-size: 1.3rem;
+                      line-height: 1.5;
+                    }
+                    .product__delivery-icon {
+                      flex-shrink: 0;
+                      width: 22px;
+                      height: 22px;
+                      margin-top: 1px;
+                    }
+                    .product__delivery-text strong {
+                      font-weight: 700;
+                    }
+                    .product__delivery-urgency {
+                      color: {{ block.settings.urgency_color | default: '#dc2626' }};
+                      font-weight: 600;
+                    }
+                  </style>
+                  <svg class="product__delivery-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="1" y="3" width="15" height="13"></rect>
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                  </svg>
+                  <div class="product__delivery-text">
+                    <div>
+                      {%- assign delivery_days = block.settings.delivery_days | default: 3 -%}
+                      {%- assign cutoff_hour = block.settings.cutoff_hour | default: 17 -%}
+                      <strong>{{ block.settings.heading | default: 'Estimated Delivery' }}:</strong>
+                      <span id="DeliveryDate-{{ block.id }}"></span>
+                    </div>
+                    <div class="product__delivery-urgency" id="DeliveryUrgency-{{ block.id }}"></div>
+                    <script>
+                      (function() {
+                        const now = new Date();
+                        const cutoff = {{ cutoff_hour }};
+                        const days = {{ delivery_days }};
+                        let start = new Date(now);
+                        if (now.getHours() >= cutoff) start.setDate(start.getDate() + 1);
+
+                        let added = 0;
+                        while (added < days) {
+                          start.setDate(start.getDate() + 1);
+                          if (start.getDay() !== 0) added++;
+                        }
+
+                        const opts = { weekday: 'short', month: 'short', day: 'numeric' };
+                        document.getElementById('DeliveryDate-{{ block.id }}').textContent = start.toLocaleDateString('en-IN', opts);
+
+                        if (now.getHours() < cutoff) {
+                          const h = cutoff - now.getHours() - 1;
+                          const m = 60 - now.getMinutes();
+                          document.getElementById('DeliveryUrgency-{{ block.id }}').textContent =
+                            'Order within ' + h + 'h ' + m + 'm for fastest delivery';
+                        }
+                      })();
+                    </script>
+                  </div>
+                </div>
             {%- endcase -%}
           {%- endfor -%}
           <a href="{{ product.url }}" class="link product__view-details animate-arrow">
@@ -775,6 +1195,10 @@
         </section>
       </div>
     </div>
+
+    {% if section.settings.enable_sticky_atc %}
+      {% render 'product-sticky-atc', product: product %}
+    {% endif %}
 
     {% render 'product-media-modal', variant_images: variant_images %}
 
@@ -823,102 +1247,8 @@
   </div>
 </product-info>
 
-{%- if section.settings.enable_sticky_atc -%}
-  <div id="sticky-atc-bar" class="sticky-atc-bar">
-    <div class="sticky-atc-bar__container">
-      <div class="sticky-atc-bar__info">
-        {%- if product.featured_image -%}
-          <img class="sticky-atc-bar__image" src="{{ product.featured_image | image_url: width: 100 }}" alt="{{ product.featured_image.alt | escape }}" width="50" height="50" loading="lazy">
-        {%- endif -%}
-        <div class="sticky-atc-bar__text">
-          <span class="sticky-atc-bar__title">{{ product.title }}</span>
-          <span class="sticky-atc-bar__price" id="sticky-atc-price">{{ product.selected_or_first_available_variant.price | money }}</span>
-        </div>
-      </div>
-      <product-form class="product-form">
-        <div class="product-form__error-message-wrapper" role="alert" hidden>
-          <span class="svg-wrapper">
-            {{- 'icon-error.svg' | inline_asset_content -}}
-          </span>
-          <span class="product-form__error-message"></span>
-        </div>
 
-        {%- form 'product', product, id: 'sticky-atc-form', class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-          <button
-            type="submit"
-            name="add"
-            class="product-form__submit button button--full-width button--primary"
-            {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}
-          >
-            <span>
-              {%- if product.selected_or_first_available_variant.available -%}
-                {{ 'products.product.add_to_cart' | t }}
-              {%- else -%}
-                {{ 'products.product.sold_out' | t }}
-              {%- endif -%}
-            </span>
-            {%- render 'loading-spinner' -%}
-          </button>
-        {%- endform -%}
-      </product-form>
-    </div>
-  </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const stickyAtc = document.getElementById('sticky-atc-bar');
-      const mainAtc = document.querySelector('.product-form__buttons');
-      
-      if (stickyAtc && mainAtc) {
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-              stickyAtc.classList.add('show');
-            } else {
-              stickyAtc.classList.remove('show');
-            }
-          });
-        }, { threshold: 0.1 });
-        
-        observer.observe(mainAtc);
-      }
-
-      // Sync variant changes using theme's pubsub
-      if (typeof subscribe === 'function' && typeof PUB_SUB_EVENTS !== 'undefined') {
-        subscribe(PUB_SUB_EVENTS.variantChange, function(event) {
-          const variant = event.data.variant;
-          const sectionId = event.data.sectionId;
-          
-          if (sectionId === {{ section.id | json }} || sectionId === {{ section.id | append: '-main' | json }}) {
-            if (variant) {
-              const stickyIdInput = stickyAtc.querySelector('input[name="id"]');
-              const stickyPrice = document.getElementById('sticky-atc-price');
-              const stickySubmit = stickyAtc.querySelector('.product-form__submit');
-              
-              if (stickyIdInput) stickyIdInput.value = variant.id;
-              
-              const mainPrice = document.querySelector('.product__info-container .price');
-              if (stickyPrice && mainPrice) {
-                stickyPrice.innerHTML = mainPrice.innerHTML;
-              }
-              
-              if (stickySubmit) {
-                if (variant.available) {
-                  stickySubmit.removeAttribute('disabled');
-                  stickySubmit.querySelector('span').innerText = {{ 'products.product.add_to_cart' | t | json }};
-                } else {
-                  stickySubmit.setAttribute('disabled', 'disabled');
-                  stickySubmit.querySelector('span').innerText = {{ 'products.product.sold_out' | t | json }};
-                }
-              }
-            }
-          }
-        });
-      }
-    });
-  </script>
-{%- endif -%}
 
 {% schema %}
 {
@@ -964,7 +1294,79 @@
     {
       "type": "title",
       "name": "t:sections.main-product.blocks.title.name",
-      "limit": 1
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Typography"
+        },
+        {
+          "type": "range",
+          "id": "title_size",
+          "min": 1.0,
+          "max": 5.0,
+          "step": 0.1,
+          "unit": "rem",
+          "label": "Font Size",
+          "default": 3.0
+        },
+        {
+          "type": "select",
+          "id": "title_weight",
+          "options": [
+            { "value": "300", "label": "Light" },
+            { "value": "400", "label": "Regular" },
+            { "value": "500", "label": "Medium" },
+            { "value": "600", "label": "Semi-Bold" },
+            { "value": "700", "label": "Bold" }
+          ],
+          "default": "600",
+          "label": "Font Weight"
+        },
+        {
+          "type": "select",
+          "id": "text_transform",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "uppercase", "label": "Uppercase" },
+            { "value": "capitalize", "label": "Capitalize" },
+            { "value": "lowercase", "label": "Lowercase" }
+          ],
+          "default": "none",
+          "label": "Text Transform"
+        },
+        {
+          "type": "color",
+          "id": "title_color",
+          "label": "Title Color",
+          "default": "#1a1a1a"
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "select",
+          "id": "title_alignment",
+          "label": "Alignment",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "range",
+          "id": "margin_bottom",
+          "min": 0,
+          "max": 50,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom Margin",
+          "default": 10
+        }
+      ]
     },
     {
       "type": "price",
@@ -2500,6 +2902,316 @@
           "info": "t:sections.main-product.blocks.icon_with_text.settings.heading.info"
         }
       ]
+    },
+    {
+      "type": "cosmetics_accordion",
+      "name": "Cosmetics Accordion Tabs",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Uses metafields: cosmetics.overview, cosmetics.ingredients, cosmetics.how_to_use, cosmetics.results"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_overview",
+          "default": true,
+          "label": "Show Overview Tab"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_ingredients",
+          "default": true,
+          "label": "Show Key Ingredients Tab"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_how_to_use",
+          "default": true,
+          "label": "Show How to Use Tab"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_results",
+          "default": true,
+          "label": "Show Results Tab"
+        }
+      ]
+    },
+    {
+      "type": "trust_badge",
+      "name": "Trust Badges",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_payment_icons",
+          "default": true,
+          "label": "Show store payment icons"
+        },
+        {
+          "type": "html",
+          "id": "custom_svg_1",
+          "label": "Custom SVG Icon 1"
+        },
+        {
+          "type": "html",
+          "id": "custom_svg_2",
+          "label": "Custom SVG Icon 2"
+        },
+        {
+          "type": "html",
+          "id": "custom_svg_3",
+          "label": "Custom SVG Icon 3"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "Guaranteed safe & secure checkout"
+        }
+      ]
+    },
+    {
+      "type": "tags_metafield",
+      "name": "Skin Concern Tags",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Target Concerns"
+        },
+        {
+          "type": "textarea",
+          "id": "manual_tags",
+          "label": "Manual Tags (Fallback)",
+          "info": "Comma-separated list. Used if the 'cosmetics.skin_concerns' metafield is empty."
+        },
+        {
+          "type": "select",
+          "id": "alignment",
+          "label": "Alignment",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "header",
+          "content": "Tag Styling"
+        },
+        {
+          "type": "color",
+          "id": "tag_bg_color",
+          "label": "Pill Background",
+          "default": "#f3f4f6"
+        },
+        {
+          "type": "color",
+          "id": "tag_text_color",
+          "label": "Pill Text",
+          "default": "#374151"
+        },
+        {
+          "type": "color",
+          "id": "tag_border_color",
+          "label": "Pill Border",
+          "default": "#d1d5db"
+        },
+        {
+          "type": "range",
+          "id": "corner_radius",
+          "min": 0,
+          "max": 30,
+          "step": 2,
+          "unit": "px",
+          "label": "Corner Radius",
+          "default": 30
+        },
+        {
+          "type": "range",
+          "id": "font_size",
+          "min": 10,
+          "max": 18,
+          "step": 1,
+          "unit": "px",
+          "label": "Font Size",
+          "default": 12
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_glass",
+          "label": "Enable Glassmorphism Effect",
+          "default": false,
+          "info": "Adds a subtle blur effect to tags. Best used with semi-transparent background colors."
+        }
+      ]
+    },
+    {
+      "type": "savings_callout",
+      "name": "Savings Callout",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Displays 'You save ₹X (Y%)' when a compare-at price exists."
+        },
+        {
+          "type": "select",
+          "id": "display_style",
+          "label": "Display style",
+          "options": [
+            { "value": "both", "label": "Amount + Percentage" },
+            { "value": "amount", "label": "Amount only" },
+            { "value": "percent", "label": "Percentage only" }
+          ],
+          "default": "both"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background color",
+          "default": "#ecfdf5"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Border color",
+          "default": "#a7f3d0"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#065f46"
+        }
+      ]
+    },
+    {
+      "type": "countdown_timer",
+      "name": "Countdown Timer",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label text",
+          "default": "Sale ends in"
+        },
+        {
+          "type": "select",
+          "id": "mode",
+          "label": "Timer mode",
+          "options": [
+            { "value": "daily", "label": "Daily recurring (resets each day)" },
+            { "value": "date", "label": "Fixed end date" }
+          ],
+          "default": "daily"
+        },
+        {
+          "type": "range",
+          "id": "daily_hours",
+          "min": 0,
+          "max": 23,
+          "step": 1,
+          "default": 23,
+          "label": "Daily cutoff hour (24h format)",
+          "info": "Used when mode is 'Daily recurring'"
+        },
+        {
+          "type": "range",
+          "id": "daily_minutes",
+          "min": 0,
+          "max": 59,
+          "step": 1,
+          "default": 59,
+          "label": "Daily cutoff minute"
+        },
+        {
+          "type": "text",
+          "id": "end_date",
+          "label": "End date (YYYY-MM-DD)",
+          "info": "Used when mode is 'Fixed end date'. Example: 2026-12-31"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background color",
+          "default": "#fef2f2"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Border color",
+          "default": "#fecaca"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#991b1b"
+        }
+      ]
+    },
+    {
+      "type": "delivery_estimate",
+      "name": "Delivery Estimate",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Estimated Delivery"
+        },
+        {
+          "type": "range",
+          "id": "delivery_days",
+          "min": 1,
+          "max": 14,
+          "step": 1,
+          "default": 3,
+          "label": "Delivery days (business days)"
+        },
+        {
+          "type": "range",
+          "id": "cutoff_hour",
+          "min": 0,
+          "max": 23,
+          "step": 1,
+          "default": 17,
+          "label": "Order cutoff hour (24h)",
+          "info": "Orders after this hour ship next business day"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Background color",
+          "default": "#f0f9ff"
+        },
+        {
+          "type": "color",
+          "id": "border_color",
+          "label": "Border color",
+          "default": "#bae6fd"
+        },
+        {
+          "type": "color",
+          "id": "text_color",
+          "label": "Text color",
+          "default": "#0c4a6e"
+        },
+        {
+          "type": "color",
+          "id": "urgency_color",
+          "label": "Urgency text color",
+          "default": "#dc2626"
+        }
+      ]
     }
   ],
   "settings": [
@@ -2644,7 +3356,7 @@
           "label": "t:sections.main-product.settings.image_zoom.options__3.label"
         }
       ],
-      "default": "lightbox",
+      "default": "hover",
       "label": "t:sections.main-product.settings.image_zoom.label"
     },
     {

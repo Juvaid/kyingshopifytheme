@@ -1,0 +1,47 @@
+.product__trust-badges {
+  margin-top: 1.5rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.product__trust-badges ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 0;
+}
+
+.product__trust-badges li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.8;
+  filter: grayscale(100%);
+  transition: all 0.3s ease;
+}
+
+.product__trust-badges li:hover {
+  opacity: 1;
+  filter: grayscale(0%);
+}
+
+.product__trust-badges svg {
+  width: 38px;
+  height: 24px;
+}
+
+.custom-trust-badge svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+.trust-badge__text {
+  margin: 0;
+  text-align: center;
+  color: rgba(var(--color-foreground), 0.75);
+}
