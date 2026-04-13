@@ -12,6 +12,22 @@
     "section_custom_slideshow_FfC6Ap": {
       "type": "section-custom-slideshow",
       "blocks": {
+        "slide_tD4xdy": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/blemfixbanner_0dddc530-e974-4200-bc0e-cb345f12069a.jpg",
+            "mobile_image": "shopify://shop_images/blemfixbannermobile.jpg",
+            "link": "shopify://products/kying-blemfix-face-cleanser-removes-blemishes-dark-spots-deep-cleansing-face-wash"
+          }
+        },
+        "slide_VGMppF": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/brighlt_lift_banner_212eb9d4-3985-4bbc-b622-7720c5668694.jpg",
+            "mobile_image": "shopify://shop_images/brighlt_lift_bannermobile.jpg",
+            "link": ""
+          }
+        },
         "slide_3TL7hQ": {
           "type": "slide",
           "settings": {
@@ -28,6 +44,8 @@
         }
       },
       "block_order": [
+        "slide_tD4xdy",
+        "slide_VGMppF",
         "slide_3TL7hQ",
         "slide_dUBE9e"
       ],
