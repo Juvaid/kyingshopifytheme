@@ -22,7 +22,14 @@
         },
         "title": {
           "type": "title",
-          "settings": {}
+          "settings": {
+            "title_size": 3,
+            "title_weight": "600",
+            "text_transform": "none",
+            "title_color": "#1a1a1a",
+            "title_alignment": "left",
+            "margin_bottom": 10
+          }
         },
         "rating": {
           "type": "rating",
@@ -58,6 +65,10 @@
           "type": "quantity_selector",
           "settings": {}
         },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
@@ -66,10 +77,6 @@
             "enable_button_sheen": true,
             "sheen_speed": 0.8
           }
-        },
-        "description": {
-          "type": "description",
-          "settings": {}
         },
         "collapsible-row-0": {
           "type": "collapsible_tab",
@@ -126,8 +133,8 @@
         "price",
         "variant_picker",
         "quantity_selector",
-        "buy_buttons",
         "description",
+        "buy_buttons",
         "collapsible-row-0",
         "collapsible-row-1",
         "collapsible-row-2",
@@ -230,6 +237,27 @@
       "type": "section-before-after",
       "disabled": true,
       "settings": {
+        "full_width": false,
+        "subheading": "",
+        "heading": "Before/after comparison",
+        "heading_size": "h1",
+        "content": "",
+        "image_aspect_ratio": "natural",
+        "image_max_height": 600,
+        "image_max_width": 1000,
+        "expand_image": true,
+        "text_position": "center",
+        "before_after_text_position": "bottom",
+        "before_text": "Before",
+        "after_text": "After",
+        "drag_initial_position": 50,
+        "background": "rgba(0,0,0,0)",
+        "background_gradient": "",
+        "text_color": "#121212",
+        "before_text_color": "#ffffff",
+        "after_text_color": "#ffffff",
+        "drag_cursor_background": "#ffffff",
+        "drag_cursor_color": "#000000",
         "padding_top": 36,
         "padding_bottom": 36
       }
