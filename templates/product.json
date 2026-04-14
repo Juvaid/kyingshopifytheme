@@ -23,7 +23,7 @@
         "title": {
           "type": "title",
           "settings": {
-            "title_size": 3,
+            "title_size": 1.8,
             "title_weight": "600",
             "text_transform": "none",
             "title_color": "#1a1a1a",
@@ -142,7 +142,7 @@
         "share"
       ],
       "settings": {
-        "enable_sticky_atc": true,
+        "enable_sticky_atc": false,
         "enable_sticky_info": true,
         "color_scheme": "",
         "media_size": "medium",
