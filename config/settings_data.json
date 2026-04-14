@@ -155,7 +155,7 @@
           "free_shipping_threshold": 1000,
           "free_shipping_message": "You're only [amount] away from free shipping!",
           "free_shipping_success_message": "Congratulations! You've unlocked free shipping.",
-          "show_discount_code": true
+          "show_discount_code": false
         }
       }
     },
