@@ -23,6 +23,7 @@
         "slide_VGMppF": {
           "type": "slide",
           "settings": {
+            "image": "shopify://shop_images/brighlt_lift_bannerultrawide.jpg",
             "mobile_image": "shopify://shop_images/brighlt_lift_bannermobile.jpg",
             "link": ""
           }
