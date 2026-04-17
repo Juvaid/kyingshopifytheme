@@ -23,7 +23,6 @@
         "slide_VGMppF": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/brighlt_lift_banner_212eb9d4-3985-4bbc-b622-7720c5668694.jpg",
             "mobile_image": "shopify://shop_images/brighlt_lift_bannermobile.jpg",
             "link": ""
           }
@@ -68,15 +67,15 @@
         "collection_8VTbXK": {
           "type": "collection",
           "settings": {
-            "tab_title": "",
-            "collection": "new-launch"
+            "tab_title": "NEW LAUNCH",
+            "collection": "hyaloeronic-series"
           }
         },
         "collection_RFWdGY": {
           "type": "collection",
           "settings": {
-            "tab_title": "",
-            "collection": "best-sellers"
+            "tab_title": "BEST SELLERS",
+            "collection": "makes-sense-collection"
           }
         }
       },
