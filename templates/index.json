@@ -147,7 +147,7 @@
         "description": "",
         "header_alignment": "left",
         "columns_desktop": 4,
-        "columns_mobile": "2",
+        "columns_mobile": "1",
         "max_width": 1400,
         "gap_desktop": 15,
         "gap_mobile": 10,
@@ -189,7 +189,7 @@
         "autoplay_speed": 5,
         "show_arrows": true,
         "arrow_size": 40,
-        "border_radius": 16,
+        "border_radius": 0,
         "margin_top": 0,
         "margin_bottom": 0
       }
