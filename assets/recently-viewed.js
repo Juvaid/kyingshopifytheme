@@ -62,7 +62,7 @@ if (!customElements.get('recently-viewed')) {
             .then(html => {
               const parser = new DOMParser();
               const doc = parser.parseFromString(html, 'text/html');
-              const card = doc.querySelector('.card-wrapper');
+              const card = doc.querySelector('.product-card');
               return card ? card.outerHTML : '';
             })
             .catch(() => '')
