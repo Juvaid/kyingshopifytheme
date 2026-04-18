@@ -140,6 +140,23 @@
         "settings": {
           "color_scheme": "scheme-1"
         }
+      },
+      "cart-drawer": {
+        "type": "cart-drawer",
+        "settings": {
+          "truncate_cart_product_names": true,
+          "cart_product_name_limit": 35,
+          "empty_cart_collection": "kying-hyaloeronic",
+          "empty_cart_heading": "Top Collections For You",
+          "empty_cart_collection_columns": 1,
+          "cart_drawer_upsell_collection": "kying-hyaloeronic",
+          "cart_drawer_upsell_heading": "You might also like",
+          "show_free_shipping_bar": true,
+          "free_shipping_threshold": 1000,
+          "free_shipping_message": "You're only [amount] away from free shipping!",
+          "free_shipping_success_message": "Congratulations! You've unlocked free shipping.",
+          "show_discount_code": false
+        }
       }
     },
     "content_for_index": [],

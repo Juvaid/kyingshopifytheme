@@ -12,51 +12,63 @@
     "section_custom_slideshow_FfC6Ap": {
       "type": "section-custom-slideshow",
       "blocks": {
+        "slide_i6WXf8": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/freeemoisturizer_offer_816048be-0719-4250-8e2e-92a294524535.jpg",
+            "mobile_image": "shopify://shop_images/freeemoisturizer_offermobile_8d57a862-079e-4f87-8d39-1532e4bb7f3c.jpg",
+            "link": ""
+          }
+        },
+        "slide_mfMkPc": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/b2get2fre_a61dba90-acf5-491f-99b7-db3d9be8d378.jpg",
+            "mobile_image": "shopify://shop_images/b2get2fremobile_a5301409-dfbb-45bf-b0ac-adb31984c98f.jpg",
+            "link": ""
+          }
+        },
+        "slide_NGAtQD": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/banner_a9fe82a3-23a0-4467-aba5-c476c017517d.jpg",
+            "mobile_image": "shopify://shop_images/bannermobilee.jpg",
+            "link": ""
+          }
+        },
         "slide_tD4xdy": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/blemfixbanner_0dddc530-e974-4200-bc0e-cb345f12069a.jpg",
-            "mobile_image": "shopify://shop_images/blemfixbannermobile.jpg",
+            "image": "shopify://shop_images/Banner_6c71f86c-ab75-42fa-a7d0-c7006483906d.jpg",
+            "mobile_image": "shopify://shop_images/mobilebanner.jpg",
             "link": "shopify://products/kying-blemfix-face-cleanser-removes-blemishes-dark-spots-deep-cleansing-face-wash"
           }
         },
         "slide_VGMppF": {
           "type": "slide",
+          "disabled": true,
           "settings": {
-            "image": "shopify://shop_images/brighlt_lift_banner_212eb9d4-3985-4bbc-b622-7720c5668694.jpg",
+            "image": "shopify://shop_images/brighlt_lift_bannerultrawide.jpg",
             "mobile_image": "shopify://shop_images/brighlt_lift_bannermobile.jpg",
             "link": ""
-          }
-        },
-        "slide_3TL7hQ": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/banner.jpg",
-            "link": "shopify://collections/kying-hyaloeronic"
-          }
-        },
-        "slide_dUBE9e": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Banners_for_kying.jpg",
-            "link": "shopify://collections/kying-hyaloeronic"
           }
         }
       },
       "block_order": [
+        "slide_i6WXf8",
+        "slide_mfMkPc",
+        "slide_NGAtQD",
         "slide_tD4xdy",
-        "slide_VGMppF",
-        "slide_3TL7hQ",
-        "slide_dUBE9e"
+        "slide_VGMppF"
       ],
       "name": "Custom Slideshow",
       "settings": {
         "slideshow_height": "adapt",
         "full_width": false,
         "autoplay": true,
-        "autoplay_speed": 5,
+        "autoplay_speed": 10,
         "show_arrows": false,
-        "arrow_size": 40,
+        "arrow_size": 20,
         "border_radius": 4,
         "margin_top": 0,
         "margin_bottom": 0
@@ -68,15 +80,15 @@
         "collection_8VTbXK": {
           "type": "collection",
           "settings": {
-            "tab_title": "",
-            "collection": "new-launch"
+            "tab_title": "NEW LAUNCH",
+            "collection": "hyaloeronic-series"
           }
         },
         "collection_RFWdGY": {
           "type": "collection",
           "settings": {
-            "tab_title": "",
-            "collection": "frontpage"
+            "tab_title": "BEST SELLERS",
+            "collection": "makes-sense-collection"
           }
         }
       },
@@ -100,61 +112,54 @@
     "section_collection_list_square_tcj4tW": {
       "type": "section-collection-list-square",
       "blocks": {
-        "collection_fLcwdB": {
+        "collection_gbFERi": {
           "type": "collection",
           "settings": {
-            "collection": "kying-bright-lift",
+            "collection": "hyaloeronic-series",
             "title": ""
           }
         },
-        "collection_4D3Grm": {
+        "collection_Bzr7kR": {
           "type": "collection",
           "settings": {
-            "collection": "kying-blemfix",
-            "title": ""
-          }
-        },
-        "collection_XHUB6A": {
-          "type": "collection",
-          "settings": {
-            "collection": "kying-bright-lift",
-            "title": ""
+            "collection": "makes-sense-collection",
+            "title": "KYING SIGNATURE"
           }
         },
         "collection_baUJbj": {
           "type": "collection",
           "settings": {
             "collection": "money-saving-combos",
+            "image": "shopify://shop_images/summersavinggs.jpg",
             "title": ""
           }
         }
       },
       "block_order": [
-        "collection_fLcwdB",
-        "collection_4D3Grm",
-        "collection_XHUB6A",
+        "collection_gbFERi",
+        "collection_Bzr7kR",
         "collection_baUJbj"
       ],
       "name": "Premium Collection List",
       "settings": {
-        "title": "EXPLORE BY NEED",
+        "title": "COLLECTIONS TO EXPLORE",
         "heading_size": "h2",
         "description": "",
         "header_alignment": "left",
-        "columns_desktop": 4,
-        "columns_mobile": "2",
+        "columns_desktop": 3,
+        "columns_mobile": "1",
         "max_width": 1400,
-        "gap_desktop": 15,
+        "gap_desktop": 10,
         "gap_mobile": 10,
-        "aspect_ratio_desktop": "1 / 1",
-        "aspect_ratio_mobile": "1 / 1",
+        "aspect_ratio_desktop": "4 / 3",
+        "aspect_ratio_mobile": "4 / 3",
         "mobile_height": 0,
         "border_radius": 8,
         "text_alignment": "left",
-        "font_size_desktop": 16,
-        "font_size_mobile": 12,
-        "overlay_opacity": 65,
-        "show_arrow": true,
+        "font_size_desktop": 22,
+        "font_size_mobile": 16,
+        "overlay_opacity": 100,
+        "show_arrow": false,
         "hover_effect": "zoom",
         "background_color": "#ffffff",
         "color_scheme": "",
@@ -162,31 +167,16 @@
         "padding_bottom": 36
       }
     },
-    "section_custom_slideshow_NyfP4c": {
-      "type": "section-custom-slideshow",
-      "blocks": {
-        "slide_met9yD": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/New.gif",
-            "link": "shopify://collections/kying-blemfix"
-          }
-        }
-      },
-      "block_order": [
-        "slide_met9yD"
-      ],
-      "name": "Custom Slideshow",
+    "recently_viewed_j9jynX": {
+      "type": "recently-viewed",
+      "name": "Recently Viewed",
       "settings": {
-        "slideshow_height": "adapt",
-        "full_width": true,
-        "autoplay": true,
-        "autoplay_speed": 5,
-        "show_arrows": true,
-        "arrow_size": 40,
-        "border_radius": 16,
-        "margin_top": 0,
-        "margin_bottom": 0
+        "heading": "Recently viewed",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": ""
       }
     },
     "section_review_block_K9TGJn": {
@@ -241,8 +231,8 @@
         "columns_desktop": 3,
         "gap": 30,
         "border_radius": 12,
-        "padding_top": 40,
-        "padding_bottom": 40,
+        "padding_top": 0,
+        "padding_bottom": 16,
         "max_width": 1200
       }
     },
@@ -272,7 +262,7 @@
     "section_custom_slideshow_FfC6Ap",
     "tabbed_collection_n3Xajh",
     "section_collection_list_square_tcj4tW",
-    "section_custom_slideshow_NyfP4c",
+    "recently_viewed_j9jynX",
     "section_review_block_K9TGJn",
     "featured_blog_wmAH8c"
   ]
