@@ -169,18 +169,6 @@
     },
     "section_custom_slideshow_NyfP4c": {
       "type": "section-custom-slideshow",
-      "blocks": {
-        "slide_met9yD": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/hyaloeronic_range_use.jpg",
-            "link": "shopify://collections/kying-blemfix"
-          }
-        }
-      },
-      "block_order": [
-        "slide_met9yD"
-      ],
       "name": "Custom Slideshow",
       "settings": {
         "slideshow_height": "adapt",
@@ -246,8 +234,8 @@
         "columns_desktop": 3,
         "gap": 30,
         "border_radius": 12,
-        "padding_top": 40,
-        "padding_bottom": 40,
+        "padding_top": 0,
+        "padding_bottom": 0,
         "max_width": 1200
       }
     },
