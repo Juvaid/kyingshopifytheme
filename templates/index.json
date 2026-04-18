@@ -167,7 +167,7 @@
         "background_color": "#ffffff",
         "color_scheme": "",
         "padding_top": 36,
-        "padding_bottom": 36
+        "padding_bottom": 0
       }
     },
     "recently_viewed_j9jynX": {
@@ -186,7 +186,7 @@
         "heading_margin_bottom": 30,
         "grid_gap": 16,
         "grid_gap_mobile": 8,
-        "padding_top": 36,
+        "padding_top": 0,
         "padding_bottom": 36
       }
     },
