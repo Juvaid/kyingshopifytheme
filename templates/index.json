@@ -35,28 +35,12 @@
             "mobile_image": "shopify://shop_images/brighlt_lift_bannermobile.jpg",
             "link": ""
           }
-        },
-        "slide_3TL7hQ": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/banner.jpg",
-            "link": "shopify://collections/kying-hyaloeronic"
-          }
-        },
-        "slide_dUBE9e": {
-          "type": "slide",
-          "settings": {
-            "image": "shopify://shop_images/Banners_for_kying.jpg",
-            "link": "shopify://collections/kying-hyaloeronic"
-          }
         }
       },
       "block_order": [
         "slide_NGAtQD",
         "slide_tD4xdy",
-        "slide_VGMppF",
-        "slide_3TL7hQ",
-        "slide_dUBE9e"
+        "slide_VGMppF"
       ],
       "name": "Custom Slideshow",
       "settings": {
