@@ -61,10 +61,6 @@
             "swatch_shape": "circle"
           }
         },
-        "description": {
-          "type": "description",
-          "settings": {}
-        },
         "quantity_selector": {
           "type": "quantity_selector",
           "settings": {}
@@ -77,6 +73,10 @@
             "enable_button_sheen": true,
             "sheen_speed": 0.8
           }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
         },
         "collapsible-row-0": {
           "type": "collapsible_tab",
@@ -132,9 +132,9 @@
         "caption",
         "price",
         "variant_picker",
-        "description",
         "quantity_selector",
         "buy_buttons",
+        "description",
         "collapsible-row-0",
         "collapsible-row-1",
         "collapsible-row-2",
