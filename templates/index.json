@@ -152,7 +152,7 @@
         "gap_desktop": 15,
         "gap_mobile": 10,
         "aspect_ratio_desktop": "4 / 3",
-        "aspect_ratio_mobile": "1 / 1",
+        "aspect_ratio_mobile": "4 / 3",
         "mobile_height": 0,
         "border_radius": 8,
         "text_alignment": "left",
