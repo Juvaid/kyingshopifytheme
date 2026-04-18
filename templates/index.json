@@ -167,6 +167,18 @@
         "padding_bottom": 36
       }
     },
+    "recently_viewed_j9jynX": {
+      "type": "recently-viewed",
+      "name": "Recently Viewed",
+      "settings": {
+        "heading": "Recently viewed",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": ""
+      }
+    },
     "section_review_block_K9TGJn": {
       "type": "section-review-block",
       "blocks": {
@@ -220,7 +232,7 @@
         "gap": 30,
         "border_radius": 12,
         "padding_top": 0,
-        "padding_bottom": 0,
+        "padding_bottom": 16,
         "max_width": 1200
       }
     },
@@ -243,18 +255,6 @@
         "color_scheme": "",
         "padding_top": 0,
         "padding_bottom": 36
-      }
-    },
-    "recently_viewed_j9jynX": {
-      "type": "recently-viewed",
-      "name": "Recently Viewed",
-      "settings": {
-        "heading": "Recently viewed",
-        "heading_size": "h2",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "columns_mobile": "2",
-        "color_scheme": ""
       }
     }
   },
