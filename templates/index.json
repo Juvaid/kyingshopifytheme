@@ -12,6 +12,22 @@
     "section_custom_slideshow_FfC6Ap": {
       "type": "section-custom-slideshow",
       "blocks": {
+        "slide_i6WXf8": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/freeemoisturizer_offer_816048be-0719-4250-8e2e-92a294524535.jpg",
+            "mobile_image": "shopify://shop_images/freeemoisturizer_offer_816048be-0719-4250-8e2e-92a294524535.jpg",
+            "link": ""
+          }
+        },
+        "slide_mfMkPc": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/b2get2fre_a61dba90-acf5-491f-99b7-db3d9be8d378.jpg",
+            "mobile_image": "shopify://shop_images/b2get2fremobile_a5301409-dfbb-45bf-b0ac-adb31984c98f.jpg",
+            "link": ""
+          }
+        },
         "slide_NGAtQD": {
           "type": "slide",
           "settings": {
@@ -38,6 +54,8 @@
         }
       },
       "block_order": [
+        "slide_i6WXf8",
+        "slide_mfMkPc",
         "slide_NGAtQD",
         "slide_tD4xdy",
         "slide_VGMppF"
