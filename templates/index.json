@@ -77,24 +77,24 @@
     "tabbed_collection_n3Xajh": {
       "type": "tabbed-collection",
       "blocks": {
-        "collection_8VTbXK": {
-          "type": "collection",
-          "settings": {
-            "tab_title": "NEW LAUNCH",
-            "collection": "hyaloeronic-series"
-          }
-        },
         "collection_RFWdGY": {
           "type": "collection",
           "settings": {
             "tab_title": "BEST SELLERS",
             "collection": "makes-sense-collection"
           }
+        },
+        "collection_8VTbXK": {
+          "type": "collection",
+          "settings": {
+            "tab_title": "NEW LAUNCH",
+            "collection": "hyaloeronic-series"
+          }
         }
       },
       "block_order": [
-        "collection_8VTbXK",
-        "collection_RFWdGY"
+        "collection_RFWdGY",
+        "collection_8VTbXK"
       ],
       "name": "Tabbed Collection",
       "settings": {
