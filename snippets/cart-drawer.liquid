@@ -74,10 +74,16 @@
           {%- if settings.empty_cart_collection != blank -%}
             <h3 class="cart-drawer__empty-featured-title">{{ settings.empty_cart_heading | escape }}</h3>
             <div class="cart-drawer__collection-wrapper">
-              {% render 'card-collection',
-                card_collection: settings.empty_cart_collection,
-                columns: settings.empty_cart_collection_columns
-              %}
+              <a href="{{ settings.empty_cart_collection.url }}" class="cart-drawer__collection-card">
+                  <div class="cart-drawer__collection-image-wrapper">
+                    <img src="{{ settings.empty_cart_collection.featured_image | image_url: width: 600 }}" alt="{{ settings.empty_cart_collection.title }}" loading="lazy" width="600" height="{{ 600 | divided_by: settings.empty_cart_collection.featured_image.aspect_ratio | ceil }}">
+                    <div class="cart-drawer__collection-overlay"></div>
+                  </div>
+                  <div class="cart-drawer__collection-content">
+                    <h4>{{ settings.empty_cart_collection.title }}</h4>
+                    <span class="button cart-drawer__collection-btn">Shop Now</span>
+                  </div>
+              </a>
             </div>
           {%- endif -%}
         </div>
