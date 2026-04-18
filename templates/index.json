@@ -16,7 +16,7 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/freeemoisturizer_offer_816048be-0719-4250-8e2e-92a294524535.jpg",
-            "mobile_image": "shopify://shop_images/freeemoisturizer_offer_816048be-0719-4250-8e2e-92a294524535.jpg",
+            "mobile_image": "shopify://shop_images/freeemoisturizer_offermobile_8d57a862-079e-4f87-8d39-1532e4bb7f3c.jpg",
             "link": ""
           }
         },
@@ -68,7 +68,7 @@
         "autoplay": true,
         "autoplay_speed": 10,
         "show_arrows": false,
-        "arrow_size": 40,
+        "arrow_size": 20,
         "border_radius": 4,
         "margin_top": 0,
         "margin_bottom": 0
