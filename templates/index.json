@@ -64,7 +64,7 @@
       "name": "Custom Slideshow",
       "settings": {
         "slideshow_height": "adapt",
-        "full_width": false,
+        "full_width": true,
         "autoplay": true,
         "autoplay_speed": 10,
         "show_arrows": false,
@@ -176,8 +176,8 @@
       "settings": {
         "heading": "Recently viewed",
         "heading_size": "h2",
-        "products_to_show": 2,
-        "columns_desktop": 4,
+        "products_to_show": 4,
+        "columns_desktop": 5,
         "columns_mobile": "2",
         "swipe_on_mobile": true,
         "swipe_card_width": 45,
