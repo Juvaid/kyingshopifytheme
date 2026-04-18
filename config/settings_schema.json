@@ -1504,6 +1504,36 @@
       },
       {
         "type": "header",
+        "content": "Free Shipping Progress Bar"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_free_shipping_bar",
+        "label": "Show free shipping progress bar",
+        "default": true
+      },
+      {
+        "type": "number",
+        "id": "free_shipping_threshold",
+        "label": "Free shipping threshold",
+        "info": "Enter the amount without currency symbols (e.g. 1000).",
+        "default": 1000
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_message",
+        "label": "Progress message",
+        "info": "Use [amount] to show the remaining amount.",
+        "default": "You're only [amount] away from free shipping!"
+      },
+      {
+        "type": "text",
+        "id": "free_shipping_success_message",
+        "label": "Success message",
+        "default": "Congratulations! You've unlocked free shipping."
+      },
+      {
+        "type": "header",
         "content": "Product Name Truncation"
       },
       {
