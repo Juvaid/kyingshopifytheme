@@ -146,7 +146,7 @@
         "heading_size": "h2",
         "description": "",
         "header_alignment": "left",
-        "columns_desktop": 4,
+        "columns_desktop": 3,
         "columns_mobile": "1",
         "max_width": 1400,
         "gap_desktop": 15,
