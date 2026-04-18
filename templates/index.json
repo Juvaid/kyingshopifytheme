@@ -93,39 +93,32 @@
     "section_collection_list_square_tcj4tW": {
       "type": "section-collection-list-square",
       "blocks": {
-        "collection_fLcwdB": {
+        "collection_gbFERi": {
           "type": "collection",
           "settings": {
-            "collection": "kying-bright-lift",
+            "collection": "hyaloeronic-series",
             "title": ""
           }
         },
-        "collection_4D3Grm": {
+        "collection_Bzr7kR": {
           "type": "collection",
           "settings": {
-            "collection": "kying-blemfix",
-            "title": ""
-          }
-        },
-        "collection_XHUB6A": {
-          "type": "collection",
-          "settings": {
-            "collection": "kying-bright-lift",
-            "title": ""
+            "collection": "makes-sense-collection",
+            "title": "KYING SIGNATURE"
           }
         },
         "collection_baUJbj": {
           "type": "collection",
           "settings": {
             "collection": "money-saving-combos",
+            "image": "shopify://shop_images/summersavinggs.jpg",
             "title": ""
           }
         }
       },
       "block_order": [
-        "collection_fLcwdB",
-        "collection_4D3Grm",
-        "collection_XHUB6A",
+        "collection_gbFERi",
+        "collection_Bzr7kR",
         "collection_baUJbj"
       ],
       "name": "Premium Collection List",
