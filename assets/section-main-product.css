@@ -2190,3 +2190,44 @@ a.product__text {
   margin: 0 !important;
 }
 
+/* Product Media Gallery Navigation Dots Customization */
+@media screen and (min-width: 750px) {
+  .product__media-container .slider-buttons {
+    left: auto !important;
+    right: 2rem !important;
+    transform: none !important;
+  }
+  .product__media-container .slider-buttons:hover {
+    transform: translateY(-2px) !important;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .product__media-wrapper .slider-buttons {
+    left: auto !important;
+    right: 1.5rem !important;
+    transform: none !important;
+  }
+}
+
+/* Smaller Dots and Low Opacity */
+.product__media-container .slider-counter__link--dots .dot,
+.product__media-wrapper .slider-counter__link--dots .dot {
+  width: 0.6rem !important;
+  height: 0.6rem !important;
+  border-width: 0.1rem !important;
+  opacity: 0.4 !important;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  margin: 0 0.2rem;
+}
+
+.product__media-container .slider-counter__link--active.slider-counter__link--dots .dot,
+.product__media-wrapper .slider-counter__link--active.slider-counter__link--dots .dot {
+  opacity: 0.9 !important;
+  transform: scale(1.1);
+}
+
+.product__media-container .slider-counter__link,
+.product__media-wrapper .slider-counter__link {
+  padding: 0.5rem !important;
+}

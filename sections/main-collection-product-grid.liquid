@@ -42,6 +42,10 @@
 
   /* Grid Gap Overrides */
   .section-{{ section.id }}-padding #product-grid {
+    --grid-desktop-horizontal-spacing: var(--grid-gap-h, 16px);
+    --grid-desktop-vertical-spacing: var(--grid-gap-v, 24px);
+    --grid-mobile-horizontal-spacing: var(--grid-gap-h, 16px);
+    --grid-mobile-vertical-spacing: var(--grid-gap-v, 24px);
     column-gap: var(--grid-gap-h, 16px);
     row-gap: var(--grid-gap-v, 24px);
   }
@@ -479,7 +483,7 @@
                     product: product,
                     show_rating: section.settings.show_rating,
                     show_quick_add: true,
-                    show_compare_at_price: section.settings.show_compare_at_price,
+                    show_compare_at_price: false,
                     show_product_type: section.settings.show_product_type,
                     show_variant_count: section.settings.show_variant_count,
                     card_title_lines: section.settings.card_title_lines,

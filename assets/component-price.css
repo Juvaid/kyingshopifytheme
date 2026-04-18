@@ -74,13 +74,24 @@
 }
 
 .price--on-sale .price__sale {
-  display: initial;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 0.2rem !important; /* Reduced gap for smaller screens */
+  white-space: nowrap !important;
+}
+
+.price--on-sale .price__sale > span {
+  white-space: nowrap !important;
+}
+
+.price--on-sale .price__sale .price-item {
+  margin-right: 0;
 }
 
 .price--center {
-  display: initial;
+  display: flex;
   justify-content: center;
 }
 

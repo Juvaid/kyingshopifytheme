@@ -146,7 +146,7 @@
           {%- if show_compare_at_price and product.compare_at_price > product.price -%}
             <span class="product-card__compare-price">{{ product.compare_at_price | money }}</span>
           {%- endif -%}
-          <span class="product-card__price{% if show_compare_at_price and product.compare_at_price > product.price %} product-card__price--sale{% endif %}">
+          <span class="product-card__price{% if product.compare_at_price > product.price %} product-card__price--sale{% endif %}">
             {{ product.price | money }}
           </span>
           {%- if settings.card_rating_location == 'below_price' -%}

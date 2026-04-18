@@ -205,7 +205,7 @@
   display: flex;
   align-items: baseline;
   gap: 6px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .product-card__price {
@@ -370,7 +370,9 @@
   }
 
   .product-card__pricing {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: 4px;
+    white-space: nowrap;
   }
 
   .product-card__price {
