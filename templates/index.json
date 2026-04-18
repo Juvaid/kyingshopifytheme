@@ -167,21 +167,6 @@
         "padding_bottom": 36
       }
     },
-    "section_custom_slideshow_NyfP4c": {
-      "type": "section-custom-slideshow",
-      "name": "Custom Slideshow",
-      "settings": {
-        "slideshow_height": "adapt",
-        "full_width": true,
-        "autoplay": true,
-        "autoplay_speed": 5,
-        "show_arrows": true,
-        "arrow_size": 40,
-        "border_radius": 0,
-        "margin_top": 0,
-        "margin_bottom": 0
-      }
-    },
     "section_review_block_K9TGJn": {
       "type": "section-review-block",
       "blocks": {
@@ -259,13 +244,25 @@
         "padding_top": 0,
         "padding_bottom": 36
       }
+    },
+    "recently_viewed_j9jynX": {
+      "type": "recently-viewed",
+      "name": "Recently Viewed",
+      "settings": {
+        "heading": "Recently viewed",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": "2",
+        "color_scheme": ""
+      }
     }
   },
   "order": [
     "section_custom_slideshow_FfC6Ap",
     "tabbed_collection_n3Xajh",
     "section_collection_list_square_tcj4tW",
-    "section_custom_slideshow_NyfP4c",
+    "recently_viewed_j9jynX",
     "section_review_block_K9TGJn",
     "featured_blog_wmAH8c"
   ]
