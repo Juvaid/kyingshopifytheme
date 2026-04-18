@@ -4,8 +4,73 @@
 
 <script src="{{ 'recently-viewed.js' | asset_url }}" defer="defer"></script>
 
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+
+  .recently-viewed-{{ section.id }} {
+    display: block;
+    position: relative;
+    z-index: 1;
+    --grid-desktop-horizontal-spacing: {{ section.settings.grid_gap }}px;
+    --grid-desktop-vertical-spacing: {{ section.settings.grid_gap }}px;
+    --grid-mobile-horizontal-spacing: {{ section.settings.grid_gap_mobile }}px;
+    --grid-mobile-vertical-spacing: {{ section.settings.grid_gap_mobile }}px;
+  }
+
+  .recently-viewed-{{ section.id }} .related-products__heading {
+    text-align: {{ section.settings.heading_alignment }};
+    margin-bottom: {{ section.settings.heading_margin_bottom }}px;
+  }
+
+  {% if section.settings.swipe_on_mobile %}
+  @media screen and (max-width: 749px) {
+    .recently-viewed-{{ section.id }} .grid {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      margin-left: -1.5rem;
+      margin-right: -1.5rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      padding-bottom: 1rem;
+      column-gap: var(--grid-mobile-horizontal-spacing);
+    }
+    
+    .recently-viewed-{{ section.id }} .grid::-webkit-scrollbar {
+      display: none;
+    }
+    .recently-viewed-{{ section.id }} .grid {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    .recently-viewed-{{ section.id }} .grid__item {
+      flex: 0 0 calc({{ section.settings.swipe_card_width }}vw - var(--grid-mobile-horizontal-spacing));
+      min-width: calc({{ section.settings.swipe_card_width }}vw - var(--grid-mobile-horizontal-spacing));
+      max-width: none !important;
+      width: auto !important;
+      scroll-snap-align: start;
+    }
+  }
+  {% endif %}
+{%- endstyle -%}
+
 <div class="color-{{ section.settings.color_scheme }} gradient no-js-hidden">
-  <recently-viewed class="recently-viewed page-width section-{{ section.id }}-padding hidden" data-product-handle="{{ product.handle }}" data-limit="{{ section.settings.products_to_show }}">
+  <recently-viewed class="recently-viewed recently-viewed-{{ section.id }} page-width section-{{ section.id }}-padding hidden" data-product-handle="{{ product.handle }}" data-limit="{{ section.settings.products_to_show }}">
     <div class="related-products__heading inline-richtext {{ section.settings.heading_size }}">
       <h2 class="title">{{ section.settings.heading }}</h2>
     </div>
@@ -83,10 +148,91 @@
       "label": "t:sections.related-products.settings.columns_mobile.label"
     },
     {
+      "type": "checkbox",
+      "id": "swipe_on_mobile",
+      "default": true,
+      "label": "Enable swipe on mobile"
+    },
+    {
+      "type": "range",
+      "id": "swipe_card_width",
+      "min": 40,
+      "max": 95,
+      "step": 5,
+      "unit": "%",
+      "label": "Mobile swipe card width",
+      "default": 45
+    },
+    {
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:sections.all.colors.label",
       "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Layout & Spacing"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "heading_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Heading Margin Bottom",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Desktop Gap",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "grid_gap_mobile",
+      "min": 4,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Mobile Gap",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
     }
   ],
   "presets": [
