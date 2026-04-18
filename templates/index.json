@@ -112,6 +112,14 @@
     "section_collection_list_square_tcj4tW": {
       "type": "section-collection-list-square",
       "blocks": {
+        "collection_baUJbj": {
+          "type": "collection",
+          "settings": {
+            "collection": "money-saving-combos",
+            "image": "shopify://shop_images/summersavinggs.jpg",
+            "title": ""
+          }
+        },
         "collection_gbFERi": {
           "type": "collection",
           "settings": {
@@ -125,24 +133,16 @@
             "collection": "makes-sense-collection",
             "title": "KYING SIGNATURE"
           }
-        },
-        "collection_baUJbj": {
-          "type": "collection",
-          "settings": {
-            "collection": "money-saving-combos",
-            "image": "shopify://shop_images/summersavinggs.jpg",
-            "title": ""
-          }
         }
       },
       "block_order": [
+        "collection_baUJbj",
         "collection_gbFERi",
-        "collection_Bzr7kR",
-        "collection_baUJbj"
+        "collection_Bzr7kR"
       ],
       "name": "Premium Collection List",
       "settings": {
-        "title": "EXPLORE BY NEED",
+        "title": "COLLECTIONS TO EXPLORE",
         "heading_size": "h2",
         "description": "",
         "header_alignment": "left",
