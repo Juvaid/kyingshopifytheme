@@ -69,6 +69,9 @@
         "autoplay_speed": 10,
         "show_arrows": false,
         "arrow_size": 20,
+        "show_dots": true,
+        "dots_alignment": "right",
+        "dots_opacity": 30,
         "border_radius": 4,
         "margin_top": 0,
         "margin_bottom": 0
