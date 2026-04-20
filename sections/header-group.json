@@ -21,13 +21,6 @@
             "link": "shopify://collections/money-saving-combos"
           }
         },
-        "announcement_drYThD": {
-          "type": "announcement",
-          "settings": {
-            "text": "",
-            "link": ""
-          }
-        },
         "announcement-bar-0": {
           "type": "announcement",
           "settings": {
@@ -38,7 +31,6 @@
       },
       "block_order": [
         "announcement_4DzBaw",
-        "announcement_drYThD",
         "announcement-bar-0"
       ],
       "settings": {
@@ -47,7 +39,7 @@
         "navigation_type": "scrolling",
         "scrolling_speed": 10,
         "bg_color": "#14878f",
-        "bg_gradient": "",
+        "bg_gradient": "radial-gradient(rgba(52, 133, 236, 1) 13%, rgba(158, 233, 255, 0.57) 86%)",
         "text_color": "#ffffff",
         "color_scheme": "",
         "show_line_separator": true,
