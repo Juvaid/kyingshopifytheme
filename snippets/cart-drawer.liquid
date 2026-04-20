@@ -704,25 +704,7 @@
         {%- endif -%}
       </div>
       <div id="CartDrawer-Footer" class="drawer__footer drawer__footer--premium {% if cart == empty %}hidden{% endif %}">
-        {%- if settings.show_cart_note -%}
-          <details id="Details-CartDrawer">
-            <summary>
-              <span class="summary__title">
-                {{ 'sections.cart.note' | t }}
-                {{- 'icon-caret.svg' | inline_asset_content -}}
-              </span>
-            </summary>
-            <cart-note class="cart__note field">
-              <label class="visually-hidden" for="CartDrawer-Note">{{ 'sections.cart.note' | t }}</label>
-              <textarea
-                id="CartDrawer-Note"
-                class="text-area text-area--resize-vertical field__input"
-                name="note"
-                placeholder="{{ 'sections.cart.note' | t }}"
-              >{{ cart.note }}</textarea>
-            </cart-note>
-          </details>
-        {%- endif -%}
+
 
         <!-- Start blocks -->
         <!-- Subtotals -->
@@ -742,23 +724,7 @@
             {%- endif -%}
           </div>
 
-          {%- if settings.show_discount_code -%}
-            <div class="cart-drawer__discount-code">
-              <div class="field">
-                <span class="svg-wrapper">
-                  {{- 'icon-discount.svg' | inline_asset_content -}}
-                </span>
-                <input
-                  type="text"
-                  id="CartDrawer-DiscountCode"
-                  name="discount"
-                  class="field__input"
-                  placeholder="Promo code"
-                >
-                <button type="button" class="cart-drawer__discount-apply button button--primary">Apply</button>
-              </div>
-            </div>
-          {%- endif -%}
+
 
           <div class="totals" role="status">
             <h2 class="totals__total">{{ 'sections.cart.estimated_total' | t }}</h2>

@@ -413,8 +413,8 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 }
 
 .cart-drawer__upsell-title {
-  margin: 0 0 1.5rem;
-  font-size: 1.2rem;
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1rem;
@@ -430,21 +430,27 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   overflow: hidden;
 }
 
+.cart-drawer__upsell-item .card__content {
+  padding: 0.5rem 0.6rem !important;
+}
+
 .cart-drawer__upsell-item .card__heading {
-  font-size: 1rem !important; /* extremely small font for mini-list */
+  font-size: 1rem !important;
   line-height: 1.2 !important;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.1rem;
 }
 
 .cart-drawer__upsell-item .price {
-  font-size: 1rem !important;
+  font-size: 0.9rem !important;
+  margin-bottom: 0.2rem;
 }
 
 .cart-drawer__upsell-item .button {
-  min-height: 32px !important;
-  font-size: 1rem !important;
-  padding: 0 1rem !important;
-  margin-top: 0.5rem !important;
+  min-height: 28px !important;
+  font-size: 0.9rem !important;
+  padding: 0 0.8rem !important;
+  margin-top: 0.2rem !important;
+  border-radius: 4px;
 }
 
 .cart-drawer__upsell-item .card__inner {
@@ -452,7 +458,7 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 }
 
 .cart-drawer__discount-code {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .cart-drawer__discount-code .field {
@@ -460,11 +466,11 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   align-items: center;
   background: #f7f7f7;
   border-radius: 100px;
-  padding: 0 5px;
+  padding: 0 4px;
   border: 1px solid #e8e8e8;
   gap: 0;
   transition: all 0.2s ease;
-  min-height: 48px;
+  min-height: 36px;
   position: relative;
   overflow: hidden;
 }
@@ -482,9 +488,9 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 }
 
 .cart-drawer__discount-code .svg-wrapper {
-  width: 16px;
-  height: 16px;
-  margin-left: 15px;
+  width: 14px;
+  height: 14px;
+  margin-left: 12px;
   color: rgba(var(--color-foreground), 0.4);
   display: flex;
   align-items: center;
@@ -493,10 +499,10 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 .cart-drawer__discount-code .field__input {
   background: transparent !important;
   border: none !important;
-  min-height: 48px !important;
-  height: 48px !important;
+  min-height: 36px !important;
+  height: 36px !important;
   padding-left: 10px !important;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   box-shadow: none !important;
   flex: 1;
   display: flex;
@@ -508,13 +514,14 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   color: #ffffff;
   border: none;
   border-radius: 100px;
-  padding: 8px 20px;
-  margin: 4px;
-  font-size: 1.2rem;
-  font-weight: 600;
+  padding: 4px 12px;
+  margin: 2px;
+  font-size: 1.1rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
   white-space: nowrap;
+  text-transform: uppercase;
 }
 
 .cart-drawer__discount-apply:hover {
@@ -808,7 +815,7 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   backdrop-filter: blur(12px);
   border-top: 1px solid rgba(var(--color-foreground), 0.08);
   box-shadow: 0 -10px 30px rgba(0,0,0,0.05);
-  padding: 2rem 2.5rem;
+  padding: 1rem 1.5rem;
 }
 
 /* Enhancing Checkout Button */
@@ -825,7 +832,7 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
 
 /* Premium Promo Code Field */
 .cart-drawer__discount-code {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 .cart-drawer__discount-field {
   display: flex !important;
@@ -849,28 +856,24 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   background: transparent !important;
   box-shadow: none !important;
   flex-grow: 1;
-  padding: 1rem;
+  padding: 0.8rem;
+  font-size: 1.2rem;
 }
 .cart-drawer__discount-input:focus {
   outline: none;
   box-shadow: none !important;
 }
-.cart-drawer__discount-apply {
-  border-radius: 0.4rem !important;
-  padding: 0.8rem 1.6rem;
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin: 0;
-  min-height: auto;
-}
+/* Reusing apply button style */
+
+/* Handled by .cart-drawer__discount-apply above */
 
 /* Upsell Carousel (Horizontal Swipe) */
 .cart-drawer__upsell-carousel {
   display: flex !important;
   flex-wrap: nowrap !important;
   overflow-x: auto;
-  gap: 1rem;
-  padding-bottom: 0.5rem;
+  gap: 0.8rem;
+  padding-bottom: 0.4rem;
   scrollbar-width: none;
 }
 .cart-drawer__upsell-carousel::-webkit-scrollbar {
@@ -886,9 +889,9 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   border-radius: 0.8rem;
   box-shadow: 0 4px 15px rgba(0,0,0,0.03);
   border: 1px solid rgba(var(--color-foreground), 0.05);
-  margin: 0 2rem 1.5rem 2rem;
+  margin: 0 1.5rem 1rem 1.5rem;
   background: rgb(var(--color-background));
-  padding: 1.5rem;
+  padding: 1.25rem;
 }
 .drawer__cart-items-wrapper {
   padding-top: 2rem;
@@ -985,3 +988,29 @@ cart-drawer-items::-webkit-scrollbar-track-piece {
   to { transform: rotate(360deg); }
 }
 
+.cart-drawer .totals {
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.cart-drawer .totals__total {
+  font-size: 1.4rem;
+  margin: 0;
+}
+
+.cart-drawer .totals__total-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.cart-drawer .tax-note {
+  margin-bottom: 1.5rem;
+  text-align: left;
+  display: block;
+}
+
+#CartDrawer-Checkout {
+  min-height: 48px;
+  font-size: 1.4rem;
+}
