@@ -10,7 +10,17 @@
 <link rel="stylesheet" href="{{ 'component-sticky-atc.css' | asset_url }}" media="print" onload="this.media='all'">
 <script src="{{ 'sticky-atc.js' | asset_url }}" defer="defer"></script>
 
-<sticky-atc class="sticky-atc" data-section="{{ section.id }}">
+<sticky-atc 
+  class="sticky-atc" 
+  data-section="{{ section.id }}"
+  data-always-visible="{{ always_visible | default: false }}"
+  data-mobile-always-visible="{{ section.settings.sticky_atc_always_visible_mobile | default: false }}"
+>
+  {%- if section.settings.sticky_atc_offer_text != blank -%}
+    <div class="sticky-atc__offer" style="background-color: {{ section.settings.sticky_atc_offer_bg }}; color: {{ section.settings.sticky_atc_offer_text_color }};">
+      {{ section.settings.sticky_atc_offer_text }}
+    </div>
+  {%- endif -%}
   <div class="page-width sticky-atc__container">
     <div class="sticky-atc__product-info">
       {%- if product.featured_image != blank -%}
@@ -32,8 +42,31 @@
     </div>
 
     <div class="sticky-atc__actions">
-      <button type="button" class="button button--primary sticky-atc__submit">
-        <span>{{ 'products.product.add_to_cart' | t }}</span>
+      <quantity-input class="quantity sticky-atc__qty">
+        <button class="quantity__button" name="minus" type="button">
+          <span class="visually-hidden">{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}</span>
+          <span class="svg-wrapper">{{ 'icon-minus.svg' | inline_asset_content }}</span>
+        </button>
+        <input
+          class="quantity__input sticky-atc__qty-input"
+          type="number"
+          name="quantity"
+          id="Sticky-Quantity-{{ section.id }}"
+          min="1"
+          value="1"
+        >
+        <button class="quantity__button" name="plus" type="button">
+          <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: product.title | escape }}</span>
+          <span class="svg-wrapper">{{ 'icon-plus.svg' | inline_asset_content }}</span>
+        </button>
+      </quantity-input>
+
+      <button 
+        type="button" 
+        class="button button--primary sticky-atc__submit"
+        style="background-color: {{ section.settings.sticky_atc_button_bg }}; color: {{ section.settings.sticky_atc_button_text_color }};"
+      >
+        <span class="sticky-atc__submit-text">{{ 'products.product.add_to_cart' | t }}</span>
         <div class="loading__spinner hidden">
           <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
             <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>

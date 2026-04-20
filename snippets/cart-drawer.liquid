@@ -71,16 +71,16 @@
         </div>
 
         <div id="CartDrawer-Empty-Featured" class="cart-drawer__empty-featured">
-          {%- if settings.empty_cart_collection != blank -%}
-            <h3 class="cart-drawer__empty-featured-title">{{ settings.empty_cart_heading | escape }}</h3>
+          {%- if drawer_settings.empty_cart_collection != blank -%}
+            <h3 class="cart-drawer__empty-featured-title">{{ drawer_settings.empty_cart_heading | escape }}</h3>
             <div class="cart-drawer__collection-wrapper">
-              <a href="{{ settings.empty_cart_collection.url }}" class="cart-drawer__collection-card">
+              <a href="{{ drawer_settings.empty_cart_collection.url }}" class="cart-drawer__collection-card">
                   <div class="cart-drawer__collection-image-wrapper">
-                    <img src="{{ settings.empty_cart_collection.featured_image | image_url: width: 600 }}" alt="{{ settings.empty_cart_collection.title }}" loading="lazy" width="600" height="{{ 600 | divided_by: settings.empty_cart_collection.featured_image.aspect_ratio | ceil }}">
+                    <img src="{{ drawer_settings.empty_cart_collection.featured_image | image_url: width: 600 }}" alt="{{ drawer_settings.empty_cart_collection.title }}" loading="lazy" width="600" height="{{ 600 | divided_by: drawer_settings.empty_cart_collection.featured_image.aspect_ratio | ceil }}">
                     <div class="cart-drawer__collection-overlay"></div>
                   </div>
                   <div class="cart-drawer__collection-content">
-                    <h4>{{ settings.empty_cart_collection.title }}</h4>
+                    <h4>{{ drawer_settings.empty_cart_collection.title }}</h4>
                     <span class="button cart-drawer__collection-btn">Shop Now</span>
                   </div>
               </a>
@@ -113,11 +113,11 @@
           <div id="CartDrawer-CartItems" class="drawer__contents js-contents" data-item-count="{{ cart.item_count }}">
             {%- render 'cart-free-shipping-bar' -%}
             {%- liquid
-              assign cart_item_style = settings.cart_item_style
+              assign cart_item_style = drawer_settings.cart_item_style
               if cart_item_style == blank
                 assign cart_item_style = 'card'
               endif
-              assign quantity_selector_style = settings.quantity_selector_style
+              assign quantity_selector_style = drawer_settings.quantity_selector_style
               if quantity_selector_style == blank
                 assign quantity_selector_style = 'pill'
               endif
@@ -150,14 +150,14 @@
 
                         <div class="cart-item-card__info">
                           <div class="cart-item-card__details">
-                            {%- if settings.show_vendor -%}
+                            {%- if drawer_settings.show_vendor -%}
                               <p class="caption-with-letter-spacing">{{ item.product.vendor }}</p>
                             {%- endif -%}
 
                             <a href="{{ item.url }}" class="cart-item-card__name h4 break">
                               {%- liquid
-                                assign truncate_enabled = settings.truncate_cart_product_names
-                                assign truncate_limit = settings.cart_product_name_limit | default: 35
+                                assign truncate_enabled = drawer_settings.truncate_cart_product_names
+                                assign truncate_limit = drawer_settings.cart_product_name_limit | default: 35
                               -%}
                               {%- if truncate_enabled -%}
                                 {{- item.product.title | truncate: truncate_limit | escape -}}
@@ -352,17 +352,17 @@
                           </td>
 
                           <td class="cart-item__details" role="cell" headers="CartDrawer-ColumnProduct">
-                            {%- if settings.show_vendor -%}
+                            {%- if drawer_settings.show_vendor -%}
                               <p class="caption-with-letter-spacing light">{{ item.product.vendor }}</p>
                             {%- endif -%}
 
                             <a href="{{ item.url }}" class="cart-item__name h4 break">
                               {%- liquid
-                                assign truncate_enabled = settings.truncate_cart_product_names
+                                assign truncate_enabled = drawer_settings.truncate_cart_product_names
                                 if truncate_enabled == null
-                                  assign truncate_enabled = settings.truncate_cart_product_names
+                                  assign truncate_enabled = drawer_settings.truncate_cart_product_names
                                 endif
-                                assign truncate_limit = settings.cart_product_name_limit | default: settings.cart_product_name_limit | default: 35
+                                assign truncate_limit = drawer_settings.cart_product_name_limit | default: drawer_settings.cart_product_name_limit | default: 35
                               -%}
                               {%- if truncate_enabled -%}
                                 {{- item.product.title | truncate: truncate_limit | escape -}}

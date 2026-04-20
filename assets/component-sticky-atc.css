@@ -3,15 +3,15 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: rgb(var(--color-background));
-  border-top: 1px solid rgba(var(--color-foreground), 0.08);
-  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+  background-color: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
   transform: translateY(100%);
-  transition: transform 0.3s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 100;
-  padding: 1rem 0;
+  padding: 0;
   visibility: hidden;
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .sticky-atc.is-active {
@@ -19,26 +19,38 @@
   visibility: visible;
 }
 
+.sticky-atc__offer {
+  padding: 8px 15px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  width: 100%;
+}
+
 .sticky-atc__container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
+  padding: 12px 0;
 }
 
 .sticky-atc__product-info {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.2rem;
   overflow: hidden;
 }
 
 .sticky-atc__image {
-  width: 44px;
-  height: 44px;
-  object-fit: contain;
-  border-radius: 4px;
-  background-color: rgba(var(--color-foreground), 0.04);
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+  background-color: #f5f5f5;
+  border: 1px solid rgba(0,0,0,0.05);
 }
 
 .sticky-atc__details {
@@ -50,25 +62,73 @@
 
 .sticky-atc__title {
   font-family: var(--font-heading-family);
-  font-size: 1.6rem;
+  font-size: 1.4rem;
+  font-weight: 700;
   margin: 0 0 0.2rem;
   text-overflow: ellipsis;
   overflow: hidden;
+  color: #1a1a1a;
 }
 
 .sticky-atc__price {
   font-size: 1.3rem;
-  color: rgba(var(--color-foreground), 0.75);
+  font-weight: 500;
+  color: #666;
 }
 
 .sticky-atc__actions {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
   flex-shrink: 0;
 }
 
+.sticky-atc__qty {
+  min-height: 48px;
+  background: #f5f5f5 !important;
+  border-radius: 8px !important;
+  border: none !important;
+}
+
 .sticky-atc__submit {
-  min-width: 200px;
-  min-height: 44px;
+  min-width: 220px;
+  min-height: 48px;
   position: relative;
+  background-color: #e1ff4d;
+  color: #000000;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  font-size: 1.3rem !important;
+  transition: transform 0.2s ease !important;
+  overflow: hidden;
+}
+
+.sticky-atc__submit::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -150%;
+  width: 100%;
+  height: 200%;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+  transform: rotate(30deg);
+  z-index: 1;
+  pointer-events: none;
+  animation: premiumSheen 4s infinite linear;
+  filter: blur(8px);
+  mix-blend-mode: overlay;
+}
+
+.sticky-atc__submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(225, 255, 77, 0.4);
+}
+
+.sticky-atc__submit:active {
+  transform: translateY(0);
 }
 
 .sticky-atc__submit .loading__spinner {
@@ -80,31 +140,49 @@
   height: 20px;
 }
 
-.sticky-atc__submit.loading span {
+.sticky-atc__submit.loading .sticky-atc__submit-text {
   visibility: hidden;
 }
 
-.sticky-atc__submit.loading .loading__spinner {
-  display: block;
-}
-
+/* Logic: Hide Inline ATC on Mobile */
 @media screen and (max-width: 749px) {
+  product-info[data-hide-inline-mobile="true"] .product-form,
+  product-info[data-hide-inline-mobile="true"] .shopify-payment-button {
+    display: none !important;
+  }
+
   .sticky-atc__image,
-  .sticky-atc__title {
-    display: none;
+  .sticky-atc__title,
+  .sticky-atc__price,
+  .sticky-atc__qty {
+    display: none !important;
   }
-  
-  .sticky-atc__price {
-    font-size: 1.6rem;
-    font-weight: 500;
-  }
-  
+
+  /* Optimized layout for mobile: Only Button + Offer */
   .sticky-atc__container {
-    gap: 1rem;
+    padding: 10px 1.5rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+  
+  .sticky-atc__product-info {
+    display: none !important;
+  }
+
+  .sticky-atc__actions {
+    width: 100%;
+    margin-top: 0;
   }
   
   .sticky-atc__submit {
-    min-width: 140px;
-    flex-grow: 1;
+    min-width: 100%;
+    width: 100%;
+    font-size: 1.4rem !important;
+  }
+
+  .sticky-atc__offer {
+    font-size: 10px;
+    padding: 6px 10px;
   }
 }

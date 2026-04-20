@@ -5,6 +5,7 @@
   data-product-id="{{ product.id }}"
   data-update-url="true"
   data-url="{{ product.url }}"
+  data-hide-inline-mobile="{{ section.settings.hide_inline_atc_mobile | default: false }}"
   {% if section.settings.image_zoom == 'hover' %}
     data-zoom-on-hover
   {% endif %}
@@ -1197,7 +1198,10 @@
     </div>
 
     {% if section.settings.enable_sticky_atc %}
-      {% render 'product-sticky-atc', product: product %}
+      {%- render 'product-sticky-atc', 
+        product: product, 
+        always_visible: false
+      -%}
     {% endif %}
 
     {% render 'product-media-modal', variant_images: variant_images %}
@@ -3220,6 +3224,56 @@
       "id": "enable_sticky_atc",
       "default": true,
       "label": "Enable Sticky Add to Cart"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_atc_always_visible_mobile",
+      "default": true,
+      "label": "Always Visible on Mobile"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_inline_atc_mobile",
+      "default": true,
+      "label": "Hide Inline Buy Buttons on Mobile"
+    },
+    {
+      "type": "header",
+      "content": "Sticky ATC Offer Bar"
+    },
+    {
+      "type": "text",
+      "id": "sticky_atc_offer_text",
+      "label": "Offer Text",
+      "default": "FREE GIFT WORTH ₹500 + FREE MINIS"
+    },
+    {
+      "type": "color",
+      "id": "sticky_atc_offer_bg",
+      "label": "Offer Bar Background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "sticky_atc_offer_text_color",
+      "label": "Offer Text Color",
+      "default": "#e1ff4d"
+    },
+    {
+      "type": "header",
+      "content": "Sticky ATC Button Styling"
+    },
+    {
+      "type": "color",
+      "id": "sticky_atc_button_bg",
+      "label": "Button Background Color",
+      "default": "#e1ff4d"
+    },
+    {
+      "type": "color",
+      "id": "sticky_atc_button_text_color",
+      "label": "Button Text Color",
+      "default": "#000000"
     },
     {
       "type": "checkbox",
