@@ -144,12 +144,12 @@
         "button_7jXKK7"
       ],
       "custom_css": [
-        ".image-with-text{padding:0!important;margin:0!important}",
-        ".page-width{max-width:100%!important;padding:0!important;margin:0!important}",
-        ".image-with-text__grid{display:block!important;gap:0!important}",
-        ".image-with-text__content{display:none!important}",
-        ".image-with-text__media-item{width:100%!important;max-width:100%!important;padding:0!important;margin:0!important}",
-        ".image-with-text__media img{width:100%!important;height:auto!important;object-fit:contain!important;display:block!important}"
+        ".image-with-text {padding: 0 !important; margin: 0 !important;}",
+        ".page-width {max-width: 100% !important; padding: 0 !important; margin: 0 !important;}",
+        ".image-with-text__grid {display: block !important; gap: 0 !important;}",
+        ".image-with-text__content {display: none !important;}",
+        ".image-with-text__media-item {width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important;}",
+        ".image-with-text__media img {width: 100% !important; height: auto !important; object-fit: contain !important; display: block !important;}"
       ],
       "name": "t:sections.image-with-text.presets.name",
       "settings": {
@@ -199,6 +199,7 @@
         "collection_Bzr7kR",
         "collection_baUJbj"
       ],
+      "custom_css": [],
       "name": "Premium Collection List",
       "settings": {
         "title": "COLLECTIONS TO EXPLORE",
@@ -228,6 +229,9 @@
     },
     "recently_viewed_j9jynX": {
       "type": "recently-viewed",
+      "custom_css": [
+        ".product-grid {display: flex !important; flex-wrap: wrap !important; justify-content: center !important; gap: 1rem !important;}"
+      ],
       "name": "Recently Viewed",
       "settings": {
         "heading": "Recently viewed",
@@ -238,7 +242,7 @@
         "swipe_on_mobile": true,
         "swipe_card_width": 45,
         "color_scheme": "",
-        "heading_alignment": "left",
+        "heading_alignment": "center",
         "heading_margin_bottom": 30,
         "grid_gap": 16,
         "grid_gap_mobile": 8,
