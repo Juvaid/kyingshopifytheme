@@ -112,6 +112,62 @@
         "padding_bottom": 36
       }
     },
+    "image_with_text_pzXfWk": {
+      "type": "image-with-text",
+      "blocks": {
+        "heading_6VVDgN": {
+          "type": "heading",
+          "settings": {
+            "heading": "Image with text",
+            "heading_size": "h1"
+          }
+        },
+        "text_R8nJCy": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+            "text_style": "body"
+          }
+        },
+        "button_7jXKK7": {
+          "type": "button",
+          "settings": {
+            "button_label": "Button label",
+            "button_link": "",
+            "button_style_secondary": false
+          }
+        }
+      },
+      "block_order": [
+        "heading_6VVDgN",
+        "text_R8nJCy",
+        "button_7jXKK7"
+      ],
+      "custom_css": [
+        ".image-with-text {padding: 0 !important; margin: 0 !important;}",
+        ".page-width {max-width: 100% !important; padding: 0 !important; margin: 0 !important;}",
+        ".image-with-text__grid {display: block !important; gap: 0 !important;}",
+        ".image-with-text__content {display: none !important;}",
+        ".image-with-text__media-item {width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important;}",
+        ".image-with-text__media img {width: 100% !important; height: auto !important; object-fit: contain !important; display: block !important;}"
+      ],
+      "name": "t:sections.image-with-text.presets.name",
+      "settings": {
+        "image": "shopify://shop_images/Banner_98097d4b-5e26-4327-abce-f709bf7e00c6.jpg",
+        "height": "adapt",
+        "desktop_image_width": "small",
+        "layout": "image_first",
+        "image_behavior": "none",
+        "content_layout": "overlap",
+        "desktop_content_position": "middle",
+        "desktop_content_alignment": "center",
+        "mobile_content_alignment": "left",
+        "section_color_scheme": "",
+        "color_scheme": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
     "section_collection_list_square_tcj4tW": {
       "type": "section-collection-list-square",
       "blocks": {
@@ -143,6 +199,7 @@
         "collection_Bzr7kR",
         "collection_baUJbj"
       ],
+      "custom_css": [],
       "name": "Premium Collection List",
       "settings": {
         "title": "COLLECTIONS TO EXPLORE",
@@ -166,12 +223,15 @@
         "hover_effect": "zoom",
         "background_color": "#ffffff",
         "color_scheme": "",
-        "padding_top": 36,
+        "padding_top": 0,
         "padding_bottom": 0
       }
     },
     "recently_viewed_j9jynX": {
       "type": "recently-viewed",
+      "custom_css": [
+        ".product-grid {display: flex !important; flex-wrap: wrap !important; justify-content: center !important; gap: 1rem !important;}"
+      ],
       "name": "Recently Viewed",
       "settings": {
         "heading": "Recently viewed",
@@ -182,7 +242,7 @@
         "swipe_on_mobile": true,
         "swipe_card_width": 45,
         "color_scheme": "",
-        "heading_alignment": "left",
+        "heading_alignment": "center",
         "heading_margin_bottom": 30,
         "grid_gap": 16,
         "grid_gap_mobile": 8,
@@ -272,6 +332,7 @@
   "order": [
     "section_custom_slideshow_FfC6Ap",
     "tabbed_collection_n3Xajh",
+    "image_with_text_pzXfWk",
     "section_collection_list_square_tcj4tW",
     "recently_viewed_j9jynX",
     "section_review_block_K9TGJn",

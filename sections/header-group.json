@@ -14,24 +14,32 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "blocks": {
+        "announcement_4DzBaw": {
+          "type": "announcement",
+          "settings": {
+            "text": "Buy 2 Get 2 Sale is Live",
+            "link": "shopify://collections/money-saving-combos"
+          }
+        },
         "announcement-bar-0": {
           "type": "announcement",
           "settings": {
-            "text": "BLEMFIX LIMITED STOCK",
+            "text": "Additional 5% off on Prepaid orders",
             "link": "shopify://collections/kying-blemfix"
           }
         }
       },
       "block_order": [
+        "announcement_4DzBaw",
         "announcement-bar-0"
       ],
       "settings": {
         "sticky_bar": false,
-        "text_size": "medium",
-        "navigation_type": "arrows",
+        "text_size": "large",
+        "navigation_type": "scrolling",
         "scrolling_speed": 10,
         "bg_color": "#14878f",
-        "bg_gradient": "",
+        "bg_gradient": "radial-gradient(rgba(52, 133, 236, 1) 13%, rgba(158, 233, 255, 0.57) 86%)",
         "text_color": "#ffffff",
         "color_scheme": "",
         "show_line_separator": false,
@@ -61,7 +69,7 @@
     }
   },
   "order": [
-    "announcement-bar",
-    "header"
+    "header",
+    "announcement-bar"
   ]
 }
