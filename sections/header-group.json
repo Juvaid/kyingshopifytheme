@@ -21,6 +21,13 @@
             "link": "shopify://collections/money-saving-combos"
           }
         },
+        "announcement_drYThD": {
+          "type": "announcement",
+          "settings": {
+            "text": "",
+            "link": ""
+          }
+        },
         "announcement-bar-0": {
           "type": "announcement",
           "settings": {
@@ -31,6 +38,7 @@
       },
       "block_order": [
         "announcement_4DzBaw",
+        "announcement_drYThD",
         "announcement-bar-0"
       ],
       "settings": {
