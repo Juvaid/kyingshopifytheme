@@ -35,14 +35,14 @@
       ],
       "settings": {
         "sticky_bar": false,
-        "text_size": "medium",
+        "text_size": "large",
         "navigation_type": "scrolling",
         "scrolling_speed": 10,
         "bg_color": "#14878f",
         "bg_gradient": "radial-gradient(rgba(52, 133, 236, 1) 13%, rgba(158, 233, 255, 0.57) 86%)",
         "text_color": "#ffffff",
         "color_scheme": "",
-        "show_line_separator": true,
+        "show_line_separator": false,
         "show_social": false,
         "enable_country_selector": false,
         "enable_language_selector": false
