@@ -49,6 +49,37 @@
       "step": 1,
       "label": "Columns on desktop",
       "default": 1
+    },
+    {
+      "type": "header",
+      "content": "Card Styling"
+    },
+    {
+      "type": "range",
+      "id": "empty_cart_overlay_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "label": "Image overlay opacity",
+      "default": 40,
+      "info": "Darkens the image to make text more readable."
+    },
+    {
+      "type": "select",
+      "id": "empty_cart_content_alignment",
+      "label": "Content alignment",
+      "options": [
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "flex-end"
     }
   ]
 }
