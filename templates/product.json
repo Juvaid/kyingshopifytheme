@@ -73,6 +73,15 @@
             "enable_button_sheen": true,
             "sheen_speed": 0.8
           }
+        },
+        "ingredient_spotlight_WXk9h4": {
+          "type": "ingredient_spotlight",
+          "repeater": "{{ product.metafields.cosmetics.ingredient_list.value }}",
+          "settings": {
+            "heading": "{{ block.repeater.description.value }}",
+            "icon_1": "{{ block.repeater.image.value }}",
+            "title_1": "{{ block.repeater.title.value }}"
+          }
         }
       },
       "block_order": [
@@ -83,7 +92,8 @@
         "price",
         "variant_picker",
         "quantity_selector",
-        "buy_buttons"
+        "buy_buttons",
+        "ingredient_spotlight_WXk9h4"
       ],
       "settings": {
         "enable_sticky_atc": true,
