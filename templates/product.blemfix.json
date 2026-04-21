@@ -23,7 +23,7 @@
         "title": {
           "type": "title",
           "settings": {
-            "title_size": 3,
+            "title_size": 1.8,
             "title_weight": "600",
             "text_transform": "none",
             "title_color": "#1a1a1a",
