@@ -48,7 +48,7 @@
             "price_size": 1.8,
             "price_weight": "600",
             "price_color": "#1a1a1a",
-            "sale_price_color": "#ff4d4d",
+            "sale_price_color": "#363636",
             "compare_at_price_color": "#1a1a1a",
             "badge_bg_color": "#f4e2e2",
             "badge_text_color": "#ff4d4d"
@@ -73,56 +73,6 @@
             "enable_button_sheen": true,
             "sheen_speed": 0.8
           }
-        },
-        "description": {
-          "type": "description",
-          "settings": {}
-        },
-        "collapsible-row-0": {
-          "type": "collapsible_tab",
-          "settings": {
-            "accordion_style": "standard",
-            "heading": "Materials",
-            "icon": "leather",
-            "content": "",
-            "page": ""
-          }
-        },
-        "collapsible-row-1": {
-          "type": "collapsible_tab",
-          "settings": {
-            "accordion_style": "standard",
-            "heading": "Shipping & Returns",
-            "icon": "truck",
-            "content": "",
-            "page": ""
-          }
-        },
-        "collapsible-row-2": {
-          "type": "collapsible_tab",
-          "settings": {
-            "accordion_style": "standard",
-            "heading": "Dimensions",
-            "icon": "ruler",
-            "content": "",
-            "page": ""
-          }
-        },
-        "collapsible-row-3": {
-          "type": "collapsible_tab",
-          "settings": {
-            "accordion_style": "standard",
-            "heading": "Care Instructions",
-            "icon": "heart",
-            "content": "",
-            "page": ""
-          }
-        },
-        "share": {
-          "type": "share",
-          "settings": {
-            "share_label": "Share"
-          }
         }
       },
       "block_order": [
@@ -133,13 +83,7 @@
         "price",
         "variant_picker",
         "quantity_selector",
-        "buy_buttons",
-        "description",
-        "collapsible-row-0",
-        "collapsible-row-1",
-        "collapsible-row-2",
-        "collapsible-row-3",
-        "share"
+        "buy_buttons"
       ],
       "settings": {
         "enable_sticky_atc": true,
