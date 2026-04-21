@@ -82,6 +82,26 @@
             "icon_1": "{{ block.repeater.image.value }}",
             "title_1": "{{ block.repeater.title.value }}"
           }
+        },
+        "cosmetics_accordion_ygFAzR": {
+          "type": "cosmetics_accordion",
+          "settings": {
+            "show_overview": true,
+            "overview_title": "Overview",
+            "overview_icon": "none",
+            "show_benefits": true,
+            "benefits_title": "Benefits",
+            "benefits_icon": "check_mark",
+            "show_ingredients": true,
+            "ingredients_title": "Key Ingredients",
+            "ingredients_icon": "leaf",
+            "show_how_to_use": true,
+            "how_to_use_title": "How to Use",
+            "how_to_use_icon": "clipboard",
+            "show_results": true,
+            "results_title": "Results",
+            "results_icon": "star"
+          }
         }
       },
       "block_order": [
@@ -93,7 +113,8 @@
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
-        "ingredient_spotlight_WXk9h4"
+        "ingredient_spotlight_WXk9h4",
+        "cosmetics_accordion_ygFAzR"
       ],
       "settings": {
         "enable_sticky_atc": true,
