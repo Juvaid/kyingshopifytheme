@@ -1,3 +1,4 @@
+{{ 'component-video-banner.css' | asset_url | stylesheet_tag }}
 {%- style -%}
   .slideshow-{{ section.id }} {
     position: relative;
@@ -147,57 +148,162 @@
 <div class="slideshow-{{ section.id }}" id="Slideshow-{{ section.id }}">
   <div class="slideshow-wrapper-{{ section.id }}" id="SlideshowWrapper-{{ section.id }}">
     {%- for block in section.blocks -%}
-      <div class="slide-{{ section.id }}" {{ block.shopify_attributes }}>
-        <a href="{{ block.settings.link | default: '#' }}">
-          {%- if block.settings.image != blank -%}
-             {%- liquid
-               assign mobile_image = block.settings.mobile_image | default: block.settings.image
-               assign loading_attr = 'lazy'
-               assign fetch_priority = 'auto'
-               if forloop.first
-                 assign loading_attr = 'eager'
-                 assign fetch_priority = 'high'
-               endif
-             -%}
-             <img 
-               srcset="{%- if block.settings.image.width >= 375 -%}{{ block.settings.image | image_url: width: 375 }} 375w,{%- endif -%}
-                 {%- if block.settings.image.width >= 550 -%}{{ block.settings.image | image_url: width: 550 }} 550w,{%- endif -%}
-                 {%- if block.settings.image.width >= 750 -%}{{ block.settings.image | image_url: width: 750 }} 750w,{%- endif -%}
-                 {%- if block.settings.image.width >= 1100 -%}{{ block.settings.image | image_url: width: 1100 }} 1100w,{%- endif -%}
-                 {%- if block.settings.image.width >= 1500 -%}{{ block.settings.image | image_url: width: 1500 }} 1500w,{%- endif -%}
-                 {%- if block.settings.image.width >= 1780 -%}{{ block.settings.image | image_url: width: 1780 }} 1780w,{%- endif -%}
-                 {%- if block.settings.image.width >= 2000 -%}{{ block.settings.image | image_url: width: 2000 }} 2000w,{%- endif -%}
-                 {%- if block.settings.image.width >= 3000 -%}{{ block.settings.image | image_url: width: 3000 }} 3000w,{%- endif -%}
-                 {{ block.settings.image | image_url }} {{ block.settings.image.width }}w"
-               src="{{ block.settings.image | image_url: width: 1500 }}"
-               sizes="{% if section.settings.full_width %}100vw{% else %}(min-width: 1400px) 1400px, 100vw{% endif %}"
-               alt="{{ block.settings.image.alt | escape }}" 
-               class="desktop-only-{{ section.id }}" 
-               loading="{{ loading_attr }}"
-               fetchpriority="{{ fetch_priority }}"
-               width="{{ block.settings.image.width }}" 
-               height="{{ block.settings.image.height }}"
-             >
-             <img 
-               srcset="{%- if mobile_image.width >= 375 -%}{{ mobile_image | image_url: width: 375 }} 375w,{%- endif -%}
-                 {%- if mobile_image.width >= 550 -%}{{ mobile_image | image_url: width: 550 }} 550w,{%- endif -%}
-                 {%- if mobile_image.width >= 750 -%}{{ mobile_image | image_url: width: 750 }} 750w,{%- endif -%}
-                 {{ mobile_image | image_url }} {{ mobile_image.width }}w"
-               src="{{ mobile_image | image_url: width: 750 }}"
-               sizes="100vw"
-               alt="{{ mobile_image.alt | escape }}" 
-               class="mobile-only-{{ section.id }}" 
-               loading="{{ loading_attr }}"
-               fetchpriority="{{ fetch_priority }}"
-               width="{{ mobile_image.width }}" 
-               height="{{ mobile_image.height }}"
-             >
-          {%- else -%}
-             <div class="placeholder-svg-wrapper" style="height: 100%; display: flex; align-items: center; background: #f3f3f3;">
-               {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
-             </div>
-          {%- endif -%}
-        </a>
+      {%- liquid
+        assign is_video = false
+        if block.settings.video_file_url != blank
+          assign is_video = true
+        endif
+      -%}
+      <div class="slide-{{ section.id }} slide-item-{{ section.id }}" data-index="{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+        {%- if is_video -%}
+          <div class="video-portal-wrapper aspect-{{ block.settings.aspect_ratio }}">
+            {%- if block.settings.aspect_ratio != 'full' and block.settings.video_file_url != blank -%}
+              <video class="video-bg-blur" muted loop playsinline autoplay>
+                <source src="{{ block.settings.video_file_url }}" type="video/mp4">
+              </video>
+            {%- endif -%}
+
+            <div class="video-portal-content origin-{{ block.settings.shrink_origin | default: 'center' }}" 
+                 id="Portal-{{ section.id }}-{{ forloop.index0 }}"
+                 data-shrink-delay="{{ block.settings.shrink_delay | default: 2.5 | times: 1000 }}"
+                 data-scale-back="{{ block.settings.enable_scale_back | default: false }}"
+                 data-scale-back-delay="{{ block.settings.scale_back_delay | default: 12 | times: 1000 }}"
+            >
+              <video 
+                id="Video-{{ section.id }}-{{ forloop.index0 }}"
+                muted 
+                playsinline 
+              >
+                <source src="{{ block.settings.video_file_url }}" type="video/mp4">
+              </video>
+
+              {% comment %} Primary Banner Cover (Visible before / after shrink) {% endcomment %}
+              {%- if block.settings.image != blank -%}
+                <div class="video-portal-cover">
+                   {%- liquid
+                     assign mobile_image = block.settings.mobile_image | default: block.settings.image
+                     assign loading_attr = 'lazy'
+                     assign fetch_priority = 'auto'
+                     if forloop.first
+                       assign loading_attr = 'eager'
+                       assign fetch_priority = 'high'
+                     endif
+                   -%}
+                   <img 
+                     srcset="{%- if block.settings.image.width >= 375 -%}{{ block.settings.image | image_url: width: 375 }} 375w,{%- endif -%}
+                       {%- if block.settings.image.width >= 550 -%}{{ block.settings.image | image_url: width: 550 }} 550w,{%- endif -%}
+                       {%- if block.settings.image.width >= 750 -%}{{ block.settings.image | image_url: width: 750 }} 750w,{%- endif -%}
+                       {%- if block.settings.image.width >= 1100 -%}{{ block.settings.image | image_url: width: 1100 }} 1100w,{%- endif -%}
+                       {%- if block.settings.image.width >= 1500 -%}{{ block.settings.image | image_url: width: 1500 }} 1500w,{%- endif -%}
+                       {%- if block.settings.image.width >= 1780 -%}{{ block.settings.image | image_url: width: 1780 }} 1780w,{%- endif -%}
+                       {%- if block.settings.image.width >= 2000 -%}{{ block.settings.image | image_url: width: 2000 }} 2000w,{%- endif -%}
+                       {%- if block.settings.image.width >= 3000 -%}{{ block.settings.image | image_url: width: 3000 }} 3000w,{%- endif -%}
+                       {{ block.settings.image | image_url }} {{ block.settings.image.width }}w"
+                     src="{{ block.settings.image | image_url: width: 1500 }}"
+                     sizes="100vw"
+                     alt="{{ block.settings.image.alt | escape }}" 
+                     class="portal-cover-desktop" 
+                     loading="{{ loading_attr }}"
+                     fetchpriority="{{ fetch_priority }}"
+                     width="{{ block.settings.image.width }}" 
+                     height="{{ block.settings.image.height }}"
+                   >
+                   {%- if block.settings.mobile_image != blank -%}
+                     <img 
+                       srcset="{%- if mobile_image.width >= 375 -%}{{ mobile_image | image_url: width: 375 }} 375w,{%- endif -%}
+                         {%- if mobile_image.width >= 550 -%}{{ mobile_image | image_url: width: 550 }} 550w,{%- endif -%}
+                         {%- if mobile_image.width >= 750 -%}{{ mobile_image | image_url: width: 750 }} 750w,{%- endif -%}
+                         {{ mobile_image | image_url }} {{ mobile_image.width }}w"
+                       src="{{ mobile_image | image_url: width: 750 }}"
+                       sizes="100vw"
+                       alt="{{ mobile_image.alt | escape }}" 
+                       class="portal-cover-mobile" 
+                       loading="{{ loading_attr }}"
+                       fetchpriority="{{ fetch_priority }}"
+                       width="{{ mobile_image.width }}" 
+                       height="{{ mobile_image.height }}"
+                     >
+                   {%- endif -%}
+                </div>
+              {%- endif -%}
+
+              {% comment %} Product/Collection Tagging {% endcomment %}
+              {%- if block.settings.product != blank or block.settings.collection != blank -%}
+                <div class="slide-metadata-tag tag-{{ block.settings.tag_position }}" style="transition-delay: {{ block.settings.tag_appearance_delay }}s;">
+                  {%- if block.settings.product != blank -%}
+                    {%- assign tagged_product = block.settings.product -%}
+                    <a href="{{ tagged_product.url }}" class="product-tag-card">
+                      <img src="{{ tagged_product.featured_image | image_url: width: 120 }}" alt="{{ tagged_product.title }}" class="product-tag-image" loading="lazy">
+                      <div class="product-tag-info">
+                        <span class="product-tag-title">{{ tagged_product.title }}</span>
+                        {%- if block.settings.show_price -%}
+                          <span class="product-tag-price">{{ tagged_product.price | money }}</span>
+                        {%- endif -%}
+                        <span class="product-tag-cta">{{ block.settings.cta_button_text | default: 'Buy Now' }}</span>
+                      </div>
+                    </a>
+                  {%- elsif block.settings.collection != blank -%}
+                    {%- assign tagged_collection = block.settings.collection -%}
+                    <a href="{{ tagged_collection.url }}" class="collection-tag-pill">
+                      {{ block.settings.cta_button_text | default: 'Shop' }} {{ tagged_collection.title }} &rarr;
+                    </a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- else -%}
+          <a href="{{ block.settings.link | default: '#' }}">
+            {%- if block.settings.image != blank -%}
+               {%- liquid
+                 assign mobile_image = block.settings.mobile_image | default: block.settings.image
+                 assign loading_attr = 'lazy'
+                 assign fetch_priority = 'auto'
+                 if forloop.first
+                   assign loading_attr = 'eager'
+                   assign fetch_priority = 'high'
+                 endif
+               -%}
+               <img 
+                 srcset="{%- if block.settings.image.width >= 375 -%}{{ block.settings.image | image_url: width: 375 }} 375w,{%- endif -%}
+                   {%- if block.settings.image.width >= 550 -%}{{ block.settings.image | image_url: width: 550 }} 550w,{%- endif -%}
+                   {%- if block.settings.image.width >= 750 -%}{{ block.settings.image | image_url: width: 750 }} 750w,{%- endif -%}
+                   {%- if block.settings.image.width >= 1100 -%}{{ block.settings.image | image_url: width: 1100 }} 1100w,{%- endif -%}
+                   {%- if block.settings.image.width >= 1500 -%}{{ block.settings.image | image_url: width: 1500 }} 1500w,{%- endif -%}
+                   {%- if block.settings.image.width >= 1780 -%}{{ block.settings.image | image_url: width: 1780 }} 1780w,{%- endif -%}
+                   {%- if block.settings.image.width >= 2000 -%}{{ block.settings.image | image_url: width: 2000 }} 2000w,{%- endif -%}
+                   {%- if block.settings.image.width >= 3000 -%}{{ block.settings.image | image_url: width: 3000 }} 3000w,{%- endif -%}
+                   {{ block.settings.image | image_url }} {{ block.settings.image.width }}w"
+                 src="{{ block.settings.image | image_url: width: 1500 }}"
+                 sizes="{% if section.settings.full_width %}100vw{% else %}(min-width: 1400px) 1400px, 100vw{% endif %}"
+                 alt="{{ block.settings.image.alt | escape }}" 
+                 class="desktop-only-{{ section.id }}" 
+                 loading="{{ loading_attr }}"
+                 fetchpriority="{{ fetch_priority }}"
+                 width="{{ block.settings.image.width }}" 
+                 height="{{ block.settings.image.height }}"
+               >
+               <img 
+                 srcset="{%- if mobile_image.width >= 375 -%}{{ mobile_image | image_url: width: 375 }} 375w,{%- endif -%}
+                   {%- if mobile_image.width >= 550 -%}{{ mobile_image | image_url: width: 550 }} 550w,{%- endif -%}
+                   {%- if mobile_image.width >= 750 -%}{{ mobile_image | image_url: width: 750 }} 750w,{%- endif -%}
+                   {{ mobile_image | image_url }} {{ mobile_image.width }}w"
+                 src="{{ mobile_image | image_url: width: 750 }}"
+                 sizes="100vw"
+                 alt="{{ mobile_image.alt | escape }}" 
+                 class="mobile-only-{{ section.id }}" 
+                 loading="{{ loading_attr }}"
+                 fetchpriority="{{ fetch_priority }}"
+                 width="{{ mobile_image.width }}" 
+                 height="{{ mobile_image.height }}"
+               >
+            {%- else -%}
+               <div class="placeholder-svg-wrapper" style="height: 100%; display: flex; align-items: center; background: #f3f3f3;">
+                 {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+               </div>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
       </div>
     {%- endfor -%}
   </div>
@@ -226,13 +332,60 @@
     const totalSlides = {{ section.blocks.size }};
     const wrapper = document.getElementById('SlideshowWrapper-{{ section.id }}');
     const dots = document.querySelectorAll('.slide-dot-{{ section.id }}');
+    const slideItems = document.querySelectorAll('.slide-item-{{ section.id }}');
     let autoPlayInterval;
 
     function updateSlideshow() {
       if (!wrapper) return;
       wrapper.style.transform = `translate3d(-${currentSlide * 100}%, 0, 0)`;
+      
       dots.forEach((dot, index) => {
         dot.classList.toggle('active', index === currentSlide);
+      });
+
+      // Handle Video Portals and lifecycle
+      slideItems.forEach((slide, index) => {
+        const portal = slide.querySelector('.video-portal-content');
+        const video = slide.querySelector('.video-portal-content video');
+        
+        // Clear existing timers
+        if (slide._portalTimer) clearTimeout(slide._portalTimer);
+        
+        if (index === currentSlide) {
+          if (portal && video) {
+            const shrinkDelay = parseInt(portal.dataset.shrinkDelay) || 2500;
+
+            // 1. Initial State: Reset video and ensure image is showing
+            video.pause();
+            video.currentTime = 0;
+            portal.classList.remove('is-active');
+
+            // 2. Add Listener for "One-time" play
+            if (!video._hasEndListener) {
+              video.addEventListener('ended', () => {
+                portal.classList.remove('is-active');
+              });
+              video._hasEndListener = true;
+            }
+
+            // 3. Trigger Shrink Transition
+            slide._portalTimer = setTimeout(() => {
+               portal.classList.add('is-active');
+               
+               // 4. Start Video exactly when shrink starts (with slight stagger for smoothness)
+               setTimeout(() => {
+                 video.play().catch(e => console.log("Playback interrupted:", e));
+               }, 300);
+            }, shrinkDelay);
+          }
+        } else {
+          // Clean up inactive slides
+          if (portal) portal.classList.remove('is-active');
+          if (video) {
+            video.pause();
+            video.currentTime = 0;
+          }
+        }
       });
     }
 
@@ -262,20 +415,24 @@
       startAutoPlay();
     }
 
-    // Performance: Only autoplay when in view
+    // Performance: Only autoplay when in view (Threshold 0.3 as per spec)
     if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             startAutoPlay();
+            updateSlideshow(); // Ensure first slide starts active
           } else {
             clearInterval(autoPlayInterval);
+            // Pause all videos when section is out of view
+            document.querySelectorAll('.slide-item-{{ section.id }} video').forEach(v => v.pause());
           }
         });
-      }, { threshold: 0.1 });
+      }, { threshold: 0.3 });
       observer.observe(document.getElementById('Slideshow-{{ section.id }}'));
     } else {
       startAutoPlay();
+      updateSlideshow();
     }
 
     // Touch Swipe Support
@@ -421,9 +578,13 @@
       "name": "Slide",
       "settings": [
         {
+          "type": "header",
+          "content": "Media Configuration"
+        },
+        {
           "type": "image_picker",
           "id": "image",
-          "label": "Desktop Image"
+          "label": "Desktop Image (Static)"
         },
         {
           "type": "image_picker",
@@ -431,9 +592,110 @@
           "label": "Mobile Image (Optional)"
         },
         {
+          "type": "text",
+          "id": "video_file_url",
+          "label": "Video File URL",
+          "info": "Upload to Content > Files. Use .mp4 for best results."
+        },
+        {
+          "type": "image_picker",
+          "id": "video_poster",
+          "label": "Video Poster Image",
+          "info": "Fallback frame while video loads."
+        },
+        {
+          "type": "select",
+          "id": "aspect_ratio",
+          "label": "Video Aspect Ratio",
+          "options": [
+            { "value": "full", "label": "Full Width/Height" },
+            { "value": "16-9", "label": "16:9 Landscape" },
+            { "value": "9-16", "label": "9:16 Portrait" },
+            { "value": "1-1", "label": "1:1 Square" }
+          ],
+          "default": "full"
+        },
+        {
+          "type": "header",
+          "content": "Transition & Animation"
+        },
+        {
+          "type": "range",
+          "id": "shrink_delay",
+          "min": 0,
+          "max": 5,
+          "step": 0.5,
+          "unit": "s",
+          "label": "Banner Static Duration",
+          "info": "How long the banner stays full-screen before shrinking to video.",
+          "default": 2.5
+        },
+        {
+          "type": "select",
+          "id": "shrink_origin",
+          "label": "Shrink Direction (Origin)",
+          "options": [
+            { "value": "center", "label": "Center" },
+            { "value": "top-left", "label": "To Top-Left" },
+            { "value": "top-right", "label": "To Top-Right" },
+            { "value": "bottom-left", "label": "To Bottom-Left" },
+            { "value": "bottom-right", "label": "To Bottom-Right" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "header",
+          "content": "Tagging & CTA"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Tagged Product"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Tagged Collection"
+        },
+        {
+          "type": "select",
+          "id": "tag_position",
+          "label": "Tag Position",
+          "options": [
+            { "value": "top-left", "label": "Top Left" },
+            { "value": "top-right", "label": "Top Right" },
+            { "value": "bottom-left", "label": "Bottom Left" },
+            { "value": "bottom-right", "label": "Bottom Right" }
+          ],
+          "default": "bottom-right"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_price",
+          "label": "Show Product Price",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "cta_button_text",
+          "label": "Button / Link Text",
+          "placeholder": "Buy Now",
+          "default": "Buy Now"
+        },
+        {
+          "type": "range",
+          "id": "tag_appearance_delay",
+          "min": 0,
+          "max": 2,
+          "step": 0.1,
+          "unit": "s",
+          "label": "Tag Appearance Delay",
+          "default": 1.2
+        },
+        {
           "type": "url",
           "id": "link",
-          "label": "Slide Link"
+          "label": "Slide Link (Fallback)"
         }
       ]
     }

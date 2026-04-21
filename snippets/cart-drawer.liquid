@@ -7,7 +7,12 @@
 
 <link rel="stylesheet" href="{{ 'quantity-popover.css' | asset_url }}" media="print" onload="this.media='all'">
 <link rel="stylesheet" href="{{ 'component-card.css' | asset_url }}" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="{{ 'component-free-shipping-bar.css' | asset_url }}" media="print" onload="this.media='all'">
+<link
+  rel="stylesheet"
+  href="{{ 'component-free-shipping-bar.css' | asset_url }}"
+  media="print"
+  onload="this.media='all'"
+>
 <noscript>
   {{- 'quantity-popover.css' | asset_url | stylesheet_tag -}}
   {{- 'component-card.css' | asset_url | stylesheet_tag -}}
@@ -60,7 +65,7 @@
             <a href="{{ routes.all_products_collection_url }}" class="button button--primary button--full-width">
               CONTINUE SHOPPING
             </a>
-            
+
             {%- if shop.customer_accounts_enabled and customer == null -%}
               <div class="cart-drawer__empty-login">
                 <p>{{ 'sections.cart.login.title' | t }}</p>
@@ -75,14 +80,26 @@
             <h3 class="cart-drawer__empty-featured-title">{{ drawer_settings.empty_cart_heading | escape }}</h3>
             <div class="cart-drawer__collection-wrapper">
               <a href="{{ drawer_settings.empty_cart_collection.url }}" class="cart-drawer__collection-card">
-                  <div class="cart-drawer__collection-image-wrapper">
-                    <img src="{{ drawer_settings.empty_cart_collection.featured_image | image_url: width: 600 }}" alt="{{ drawer_settings.empty_cart_collection.title }}" loading="lazy" width="600" height="{{ 600 | divided_by: drawer_settings.empty_cart_collection.featured_image.aspect_ratio | ceil }}">
-                    <div class="cart-drawer__collection-overlay" style="--overlay-opacity: {{ drawer_settings.empty_cart_overlay_opacity | divided_by: 100.0 }};"></div>
-                  </div>
-                  <div class="cart-drawer__collection-content" style="align-items: {{ drawer_settings.empty_cart_content_alignment }};">
-                    <h4>{{ drawer_settings.empty_cart_collection.title }}</h4>
-                    <span class="button cart-drawer__collection-btn">Shop Now</span>
-                  </div>
+                <div class="cart-drawer__collection-image-wrapper">
+                  <img
+                    src="{{ drawer_settings.empty_cart_collection.featured_image | image_url: width: 600 }}"
+                    alt="{{ drawer_settings.empty_cart_collection.title }}"
+                    loading="lazy"
+                    width="600"
+                    height="{{ 600 | divided_by: drawer_settings.empty_cart_collection.featured_image.aspect_ratio | ceil }}"
+                  >
+                  <div
+                    class="cart-drawer__collection-overlay"
+                    style="--overlay-opacity: {{ drawer_settings.empty_cart_overlay_opacity | divided_by: 100.0 }};"
+                  ></div>
+                </div>
+                <div
+                  class="cart-drawer__collection-content"
+                  style="align-items: {{ drawer_settings.empty_cart_content_alignment }};"
+                >
+                  <h4>{{ drawer_settings.empty_cart_collection.title }}</h4>
+                  <span class="button cart-drawer__collection-btn">Shop Now</span>
+                </div>
               </a>
             </div>
           {%- endif -%}
@@ -284,8 +301,6 @@
                                   <span class="svg-wrapper">{{- 'icon-plus.svg' | inline_asset_content -}}</span>
                                 </button>
                               </quantity-input>
-
-
                             </div>
                           </div>
                         </div>
@@ -568,7 +583,6 @@
                                     </button>
                                   </quantity-input>
                                 </div>
-
                               </div>
                               {%- if has_qty_rules or has_vol_pricing -%}
                                 <button
@@ -681,7 +695,6 @@
           </p>
           <div id="CartDrawer-CartErrors" role="alert"></div>
         </form>
-
       </cart-drawer-items>
       <div id="CartDrawer-Upsell" class="cart-drawer__upsell">
         {%- if settings.cart_drawer_upsell_collection != blank -%}
@@ -703,9 +716,10 @@
           </div>
         {%- endif -%}
       </div>
-      <div id="CartDrawer-Footer" class="drawer__footer drawer__footer--premium {% if cart == empty %}hidden{% endif %}">
-
-
+      <div
+        id="CartDrawer-Footer"
+        class="drawer__footer drawer__footer--premium {% if cart == empty %}hidden{% endif %}"
+      >
         <!-- Start blocks -->
         <!-- Subtotals -->
 
@@ -723,8 +737,6 @@
               </ul>
             {%- endif -%}
           </div>
-
-
 
           <div class="totals" role="status">
             <h2 class="totals__total">{{ 'sections.cart.estimated_total' | t }}</h2>

@@ -43,7 +43,7 @@
         padding-top: {{ section.settings.padding_top }}px;
         padding-bottom: {{ section.settings.padding_bottom }}px;
       }
-      
+
       .section-{{ section.id }}-padding .product__media-wrapper media-gallery {
         gap: {{ section.settings.gallery_info_gap }}px !important;
       }
@@ -54,7 +54,7 @@
         padding-left: {{ section.settings.mobile_info_padding }}px !important;
         padding-right: {{ section.settings.mobile_info_padding }}px !important;
       }
-      
+
       /* Reduce gap between thumbnails and info on mobile */
       .section-{{ section.id }}-padding .product__media-wrapper {
         margin-bottom: 2rem !important;
@@ -142,7 +142,12 @@
                   {%- endstyle -%}
                 </div>
               {%- when 'price' -%}
-                <div id="price-{{ section.id }}" class="product__price-container" role="status" {{ block.shopify_attributes }}>
+                <div
+                  id="price-{{ section.id }}"
+                  class="product__price-container"
+                  role="status"
+                  {{ block.shopify_attributes }}
+                >
                   {%- style -%}
                     #price-{{ section.id }} .price {
                       font-size: {{ block.settings.price_size }}rem;
@@ -251,21 +256,30 @@
                   </div>
                 {%- endif -%}
               {%- when 'ingredient_spotlight' -%}
+                {%- liquid
+                  assign dynamic_ingredients = product.metafields.cosmetics.ingredient_list.value
+                  assign has_dynamic = false
+                  if dynamic_ingredients != blank
+                    assign has_dynamic = true
+                  endif
+                -%}
                 <div class="product__ingredient-spotlight" {{ block.shopify_attributes }}>
                   {%- if block.settings.heading != blank -%}
                     <h3 class="h4">{{ block.settings.heading }}</h3>
                   {%- endif -%}
                   <div class="ingredient-spotlight__grid">
-                    {%- for i in (1..3) -%}
-                      {%- assign icon_key = 'icon_' | append: i -%}
-                      {%- assign title_key = 'title_' | append: i -%}
-                      {%- assign desc_key = 'desc_' | append: i -%}
-                      
-                      {%- if block.settings[title_key] != blank -%}
+                    {%- if has_dynamic -%}
+                      {%- for ingredient in dynamic_ingredients -%}
                         <div class="ingredient-spotlight__item">
-                          {%- if block.settings[icon_key] != blank -%}
+                          {%- if ingredient.image != blank -%}
                             <div class="ingredient-spotlight__icon">
-                              <img src="{{ block.settings[icon_key] | image_url: width: 100 }}" alt="{{ block.settings[title_key] | escape }}" loading="lazy" width="40" height="40">
+                              <img
+                                src="{{ ingredient.image | image_url: width: 100 }}"
+                                alt="{{ ingredient.title | escape }}"
+                                loading="lazy"
+                                width="40"
+                                height="40"
+                              >
                             </div>
                           {%- else -%}
                             <div class="ingredient-spotlight__icon placeholder">
@@ -273,13 +287,101 @@
                             </div>
                           {%- endif -%}
                           <div class="ingredient-spotlight__text">
-                            <strong>{{ block.settings[title_key] }}</strong>
-                            <span>{{ block.settings[desc_key] }}</span>
+                            <strong>{{ ingredient.title }}</strong>
+                            <span>{{ ingredient.description | default: ingredient.subtitle }}</span>
                           </div>
                         </div>
-                      {%- endif -%}
-                    {%- endfor -%}
+                      {%- endfor -%}
+                    {%- else -%}
+                      {%- for i in (1..3) -%}
+                        {%- assign icon_key = 'icon_' | append: i -%}
+                        {%- assign title_key = 'title_' | append: i -%}
+                        {%- assign desc_key = 'desc_' | append: i -%}
+
+                        {%- if block.settings[title_key] != blank -%}
+                          <div class="ingredient-spotlight__item">
+                            {%- if block.settings[icon_key] != blank -%}
+                              <div class="ingredient-spotlight__icon">
+                                <img
+                                  src="{{ block.settings[icon_key] | image_url: width: 100 }}"
+                                  alt="{{ block.settings[title_key] | escape }}"
+                                  loading="lazy"
+                                  width="40"
+                                  height="40"
+                                >
+                              </div>
+                            {%- else -%}
+                              <div class="ingredient-spotlight__icon placeholder">
+                                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                              </div>
+                            {%- endif -%}
+                            <div class="ingredient-spotlight__text">
+                              <strong>{{ block.settings[title_key] }}</strong>
+                              <span>{{ block.settings[desc_key] }}</span>
+                            </div>
+                          </div>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    {%- endif -%}
                   </div>
+
+                  {%- assign full_ingredients = product.metafields.cosmetics.full_ingredients -%}
+                  {%- if full_ingredients != blank -%}
+                    <div class="ingredient-spotlight__view-all">
+                      <button type="button" class="link underlined-link ingredient-toggle-btn" aria-expanded="false">
+                        VIEW ALL
+                      </button>
+                    </div>
+                    <div class="ingredient-spotlight__expansion content-hidden">
+                      <div class="rte">
+                        {{ full_ingredients | metafield_tag }}
+                      </div>
+                    </div>
+                    <script>
+                      document.querySelector('.ingredient-toggle-btn')?.addEventListener('click', function () {
+                        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                        this.setAttribute('aria-expanded', !isExpanded);
+                        this.textContent = isExpanded ? 'VIEW ALL' : 'SHOW LESS';
+                        const expansion = document.querySelector('.ingredient-spotlight__expansion');
+                        if (expansion) {
+                          expansion.classList.toggle('content-hidden');
+                          if (!isExpanded) {
+                            expansion.style.maxHeight = expansion.scrollHeight + 'px';
+                          } else {
+                            expansion.style.maxHeight = '0';
+                          }
+                        }
+                      });
+                    </script>
+                    {%- style -%}
+                      .ingredient-spotlight__expansion {
+                        overflow: hidden;
+                        transition: max-height 0.3s ease-out, opacity 0.3s ease;
+                        max-height: 0;
+                        opacity: 0;
+                        margin-top: 1rem;
+                      }
+                      .ingredient-spotlight__expansion:not(.content-hidden) {
+                        opacity: 1;
+                        margin-top: 2rem;
+                      }
+                      .ingredient-spotlight__view-all {
+                        text-align: center;
+                        margin-top: 2rem;
+                      }
+                      .ingredient-toggle-btn {
+                        font-size: 1.2rem;
+                        font-weight: 600;
+                        letter-spacing: 0.1em;
+                        cursor: pointer;
+                        background: none;
+                        border: none;
+                        padding: 0;
+                        color: inherit;
+                        text-transform: uppercase;
+                      }
+                    {%- endstyle -%}
+                  {%- endif -%}
                 </div>
               {%- when 'sku' -%}
                 <p
@@ -294,7 +396,10 @@
               {%- when 'custom_liquid' -%}
                 {{ block.settings.custom_liquid }}
               {%- when 'collapsible_tab' -%}
-                <div class="product__accordion accordion accordion--{{ block.settings.accordion_style | default: 'standard' }} quick-add-hidden" {{ block.shopify_attributes }}>
+                <div
+                  class="product__accordion accordion accordion--{{ block.settings.accordion_style | default: 'standard' }} quick-add-hidden"
+                  {{ block.shopify_attributes }}
+                >
                   <details id="Details-{{ block.id }}-{{ section.id }}">
                     <summary>
                       <div class="summary__title">
@@ -312,65 +417,202 @@
                   </details>
                 </div>
               {%- when 'cosmetics_accordion' -%}
-                <div class="product__accordion accordion accordion--{{ block.settings.accordion_style | default: 'standard' }} quick-add-hidden" {{ block.shopify_attributes }}>
+                <div
+                  class="product__accordion accordion accordion--{{ block.settings.accordion_style | default: 'standard' }} quick-add-hidden"
+                  {{ block.shopify_attributes }}
+                >
                   {%- if block.settings.show_overview -%}
-                  <details id="Details-Overview-{{ section.id }}">
-                    <summary>
-                      <div class="summary__title">
-                        {% render 'icon-accordion', icon: 'plant' %}
-                        <h2 class="h4 accordion__title">Overview</h2>
-                      </div>
-                      {{- 'icon-caret.svg' | inline_asset_content -}}
-                    </summary>
-                    <div class="accordion__content rte" id="ProductAccordion-Overview-{{ section.id }}">
-                      {{ product.metafields.cosmetics.overview | default: product.description }}
-                    </div>
-                  </details>
+                    {%- assign overview_content = product.metafields.cosmetics.overview
+                      | default: product.description
+                    -%}
+                    {%- assign overview_image = product.metafields.cosmetics.overview_image.value -%}
+                    {%- if overview_content != blank or overview_image != blank -%}
+                      <details id="Details-Overview-{{ section.id }}">
+                        <summary>
+                          <div class="summary__title">
+                            {% render 'icon-accordion', icon: block.settings.overview_icon %}
+                            <h2 class="h4 accordion__title">{{ block.settings.overview_title }}</h2>
+                          </div>
+                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        </summary>
+                        <div class="accordion__content rte" id="ProductAccordion-Overview-{{ section.id }}">
+                          {%- if overview_image != blank -%}
+                            <div class="accordion__image mb-2">
+                              {{
+                                overview_image
+                                | image_url: width: 1000
+                                | image_tag: loading: 'lazy', class: 'content-image'
+                              }}
+                            </div>
+                          {%- endif -%}
+                          {%- if overview_content.type == 'rich_text_field' -%}
+                            {{ overview_content | metafield_tag }}
+                          {%- else -%}
+                            {{ overview_content }}
+                          {%- endif -%}
+                        </div>
+                      </details>
+                    {%- endif -%}
                   {%- endif -%}
-                  
+
+                  {%- if block.settings.show_benefits -%}
+                    {%- assign benefit_list = product.metafields.cosmetics.benefit_list.value -%}
+                    {%- if benefit_list != blank -%}
+                      {%- style -%}
+                        .benefit-list {
+                          list-style: none;
+                          padding: 0;
+                          margin: 0;
+                          display: flex;
+                          flex-direction: column;
+                          gap: 1.5rem;
+                        }
+                        .benefit-item {
+                          display: flex;
+                          align-items: flex-start;
+                          gap: 1.5rem;
+                        }
+                        .benefit-icon {
+                          flex-shrink: 0;
+                          width: 32px;
+                          height: 32px;
+                          display: flex;
+                          align-items: center;
+                          justify-content: center;
+                        }
+                        .benefit-icon img {
+                          width: 100%;
+                          height: 100%;
+                          object-fit: contain;
+                        }
+                        .benefit-text {
+                          font-size: 1.4rem;
+                          line-height: 1.4;
+                          color: rgb(var(--color-foreground));
+                        }
+                      {%- endstyle -%}
+                      <details id="Details-Benefits-{{ section.id }}">
+                        <summary>
+                          <div class="summary__title">
+                            {% render 'icon-accordion', icon: block.settings.benefits_icon %}
+                            <h2 class="h4 accordion__title">{{ block.settings.benefits_title }}</h2>
+                          </div>
+                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        </summary>
+                        <div class="accordion__content rte" id="ProductAccordion-Benefits-{{ section.id }}">
+                          <ul class="benefit-list">
+                            {%- for benefit in benefit_list -%}
+                              <li class="benefit-item">
+                                {%- if benefit.icon != blank -%}
+                                  <div class="benefit-icon">
+                                    {{ benefit.icon | image_url: width: 64 | image_tag: loading: 'lazy' }}
+                                  </div>
+                                {%- endif -%}
+                                <div class="benefit-text">
+                                  {{ benefit.text }}
+                                </div>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      </details>
+                    {%- endif -%}
+                  {%- endif -%}
+
                   {%- if block.settings.show_ingredients -%}
-                  <details id="Details-Ingredients-{{ section.id }}">
-                    <summary>
-                      <div class="summary__title">
-                        {% render 'icon-accordion', icon: 'leaf' %}
-                        <h2 class="h4 accordion__title">Key Ingredients</h2>
-                      </div>
-                      {{- 'icon-caret.svg' | inline_asset_content -}}
-                    </summary>
-                    <div class="accordion__content rte" id="ProductAccordion-Ingredients-{{ section.id }}">
-                      {{ product.metafields.cosmetics.ingredients | default: '<p>Add ingredients via product metafields (cosmetics.ingredients)</p>' }}
-                    </div>
-                  </details>
+                    {%- assign ingredients_content = product.metafields.cosmetics.ingredients -%}
+                    {%- assign ingredients_image = product.metafields.cosmetics.ingredients_image.value -%}
+                    {%- if ingredients_content != blank or ingredients_image != blank -%}
+                      <details id="Details-Ingredients-{{ section.id }}">
+                        <summary>
+                          <div class="summary__title">
+                            {% render 'icon-accordion', icon: block.settings.ingredients_icon %}
+                            <h2 class="h4 accordion__title">{{ block.settings.ingredients_title }}</h2>
+                          </div>
+                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        </summary>
+                        <div class="accordion__content rte" id="ProductAccordion-Ingredients-{{ section.id }}">
+                          {%- if ingredients_image != blank -%}
+                            <div class="accordion__image mb-2">
+                              {{
+                                ingredients_image
+                                | image_url: width: 1000
+                                | image_tag: loading: 'lazy', class: 'content-image'
+                              }}
+                            </div>
+                          {%- endif -%}
+                          {%- if ingredients_content.type == 'rich_text_field' -%}
+                            {{ ingredients_content | metafield_tag }}
+                          {%- else -%}
+                            {{ ingredients_content }}
+                          {%- endif -%}
+                        </div>
+                      </details>
+                    {%- endif -%}
                   {%- endif -%}
 
                   {%- if block.settings.show_how_to_use -%}
-                  <details id="Details-HowToUse-{{ section.id }}">
-                    <summary>
-                      <div class="summary__title">
-                        {% render 'icon-accordion', icon: 'clipboard' %}
-                        <h2 class="h4 accordion__title">How to Use</h2>
-                      </div>
-                      {{- 'icon-caret.svg' | inline_asset_content -}}
-                    </summary>
-                    <div class="accordion__content rte" id="ProductAccordion-HowToUse-{{ section.id }}">
-                      {{ product.metafields.cosmetics.how_to_use | default: '<p>Add instructions via product metafields (cosmetics.how_to_use)</p>' }}
-                    </div>
-                  </details>
+                    {%- assign how_to_use_content = product.metafields.cosmetics.how_to_use -%}
+                    {%- assign how_to_use_image = product.metafields.cosmetics.how_to_use_image.value -%}
+                    {%- if how_to_use_content != blank or how_to_use_image != blank -%}
+                      <details id="Details-HowToUse-{{ section.id }}">
+                        <summary>
+                          <div class="summary__title">
+                            {% render 'icon-accordion', icon: block.settings.how_to_use_icon %}
+                            <h2 class="h4 accordion__title">{{ block.settings.how_to_use_title }}</h2>
+                          </div>
+                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        </summary>
+                        <div class="accordion__content rte" id="ProductAccordion-HowToUse-{{ section.id }}">
+                          {%- if how_to_use_image != blank -%}
+                            <div class="accordion__image mb-2">
+                              {{
+                                how_to_use_image
+                                | image_url: width: 1000
+                                | image_tag: loading: 'lazy', class: 'content-image'
+                              }}
+                            </div>
+                          {%- endif -%}
+                          {%- if how_to_use_content.type == 'rich_text_field' -%}
+                            {{ how_to_use_content | metafield_tag }}
+                          {%- else -%}
+                            {{ how_to_use_content }}
+                          {%- endif -%}
+                        </div>
+                      </details>
+                    {%- endif -%}
                   {%- endif -%}
 
                   {%- if block.settings.show_results -%}
-                  <details id="Details-Results-{{ section.id }}">
-                    <summary>
-                      <div class="summary__title">
-                        {% render 'icon-accordion', icon: 'star' %}
-                        <h2 class="h4 accordion__title">Results</h2>
-                      </div>
-                      {{- 'icon-caret.svg' | inline_asset_content -}}
-                    </summary>
-                    <div class="accordion__content rte" id="ProductAccordion-Results-{{ section.id }}">
-                      {{ product.metafields.cosmetics.results | default: '<p>Add expected results via product metafields (cosmetics.results)</p>' }}
-                    </div>
-                  </details>
+                    {%- assign results_content = product.metafields.cosmetics.results -%}
+                    {%- assign results_image = product.metafields.cosmetics.results_image.value -%}
+                    {%- if results_content != blank or results_image != blank -%}
+                      <details id="Details-Results-{{ section.id }}">
+                        <summary>
+                          <div class="summary__title">
+                            {% render 'icon-accordion', icon: block.settings.results_icon %}
+                            <h2 class="h4 accordion__title">{{ block.settings.results_title }}</h2>
+                          </div>
+                          {{- 'icon-caret.svg' | inline_asset_content -}}
+                        </summary>
+                        <div class="accordion__content rte" id="ProductAccordion-Results-{{ section.id }}">
+                          {%- if results_image != blank -%}
+                            <div class="accordion__image mb-2">
+                              {{
+                                results_image
+                                | image_url: width: 1000
+                                | image_tag: loading: 'lazy', class: 'content-image'
+                              }}
+                            </div>
+                          {%- endif -%}
+                          {%- if results_content.type == 'rich_text_field' -%}
+                            {{ results_content | metafield_tag }}
+                          {%- else -%}
+                            {{ results_content }}
+                          {%- endif -%}
+                        </div>
+                      </details>
+                    {%- endif -%}
                   {%- endif -%}
                 </div>
               {%- when 'quantity_selector' -%}
@@ -489,7 +731,7 @@
                                   </span>
                                   {%- break -%}
                                 {%- endif -%}
-                                {%- endfor -%}
+                              {%- endfor -%}
                             {%- endif -%}
                           </div>
                         {%- else -%}
@@ -628,10 +870,10 @@
                   {%- if block.settings.heading != blank -%}
                     <h3 class="product__tags-heading">{{ block.settings.heading }}</h3>
                   {%- endif -%}
-                  
+
                   <ul class="product__tags-list list-unstyled" role="list">
                     {%- liquid
-                      assign tag_source = nil
+                      assign tag_source = null
                       if product.metafields.cosmetics.skin_concerns != blank
                         assign tag_source = product.metafields.cosmetics.skin_concerns.value
                       elsif block.settings.manual_tags != blank
@@ -760,7 +1002,7 @@
                     assign rating_value = product.metafields.reviews.rating.value.rating | default: 0
                     assign rating_max = product.metafields.reviews.rating.value.scale_max | default: 5
                     assign rating_count = product.metafields.reviews.rating_count | default: 0
-                    
+
                     assign rating_decimal = 0
                     assign decimal = rating_value | modulo: 1
                     if decimal >= 0.3 and decimal <= 0.7
@@ -954,7 +1196,11 @@
               {%- when 'savings_callout' -%}
                 {%- if product.compare_at_price > product.price -%}
                   {%- assign savings_amount = product.compare_at_price | minus: product.price -%}
-                  {%- assign savings_percent = savings_amount | times: 100.0 | divided_by: product.compare_at_price | round -%}
+                  {%- assign savings_percent = savings_amount
+                    | times: 100.0
+                    | divided_by: product.compare_at_price
+                    | round
+                  -%}
                   <div class="product__savings-callout" {{ block.shopify_attributes }}>
                     <style>
                       .product__savings-callout {
@@ -976,7 +1222,15 @@
                         height: 20px;
                       }
                     </style>
-                    <svg class="product__savings-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg
+                      class="product__savings-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
                       <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                     </svg>
                     <span>
@@ -1041,14 +1295,18 @@
                     .product__countdown[hidden] { display: none; }
                   </style>
                   <div class="product__countdown-label">{{ block.settings.label | default: 'Sale ends in' }}</div>
-                  <div class="product__countdown-timer" data-countdown
+                  <div
+                    class="product__countdown-timer"
+                    data-countdown
                     {%- if block.settings.mode == 'date' -%}
                       data-end-date="{{ block.settings.end_date }}"
                     {%- else -%}
                       data-hours="{{ block.settings.daily_hours }}" data-minutes="{{ block.settings.daily_minutes }}"
                     {%- endif -%}
                   >
-                    <div class="product__countdown-unit" data-unit-days><span data-days>00</span><small>Days</small></div>
+                    <div class="product__countdown-unit" data-unit-days>
+                      <span data-days>00</span><small>Days</small>
+                    </div>
                     <span class="product__countdown-sep" data-unit-days>:</span>
                     <div class="product__countdown-unit"><span data-hours>00</span><small>Hours</small></div>
                     <span class="product__countdown-sep">:</span>
@@ -1057,7 +1315,7 @@
                     <div class="product__countdown-unit"><span data-secs>00</span><small>Secs</small></div>
                   </div>
                   <script>
-                    (function() {
+                    (function () {
                       const el = document.getElementById('Countdown-{{ block.id }}');
                       const timer = el.querySelector('[data-countdown]');
                       const dEl = timer.querySelector('[data-days]');
@@ -1087,22 +1345,28 @@
                         end = todayEnd > now.getTime() ? todayEnd : todayEnd + 86400000;
                       }
 
-                      if (!end) { el.hidden = true; return; }
+                      if (!end) {
+                        el.hidden = true;
+                        return;
+                      }
 
                       function tick() {
                         const diff = Math.max(0, end - Date.now());
-                        if (diff <= 0) { el.hidden = true; return; }
-                        
+                        if (diff <= 0) {
+                          el.hidden = true;
+                          return;
+                        }
+
                         const d = Math.floor(diff / 86400000);
                         const h = Math.floor((diff % 86400000) / 3600000);
                         const m = Math.floor((diff % 3600000) / 60000);
                         const s = Math.floor((diff % 60000) / 1000);
 
                         if (d > 0) {
-                          dayUnits.forEach(u => u.style.display = 'flex');
+                          dayUnits.forEach((u) => (u.style.display = 'flex'));
                           dEl.textContent = String(d).padStart(2, '0');
                         } else {
-                          dayUnits.forEach(u => u.style.display = 'none');
+                          dayUnits.forEach((u) => (u.style.display = 'none'));
                         }
 
                         hEl.textContent = String(h).padStart(2, '0');
@@ -1146,7 +1410,15 @@
                       font-weight: 600;
                     }
                   </style>
-                  <svg class="product__delivery-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg
+                    class="product__delivery-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
                     <rect x="1" y="3" width="15" height="13"></rect>
                     <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
                     <circle cx="5.5" cy="18.5" r="2.5"></circle>
@@ -1198,10 +1470,7 @@
     </div>
 
     {% if section.settings.enable_sticky_atc %}
-      {%- render 'product-sticky-atc', 
-        product: product, 
-        always_visible: false
-      -%}
+      {%- render 'product-sticky-atc', product: product, always_visible: false -%}
     {% endif %}
 
     {% render 'product-media-modal', variant_images: variant_images %}
@@ -1244,15 +1513,11 @@
       <script src="{{ 'product-model.js' | asset_url }}" defer></script>
     {%- endif -%}
 
-
     <script type="application/ld+json">
       {{ product | structured_data }}
     </script>
   </div>
 </product-info>
-
-
-
 
 {% schema %}
 {
@@ -1633,6 +1898,10 @@
       "name": "Ingredient Spotlight",
       "limit": 1,
       "settings": [
+        {
+          "type": "paragraph",
+          "content": "To show different ingredients for each product, create a Product Metafield 'cosmetics.ingredient_list' (List of Metaobjects). The block will automatically use it if present."
+        },
         {
           "type": "text",
           "id": "heading",
@@ -2914,31 +3183,351 @@
       "settings": [
         {
           "type": "paragraph",
-          "content": "Uses metafields: cosmetics.overview, cosmetics.ingredients, cosmetics.how_to_use, cosmetics.results"
+          "content": "Pulls content from Metafields (Namespace: cosmetics). To set these up, go to Settings > Custom Data > Products."
+        },
+        {
+          "type": "header",
+          "content": "Tab 1: Overview",
+          "info": "Metafields: cosmetics.overview (Defaults to product description), cosmetics.overview_image (File)"
         },
         {
           "type": "checkbox",
           "id": "show_overview",
           "default": true,
-          "label": "Show Overview Tab"
+          "label": "Enable Overview Tab"
+        },
+        {
+          "type": "text",
+          "id": "overview_title",
+          "default": "Overview",
+          "label": "Tab Title"
+        },
+        {
+          "type": "select",
+          "id": "overview_icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "apple", "label": "Apple" },
+            { "value": "banana", "label": "Banana" },
+            { "value": "bottle", "label": "Bottle" },
+            { "value": "box", "label": "Box" },
+            { "value": "carrot", "label": "Carrot" },
+            { "value": "chat_bubble", "label": "Chat Bubble" },
+            { "value": "check_mark", "label": "Check Mark" },
+            { "value": "clipboard", "label": "Clipboard" },
+            { "value": "dairy", "label": "Dairy" },
+            { "value": "dairy_free", "label": "Dairy Free" },
+            { "value": "dryer", "label": "Dryer" },
+            { "value": "eye", "label": "Eye" },
+            { "value": "fire", "label": "Fire" },
+            { "value": "gluten_free", "label": "Gluten Free" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "iron", "label": "Iron" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "leather", "label": "Leather" },
+            { "value": "lightning_bolt", "label": "Lightning Bolt" },
+            { "value": "lipstick", "label": "Lipstick" },
+            { "value": "lock", "label": "Lock" },
+            { "value": "map_pin", "label": "Map Pin" },
+            { "value": "nut_free", "label": "Nut Free" },
+            { "value": "pants", "label": "Pants" },
+            { "value": "paw_print", "label": "Paw Print" },
+            { "value": "pepper", "label": "Pepper" },
+            { "value": "perfume", "label": "Perfume" },
+            { "value": "plane", "label": "Plane" },
+            { "value": "plant", "label": "Plant" },
+            { "value": "price_tag", "label": "Price Tag" },
+            { "value": "question_mark", "label": "Question Mark" },
+            { "value": "recycle", "label": "Recycle" },
+            { "value": "return", "label": "Return" },
+            { "value": "ruler", "label": "Ruler" },
+            { "value": "serving_dish", "label": "Serving Dish" },
+            { "value": "shirt", "label": "Shirt" },
+            { "value": "shoe", "label": "Shoe" },
+            { "value": "silhouette", "label": "Silhouette" },
+            { "value": "snowflake", "label": "Snowflake" },
+            { "value": "star", "label": "Star" },
+            { "value": "stopwatch", "label": "Stopwatch" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "washing", "label": "Washing" }
+          ],
+          "label": "Tab Icon"
+        },
+        {
+          "type": "header",
+          "content": "Tab: Benefits",
+          "info": "Metafields: cosmetics.benefit_list (List of Benefit Metaobjects)"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_benefits",
+          "default": true,
+          "label": "Enable Benefits Tab"
+        },
+        {
+          "type": "text",
+          "id": "benefits_title",
+          "default": "Benefits",
+          "label": "Tab Title"
+        },
+        {
+          "type": "select",
+          "id": "benefits_icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "apple", "label": "Apple" },
+            { "value": "banana", "label": "Banana" },
+            { "value": "bottle", "label": "Bottle" },
+            { "value": "box", "label": "Box" },
+            { "value": "carrot", "label": "Carrot" },
+            { "value": "chat_bubble", "label": "Chat Bubble" },
+            { "value": "check_mark", "label": "Check Mark" },
+            { "value": "clipboard", "label": "Clipboard" },
+            { "value": "dairy", "label": "Dairy" },
+            { "value": "dairy_free", "label": "Dairy Free" },
+            { "value": "dryer", "label": "Dryer" },
+            { "value": "eye", "label": "Eye" },
+            { "value": "fire", "label": "Fire" },
+            { "value": "gluten_free", "label": "Gluten Free" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "iron", "label": "Iron" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "leather", "label": "Leather" },
+            { "value": "lightning_bolt", "label": "Lightning Bolt" },
+            { "value": "lipstick", "label": "Lipstick" },
+            { "value": "lock", "label": "Lock" },
+            { "value": "map_pin", "label": "Map Pin" },
+            { "value": "nut_free", "label": "Nut Free" },
+            { "value": "pants", "label": "Pants" },
+            { "value": "paw_print", "label": "Paw Print" },
+            { "value": "pepper", "label": "Pepper" },
+            { "value": "perfume", "label": "Perfume" },
+            { "value": "plane", "label": "Plane" },
+            { "value": "plant", "label": "Plant" },
+            { "value": "price_tag", "label": "Price Tag" },
+            { "value": "question_mark", "label": "Question Mark" },
+            { "value": "recycle", "label": "Recycle" },
+            { "value": "return", "label": "Return" },
+            { "value": "ruler", "label": "Ruler" },
+            { "value": "serving_dish", "label": "Serving Dish" },
+            { "value": "shirt", "label": "Shirt" },
+            { "value": "shoe", "label": "Shoe" },
+            { "value": "silhouette", "label": "Silhouette" },
+            { "value": "snowflake", "label": "Snowflake" },
+            { "value": "star", "label": "Star" },
+            { "value": "stopwatch", "label": "Stopwatch" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "washing", "label": "Washing" }
+          ],
+          "default": "check_mark",
+          "label": "Tab Icon"
+        },
+        {
+          "type": "header",
+          "content": "Tab 2: Ingredients",
+          "info": "Metafields: cosmetics.ingredients (Rich Text), cosmetics.ingredients_image (File)"
         },
         {
           "type": "checkbox",
           "id": "show_ingredients",
           "default": true,
-          "label": "Show Key Ingredients Tab"
+          "label": "Enable Ingredients Tab"
+        },
+        {
+          "type": "text",
+          "id": "ingredients_title",
+          "default": "Key Ingredients",
+          "label": "Tab Title"
+        },
+        {
+          "type": "select",
+          "id": "ingredients_icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "apple", "label": "Apple" },
+            { "value": "banana", "label": "Banana" },
+            { "value": "bottle", "label": "Bottle" },
+            { "value": "box", "label": "Box" },
+            { "value": "carrot", "label": "Carrot" },
+            { "value": "chat_bubble", "label": "Chat Bubble" },
+            { "value": "check_mark", "label": "Check Mark" },
+            { "value": "clipboard", "label": "Clipboard" },
+            { "value": "dairy", "label": "Dairy" },
+            { "value": "dairy_free", "label": "Dairy Free" },
+            { "value": "dryer", "label": "Dryer" },
+            { "value": "eye", "label": "Eye" },
+            { "value": "fire", "label": "Fire" },
+            { "value": "gluten_free", "label": "Gluten Free" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "iron", "label": "Iron" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "leather", "label": "Leather" },
+            { "value": "lightning_bolt", "label": "Lightning Bolt" },
+            { "value": "lipstick", "label": "Lipstick" },
+            { "value": "lock", "label": "Lock" },
+            { "value": "map_pin", "label": "Map Pin" },
+            { "value": "nut_free", "label": "Nut Free" },
+            { "value": "pants", "label": "Pants" },
+            { "value": "paw_print", "label": "Paw Print" },
+            { "value": "pepper", "label": "Pepper" },
+            { "value": "perfume", "label": "Perfume" },
+            { "value": "plane", "label": "Plane" },
+            { "value": "plant", "label": "Plant" },
+            { "value": "price_tag", "label": "Price Tag" },
+            { "value": "question_mark", "label": "Question Mark" },
+            { "value": "recycle", "label": "Recycle" },
+            { "value": "return", "label": "Return" },
+            { "value": "ruler", "label": "Ruler" },
+            { "value": "serving_dish", "label": "Serving Dish" },
+            { "value": "shirt", "label": "Shirt" },
+            { "value": "shoe", "label": "Shoe" },
+            { "value": "silhouette", "label": "Silhouette" },
+            { "value": "snowflake", "label": "Snowflake" },
+            { "value": "star", "label": "Star" },
+            { "value": "stopwatch", "label": "Stopwatch" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "washing", "label": "Washing" }
+          ],
+          "default": "leaf",
+          "label": "Tab Icon"
+        },
+        {
+          "type": "header",
+          "content": "Tab 3: How to Use",
+          "info": "Metafields: cosmetics.how_to_use (Rich Text), cosmetics.how_to_use_image (File)"
         },
         {
           "type": "checkbox",
           "id": "show_how_to_use",
           "default": true,
-          "label": "Show How to Use Tab"
+          "label": "Enable How to Use Tab"
+        },
+        {
+          "type": "text",
+          "id": "how_to_use_title",
+          "default": "How to Use",
+          "label": "Tab Title"
+        },
+        {
+          "type": "select",
+          "id": "how_to_use_icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "apple", "label": "Apple" },
+            { "value": "banana", "label": "Banana" },
+            { "value": "bottle", "label": "Bottle" },
+            { "value": "box", "label": "Box" },
+            { "value": "carrot", "label": "Carrot" },
+            { "value": "chat_bubble", "label": "Chat Bubble" },
+            { "value": "check_mark", "label": "Check Mark" },
+            { "value": "clipboard", "label": "Clipboard" },
+            { "value": "dairy", "label": "Dairy" },
+            { "value": "dairy_free", "label": "Dairy Free" },
+            { "value": "dryer", "label": "Dryer" },
+            { "value": "eye", "label": "Eye" },
+            { "value": "fire", "label": "Fire" },
+            { "value": "gluten_free", "label": "Gluten Free" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "iron", "label": "Iron" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "leather", "label": "Leather" },
+            { "value": "lightning_bolt", "label": "Lightning Bolt" },
+            { "value": "lipstick", "label": "Lipstick" },
+            { "value": "lock", "label": "Lock" },
+            { "value": "map_pin", "label": "Map Pin" },
+            { "value": "nut_free", "label": "Nut Free" },
+            { "value": "pants", "label": "Pants" },
+            { "value": "paw_print", "label": "Paw Print" },
+            { "value": "pepper", "label": "Pepper" },
+            { "value": "perfume", "label": "Perfume" },
+            { "value": "plane", "label": "Plane" },
+            { "value": "plant", "label": "Plant" },
+            { "value": "price_tag", "label": "Price Tag" },
+            { "value": "question_mark", "label": "Question Mark" },
+            { "value": "recycle", "label": "Recycle" },
+            { "value": "return", "label": "Return" },
+            { "value": "ruler", "label": "Ruler" },
+            { "value": "serving_dish", "label": "Serving Dish" },
+            { "value": "shirt", "label": "Shirt" },
+            { "value": "shoe", "label": "Shoe" },
+            { "value": "silhouette", "label": "Silhouette" },
+            { "value": "snowflake", "label": "Snowflake" },
+            { "value": "star", "label": "Star" },
+            { "value": "stopwatch", "label": "Stopwatch" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "washing", "label": "Washing" }
+          ],
+          "default": "clipboard",
+          "label": "Tab Icon"
+        },
+        {
+          "type": "header",
+          "content": "Tab 4: Results",
+          "info": "Metafields: cosmetics.results (Rich Text), cosmetics.results_image (File)"
         },
         {
           "type": "checkbox",
           "id": "show_results",
           "default": true,
-          "label": "Show Results Tab"
+          "label": "Enable Results Tab"
+        },
+        {
+          "type": "text",
+          "id": "results_title",
+          "default": "Results",
+          "label": "Tab Title"
+        },
+        {
+          "type": "select",
+          "id": "results_icon",
+          "options": [
+            { "value": "none", "label": "None" },
+            { "value": "apple", "label": "Apple" },
+            { "value": "banana", "label": "Banana" },
+            { "value": "bottle", "label": "Bottle" },
+            { "value": "box", "label": "Box" },
+            { "value": "carrot", "label": "Carrot" },
+            { "value": "chat_bubble", "label": "Chat Bubble" },
+            { "value": "check_mark", "label": "Check Mark" },
+            { "value": "clipboard", "label": "Clipboard" },
+            { "value": "dairy", "label": "Dairy" },
+            { "value": "dairy_free", "label": "Dairy Free" },
+            { "value": "dryer", "label": "Dryer" },
+            { "value": "eye", "label": "Eye" },
+            { "value": "fire", "label": "Fire" },
+            { "value": "gluten_free", "label": "Gluten Free" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "iron", "label": "Iron" },
+            { "value": "leaf", "label": "Leaf" },
+            { "value": "leather", "label": "Leather" },
+            { "value": "lightning_bolt", "label": "Lightning Bolt" },
+            { "value": "lipstick", "label": "Lipstick" },
+            { "value": "lock", "label": "Lock" },
+            { "value": "map_pin", "label": "Map Pin" },
+            { "value": "nut_free", "label": "Nut Free" },
+            { "value": "pants", "label": "Pants" },
+            { "value": "paw_print", "label": "Paw Print" },
+            { "value": "pepper", "label": "Pepper" },
+            { "value": "perfume", "label": "Perfume" },
+            { "value": "plane", "label": "Plane" },
+            { "value": "plant", "label": "Plant" },
+            { "value": "price_tag", "label": "Price Tag" },
+            { "value": "question_mark", "label": "Question Mark" },
+            { "value": "recycle", "label": "Recycle" },
+            { "value": "return", "label": "Return" },
+            { "value": "ruler", "label": "Ruler" },
+            { "value": "serving_dish", "label": "Serving Dish" },
+            { "value": "shirt", "label": "Shirt" },
+            { "value": "shoe", "label": "Shoe" },
+            { "value": "silhouette", "label": "Silhouette" },
+            { "value": "snowflake", "label": "Snowflake" },
+            { "value": "star", "label": "Star" },
+            { "value": "stopwatch", "label": "Stopwatch" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "washing", "label": "Washing" }
+          ],
+          "default": "star",
+          "label": "Tab Icon"
         }
       ]
     },
